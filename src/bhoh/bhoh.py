@@ -54,7 +54,7 @@ class Tiles():
                 yield i
     
     def _extremum(self, coord):
-       self.sides = [max(coord.y, self.sides[0]), max(coord.x, self.sides[1]), min(coord.y, self.sides[2]), min(coord.x, self.sides[3]) ]
+        self.sides = [max(coord.y, self.sides[0]), max(coord.x, self.sides[1]), min(coord.y, self.sides[2]), min(coord.x, self.sides[3]) ]
     
     def __iter__(self):
         print '__iter__ of Tiles'

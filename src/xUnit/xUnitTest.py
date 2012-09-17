@@ -1,7 +1,6 @@
 '''
 Created on 2012-5-29
 
-@author: 1411494
 '''
 import unittest
 from xUnit import WasRun, TestResult, TestSuite 

@@ -1,4 +1,4 @@
-from BowlingGame import Bowling
+from bowlingGame import Bowling
 import unittest
 
 class TestUntitled(unittest.TestCase):

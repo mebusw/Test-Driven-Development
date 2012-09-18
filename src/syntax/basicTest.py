@@ -4,6 +4,7 @@ Created on 2012-9-17
 '''
 import unittest
 
+AGlobalList = []
 
 class Test(unittest.TestCase):
 
@@ -39,6 +40,10 @@ class Test(unittest.TestCase):
         x = Enum('foo', 'bar', 'baz', 'bat')
         self.assertEqual(2, x.baz)
         self.assertEqual(3, x.bat)
+        
+    def testGlobalAndLocal(self):
+        AGlobalList.append(99)
+        self.assertEqual(1, len(AGlobalList), 'you are inserting into local list')
         
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

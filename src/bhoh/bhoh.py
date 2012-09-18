@@ -35,12 +35,15 @@ class Tiles():
         self.visited = [False] * len(self.children)
         return len(self.children)
     
-    def DFSsearch(self, n, coord):
-        '''when yield used, the function 
-            generate a iterator'''
-        #print 'DFSsearch of Tiles'
+    def DFSIter(self):
+        ''' this is the entry point of the recursion method _DFSsearch()'''
+        self.visited = [False] * len(self.children)
+        return self._DFSsearch(0, Vector2(0, 0))
+    
+    def _DFSsearch(self, n, coord):
+        '''when yield used, the function generate a iterator'''
 
-        if None == n or self.visited[n] :
+        if None == n or self.visited[n]:
             return
         
         box = self.children[n]
@@ -50,7 +53,7 @@ class Tiles():
         yield box
         
         for i in range(4):
-            for i in self.DFSsearch(box.adj[i], coord + DIRECTION[i]):
+            for i in self._DFSsearch(box.adj[i], coord + DIRECTION[i]):
                 yield i
     
     def _extremum(self, coord):

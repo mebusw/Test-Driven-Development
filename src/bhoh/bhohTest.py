@@ -23,7 +23,7 @@ class TestTiles(unittest.TestCase):
         assert 7 == tiles.count()
         
         result = []
-        for i in tiles.DFSsearch(0, Vector2(0, 0)):
+        for i in tiles.DFSIter():
             print i.name, i.coord
             result.append(i)
         assert ['A', 'B', 'F', 'D', 'G', 'E', 'C'] == map(lambda x: x.name, result)

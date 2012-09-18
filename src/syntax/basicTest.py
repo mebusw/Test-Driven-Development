@@ -40,6 +40,7 @@ class Test(unittest.TestCase):
         x = Enum('foo', 'bar', 'baz', 'bat')
         self.assertEqual(2, x.baz)
         self.assertEqual(3, x.bat)
+
         
     def testGlobalAndLocal(self):
         AGlobalList.append(99)

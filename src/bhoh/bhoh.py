@@ -1,8 +1,11 @@
 '''
 Created on 2012-9-17
 
-Betrayal at House On the Hill
+Idea come from board game: "Betrayal at House On the Hill"
+
+to traverse all tiles and calculate the max width and height of map
 '''
+
 
 class Vector2():
     def __init__(self, x=0, y=0):
@@ -19,9 +22,10 @@ class Vector2():
         return (self.x - other.x) + (self.y - other.y)
     
 ### NESW
-DIRECTION = [Vector2(0, 1), Vector2(1, 0), Vector2(0, -1), Vector2(-1, 0)]
 
 class Tiles():
+    DIRECTION = [Vector2(0, 1), Vector2(1, 0), Vector2(0, -1), Vector2(-1, 0)]
+    
     def __init__(self):
         self.children = []
         self.visited = []
@@ -53,7 +57,7 @@ class Tiles():
         yield box
         
         for i in range(4):
-            for i in self._DFSsearch(box.adj[i], coord + DIRECTION[i]):
+            for i in self._DFSsearch(box.adj[i], coord + Tiles.DIRECTION[i]):
                 yield i
     
     def _extremum(self, coord):

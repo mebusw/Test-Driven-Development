@@ -21,7 +21,7 @@ public class CircularBufferTest {
 
     @Before
     public void setUp() throws Exception {
-        buffer = new CircularBuffer();
+        buffer = new CircularBuffer(500);
     }
 
     @After
@@ -31,7 +31,7 @@ public class CircularBufferTest {
 
     @Test
     public void test() {
-        fail("Not yet implemented");
+        // fail("Not yet implemented");
     }
 
     /**
@@ -75,13 +75,14 @@ public class CircularBufferTest {
      * You will find some more instruction down the page
      */
 
-    // TODO start from here
-
-    void testEmptyAfterCreation() {
+    // TODO Add @Test to test function to enable it
+    @Test
+    public void testEmptyAfterCreation() {
         assertTrue(buffer.isEmpty());
     }
 
-    void testNotFullAfterCreation() {
+    @Test
+    public void testNotFullAfterCreation() {
         assertFalse(buffer.isFull());
     }
 
@@ -91,19 +92,22 @@ public class CircularBufferTest {
      * Please delete any other code you have written.
      */
 
-    void testNotEmpty() {
+    @Test
+    public void testNotEmpty() {
         buffer.put(10046);
         assertFalse(buffer.isEmpty());
     }
 
-    void testNotEmptyThenEmpty() {
+    @Test
+    public void testNotEmptyThenEmpty() {
         buffer.put(4567);
         assertFalse(buffer.isEmpty());
         buffer.get();
         assertTrue(buffer.isEmpty());
     }
 
-    void testGetPutOneValue() {
+    @Test
+    public void testGetPutOneValue() {
         buffer.put(4567);
         assertEquals(4567, buffer.get());
     }
@@ -117,7 +121,8 @@ public class CircularBufferTest {
      * to be doing TDD!
      */
 
-    void testGetPutAFew() {
+    @Test
+    public void testGetPutAFew() {
         buffer.put(1);
         buffer.put(2);
         buffer.put(3);
@@ -132,7 +137,8 @@ public class CircularBufferTest {
      * yet. Why? your tests do not require it. Delete untested code now!
      */
 
-    void testCapacity() {
+    @Test
+    public void testCapacity() {
         buffer = new CircularBuffer(2);
         assertEquals(2, buffer.capacity());
     }
@@ -144,7 +150,8 @@ public class CircularBufferTest {
      * change CircularBuffer_Create to accept a parameter?
      */
 
-    void testIsFull() {
+    @Test
+    public void testIsFull() {
         for (int i = 0; i < buffer.capacity(); i++) {
             buffer.put(i + 100);
         }
@@ -157,7 +164,8 @@ public class CircularBufferTest {
      * untested code. How many times do I have to tell you?!
      */
 
-    void testEmptyToFullToEmpty() {
+    @Test
+    public void testEmptyToFullToEmpty() {
         for (int i = 0; i < buffer.capacity(); i++) {
             buffer.put(i + 100);
         }
@@ -177,7 +185,8 @@ public class CircularBufferTest {
      * tests when your buffer boundary is violated.
      */
 
-    void testWrapAround() {
+    @Test
+    public void testWrapAround() {
         int capacity = buffer.capacity();
         for (int i = 0; i < capacity; i++) {
             buffer.put(i + 100);
@@ -208,12 +217,21 @@ public class CircularBufferTest {
      * 
      */
 
-    void testPutToFullFails() {
+    @Test
+    public void testPutToFullFails() {
         fillTheQueue(900, buffer.capacity());
         assertFalse(buffer.put(9999));
     }
 
-    void testPutToFullDoesNotDamageContents() {
+    private void fillTheQueue(int num, int capacity) {
+        for (int i = 0; i < capacity; i++) {
+            buffer.put(i + num);
+        }
+
+    }
+
+    @Test
+    public void testPutToFullDoesNotDamageContents() {
         fillTheQueue(900, buffer.capacity());
         buffer.put(9999);
 
@@ -228,8 +246,9 @@ public class CircularBufferTest {
      * production code into a helper function?
      * 
      */
-
-    void testGetFromEmptyReturns0_WeHaveToDoSomething() {
+    
+    @Test
+    public void testGetFromEmptyReturns0_WeHaveToDoSomething() {
         assertEquals(0, buffer.get());
         assertTrue(buffer.isEmpty());
         assertFalse(buffer.isFull());

@@ -3,12 +3,12 @@ package exercise;
 public class CircularBuffer {
     private int index;
     private int outdex;
-    private int m[];
+    private int values[];
     private int capacity;
 
     public CircularBuffer(int i) {
         this.capacity = i + 1;
-        m = new int[capacity];
+        values = new int[capacity];
         index = 0;
         outdex = 0;
     }
@@ -22,13 +22,13 @@ public class CircularBuffer {
     }
 
     public boolean isFull() {
-        return (outdex + capacity - index) % capacity == 1;
+        return capacity - count() == 1;
     }
 
     public boolean put(int i) {
         if (this.isFull())
             return false;
-        m[index] = i;
+        values[index] = i;
         index++;
         index %= this.capacity;
 
@@ -38,7 +38,7 @@ public class CircularBuffer {
     public int get() {
         if (this.isEmpty())
             return 0;
-        int curr = m[outdex % this.capacity];
+        int curr = values[outdex % this.capacity];
         outdex++;
         outdex %= this.capacity;
         return curr;
@@ -48,4 +48,20 @@ public class CircularBuffer {
         return this.capacity - 1;
     }
 
+    public String print() {
+        StringBuffer sb = new StringBuffer("Circular buffer content:\n<");
+        int curr = outdex;
+        for (int i = 0; i < count(); i++) {
+            if (i != 0) {
+                sb.append(", ");
+            }
+            sb.append(String.format("%d", values[curr++]));
+            curr %= this.capacity;
+        }
+        return sb.append(">\n").toString();
+    }
+
+    private int count() {
+        return (index + capacity - outdex) % capacity;
+    }
 }

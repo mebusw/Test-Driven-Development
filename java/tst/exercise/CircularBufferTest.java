@@ -7,12 +7,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Copyright (c) 2007, 2008 James Grenning All Rights Reserved Renaissance
- * Software Consulting, Inc For use by someone who attended a training session
- * by James Grenning
+ * Copyright (c) mebusw@163.com, the test cases are learned from James Grenning's
+ * TDDinC exercise, translated into Java
  * 
- * Contact info: www.renaissancesoftware.net www.renaissancesoftware.net/blog
- * james@renaissancesoftware.net
  */
 
 public class CircularBufferTest {
@@ -21,6 +18,7 @@ public class CircularBufferTest {
 
     @Before
     public void setUp() throws Exception {
+        // buffer = new CircularBuffer();
         buffer = new CircularBuffer(500);
     }
 
@@ -223,9 +221,9 @@ public class CircularBufferTest {
         assertFalse(buffer.put(9999));
     }
 
-    private void fillTheQueue(int num, int capacity) {
+    private void fillTheQueue(int start, int capacity) {
         for (int i = 0; i < capacity; i++) {
-            buffer.put(i + num);
+            buffer.put(i + start);
         }
 
     }
@@ -246,7 +244,7 @@ public class CircularBufferTest {
      * production code into a helper function?
      * 
      */
-    
+
     @Test
     public void testGetFromEmptyReturns0_WeHaveToDoSomething() {
         assertEquals(0, buffer.get());
@@ -264,4 +262,76 @@ public class CircularBufferTest {
      * Do it again next week except without my tests to guide you
      */
 
+    @Test
+    public void testPrintEmpty() {
+        String expectedOutput = "Circular buffer content:\n<>\n";
+        assertEquals(expectedOutput, buffer.print());
+    }
+
+    /**
+     * You should have only printed the heading. this next test drives you to
+     * get the format of a single element. Did you implement any of the wrap
+     * around logic in your print function? Delete it if you did.
+     */
+
+    @Test
+    public void testPrintAfterOneIsPut() {
+        String expectedOutput = "Circular buffer content:\n<1>\n";
+        buffer.put(1);
+        assertEquals(expectedOutput, buffer.print());
+
+    }
+
+    @Test
+    public void testPrintNotYetWrappedOrFull() {
+        String expectedOutput = "Circular buffer content:\n<1, 2, 3>\n";
+        buffer.put(1);
+        buffer.put(2);
+        buffer.put(3);
+        assertEquals(expectedOutput, buffer.print());
+
+    }
+
+    @Test
+    public void testPrintNotYetWrappedAndIsFull() {
+        String expectedOutput = "Circular buffer content:\n<200, 201, 202, 203, 204>\n";
+        buffer = new CircularBuffer(5);
+        buffer.put(200);
+        buffer.put(201);
+        buffer.put(202);
+        buffer.put(203);
+        buffer.put(204);
+        assertEquals(expectedOutput, buffer.print());
+    }
+
+    /**
+     * Print does not need to handle wrapping until this next test. I am glad to
+     * hear you resisted the temptation to code ahead of your tests
+     */
+
+    @Test
+    public void testPrintWrappedAndIsFullOldestToNewest() {
+        String expectedOutput = "Circular buffer content:\n<201, 202, 203, 204, 999>\n";
+        buffer = new CircularBuffer(5);
+        buffer.put(200);
+        buffer.put(201);
+        buffer.put(202);
+        buffer.put(203);
+        buffer.put(204);
+        buffer.get();
+        buffer.put(999);
+        assertEquals(expectedOutput, buffer.print());
+    }
+
+    @Test
+    public void testFillThenEmptyThenPrint() {
+        String expectedOutput = "Circular buffer content:\n<>\n";
+        buffer = new CircularBuffer(5);
+        fillTheQueue(200, 5);
+
+        for (int i = 0; i < 5; i++) {
+            buffer.get();
+        }
+        assertEquals(expectedOutput, buffer.print());
+    }
 }

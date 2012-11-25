@@ -7,11 +7,10 @@
 var Game = function() {
     return {
         tick : function(init_grid) {
-            var grid_line_0 = init_grid[0];
-            var len = grid_line_0.length;
-            var result = [this._arrayGen(0, len)];
+            var len = init_grid[0].length;
+            var result = this._initGrid(0, len);
             for ( var i = 1; i < len - 1; i++) {
-                if (grid_line_0[i] === 1 && grid_line_0[i - 1] === 1 && grid_line_0[i + 1] === 1) {
+                if (init_grid[0][i] === 1 && init_grid[0][i - 1] === 1 && init_grid[0][i + 1] === 1) {
                     result[0][i] = 1;
                 }
 
@@ -19,10 +18,10 @@ var Game = function() {
             return result;
         },
 
-        _arrayGen : function(elem, len) {
-            var arr = [];
+        _initGrid : function(elem, len) {
+            var arr = [[]];
             for ( var i = 0; i < len; i++) {
-                arr.push(elem);
+                arr[0].push(elem);
             }
             return arr;
         },

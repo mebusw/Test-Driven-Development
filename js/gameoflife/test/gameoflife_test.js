@@ -27,10 +27,10 @@
  * 
  */
 
+var game = new Game();
+
 describe("one cell", function() {
-    var game;
     beforeEach(function() {
-        game = new Game();
     });
 
     it("only one cell should die", function() {
@@ -41,9 +41,7 @@ describe("one cell", function() {
 });
 
 describe("two cell", function() {
-    var game;
     beforeEach(function() {
-        game = new Game();
     });
 
     it("two cells should die", function() {
@@ -55,9 +53,7 @@ describe("two cell", function() {
 });
 
 describe("three cell", function() {
-    var game;
     beforeEach(function() {
-        game = new Game();
     });
 
     it("cell with less than two alive neignboor will die", function() {
@@ -78,10 +74,9 @@ describe("three cell", function() {
 
 });
 
+/*
 describe("four cell", function() {
-    var game;
     beforeEach(function() {
-        game = new Game();
     });
 
     it("one or two cells alive, but with less than two alive neignboor will die", function() {
@@ -98,10 +93,11 @@ describe("four cell", function() {
         expect(game.tick([ [ 1, 0, 1, 1 ] ])).toEqual([ [ 0, 0, 0, 0 ] ]);
     });
 
-    it("three more alive cells, with two alive neignboor will die", function() {
+    it("three more alive cells, with two alive neignboor will live", function() {
         expect(game.tick([ [ 1, 1, 1, 0 ] ])).toEqual([ [ 0, 1, 0, 0 ] ]);
         expect(game.tick([ [ 0, 1, 1, 1 ] ])).toEqual([ [ 0, 0, 1, 0 ] ]);
         expect(game.tick([ [ 1, 1, 1, 1 ] ])).toEqual([ [ 0, 1, 1, 0 ] ]);
     });
 
 });
+*/

@@ -94,8 +94,9 @@ describe("four cell", function() {
 
     it("three more alive cells, with two alive neignboor will live", function() {
         expect(game.tick([ [ 1, 1, 1, 0 ] ])).toEqual([ [ 0, 1, 0, 0 ] ]);
-        //expect(game.tick([ [ 0, 1, 1, 1 ] ])).toEqual([ [ 0, 0, 1, 0 ] ]);
-        // expect(game.tick([ [ 1, 1, 1, 1 ] ])).toEqual([ [ 0, 1, 1, 0 ] ]);
+        expect(game.tick([ [ 0, 1, 1, 1 ] ])).toEqual([ [ 0, 0, 1, 0 ] ]);
+        expect(game.tick([ [ 1, 1, 1, 1 ] ])).toEqual([ [ 0, 1, 1, 0 ] ]);
+        expect(game.tick([ [ 1, 1, 1, 1, 1 ] ])).toEqual([ [ 0, 1, 1, 1, 0 ] ]);
     });
 
 });

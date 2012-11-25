@@ -115,7 +115,7 @@ describe("Y axis", function() {
         });
 
         it("an alive cell with two alive neighboors will live", function() {
-            //expect(game.tick([ [ 1 ], [ 1 ], [ 1 ] ])).toEqual([ [ 0 ], [ 1 ], [ 0 ] ]);
+             expect(game.tick([ [ 1 ], [ 1 ], [ 1 ] ])).toEqual([ [ 0 ], [ 1 ], [ 0 ] ]);
         });
     });
 });

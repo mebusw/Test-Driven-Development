@@ -17,46 +17,58 @@ var Game = function() {
 
             this._initGrid();
 
-            for ( var i = 0; i < this.xLen; i++)
-                if (this._isAlive(i) && this._has2AliveNeighboors(i)) {
-                    this._setAlive(i);
+            if (this.xLen > 1 || this.yLen > 1) {
+                for ( var j = 0; j < this.xLen; j++) {
+                    if (this._isAlive(0, j) && this._has2AliveNeighboors(0, j)) {
+                        this._setAlive(0, j);
+                    }
                 }
+                if (this.yLen >= 2 && this._isAlive(1, 0) && this._isUpAlive(1, 0) && this._isDownAlive(1, 0)) {
+                    this._setAlive(1, 0);
+                }
+            }
+
             return this.nextGrid;
         },
 
         _initGrid : function() {
-            this.nextGrid = [];
-            if (this.grid.length >= 2) {
-                for ( var i = 0; i < this.yLen; i++) {
-                    this.nextGrid.push([ 0 ]);
+            this.nextGrid = [];          
+            for ( var i = 0; i < this.yLen; i++) {
+                this.nextGrid[i] = [];
+                for ( var j = 0; j < this.xLen; j++) {
+                    this.nextGrid[i].push(0);
                 }
 
-            } else {
-                this.nextGrid.push([]);
-                for ( var i = 0; i < this.xLen; i++) {
-                    this.nextGrid[0].push(0);
-                }
             }
             return this.nextGrid;
         },
 
-        _setAlive : function(i) {
-            this.nextGrid[0][i] = 1;
-        },
-        _isAlive : function(i) {
-            return this.grid[0][i] === 1;
+        _setAlive : function(i, j) {
+            this.nextGrid[i][j] = 1;
         },
 
-        _isLeftAlive : function(i) {
-            return i > 0 && this.grid[0][i - 1] === 1;
+        _isAlive : function(i, j) {
+            return this.grid[i][j] === 1;
         },
 
-        _isRightAlive : function(i) {
-            return i < this.xLen - 1 && this.grid[0][i + 1] === 1;
+        _isLeftAlive : function(i, j) {
+            return j > 0 && this.grid[i][j - 1] === 1;
         },
 
-        _has2AliveNeighboors : function(i) {
-            return this._isLeftAlive(i) && this._isRightAlive(i);
+        _isRightAlive : function(i, j) {
+            return j < this.xLen - 1 && this.grid[i][j + 1] === 1;
+        },
+
+        _isUpAlive : function(i, j) {
+            return i > 0 && this.grid[i - 1][j] === 1;
+        },
+
+        _isDownAlive : function(i, j) {
+            return i < this.yLen - 1 && this.grid[i + 1][j] === 1;
+        },
+
+        _has2AliveNeighboors : function(i, j) {
+            return this._isLeftAlive(i, j) && this._isRightAlive(i, j);
 
         },
     };

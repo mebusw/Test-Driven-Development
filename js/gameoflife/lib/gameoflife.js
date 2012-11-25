@@ -17,22 +17,20 @@ var Game = function() {
 
             this._initGrid();
 
-            if (this.xLen > 1 || this.yLen > 1) {
-                for ( var j = 0; j < this.xLen; j++) {
-                    if (this._isAlive(0, j) && this._has2AliveNeighboors(0, j)) {
-                        this._setAlive(0, j);
-                    }
+            for ( var j = 0; j < this.xLen; j++) {
+                if (this._isAlive(0, j) && this._has2AliveNeighboors(0, j)) {
+                    this._setAlive(0, j);
                 }
-                if (this.yLen >= 2 && this._isAlive(1, 0) && this._isUpAlive(1, 0) && this._isDownAlive(1, 0)) {
-                    this._setAlive(1, 0);
-                }
+            }
+            if (this.yLen >= 2 && this._isAlive(1, 0) && this._has2AliveNeighboors(1, 0)) {
+                this._setAlive(1, 0);
             }
 
             return this.nextGrid;
         },
 
         _initGrid : function() {
-            this.nextGrid = [];          
+            this.nextGrid = [];
             for ( var i = 0; i < this.yLen; i++) {
                 this.nextGrid[i] = [];
                 for ( var j = 0; j < this.xLen; j++) {
@@ -68,8 +66,20 @@ var Game = function() {
         },
 
         _has2AliveNeighboors : function(i, j) {
-            return this._isLeftAlive(i, j) && this._isRightAlive(i, j);
-
+            var count = 0;
+            if (this._isLeftAlive(i, j)) {
+                count += 1;
+            }
+            if (this._isRightAlive(i, j)) {
+                count += 1;
+            }
+            if (this._isUpAlive(i, j)) {
+                count += 1;
+            }
+            if (this._isDownAlive(i, j)) {
+                count += 1;
+            }
+            return count === 2;
         },
     };
 

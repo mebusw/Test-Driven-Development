@@ -38,5 +38,5 @@ module.exports = function(grunt) {
   
   // Default task.
   grunt.registerTask('default', 'lint jasmine');
-
+  grunt.registerTask('tdd', 'jasmine-server');
 };

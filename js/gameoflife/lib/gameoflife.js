@@ -6,3 +6,11 @@
  * Licensed under the MIT license.
  */
 
+var Game = function(current) {
+    return {
+        tick: function () {
+            return [0];
+        }
+    };
+    
+}

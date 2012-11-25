@@ -104,7 +104,18 @@ describe("Y axis", function() {
 
         it("two cells should die", function() {
             expect(game.tick([ [ 0 ], [ 0 ] ])).toEqual([ [ 0 ], [ 0 ] ]);
+            expect(game.tick([ [ 1 ], [ 0 ] ])).toEqual([ [ 0 ], [ 0 ] ]);
+            expect(game.tick([ [ 1 ], [ 1 ] ])).toEqual([ [ 0 ], [ 0 ] ]);
         });
 
+        it("three cells should die", function() {
+            expect(game.tick([ [ 0 ], [ 0 ], [ 0 ] ])).toEqual([ [ 0 ], [ 0 ], [ 0 ] ]);
+            expect(game.tick([ [ 1 ], [ 0 ], [ 0 ] ])).toEqual([ [ 0 ], [ 0 ], [ 0 ] ]);
+            expect(game.tick([ [ 1 ], [ 1 ], [ 0 ] ])).toEqual([ [ 0 ], [ 0 ], [ 0 ] ]);
+        });
+
+        it("an alive cell with two alive neighboors will live", function() {
+            //expect(game.tick([ [ 1 ], [ 1 ], [ 1 ] ])).toEqual([ [ 0 ], [ 1 ], [ 0 ] ]);
+        });
     });
 });

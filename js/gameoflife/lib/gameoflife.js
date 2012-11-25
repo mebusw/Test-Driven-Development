@@ -11,24 +11,30 @@ function arrays_equal(a, b) {
 var Game = function() {
     return {
         tick : function(grid) {
-
             this.grid = grid;
-            this._initGrid(0, grid[0].length);
+            this.xLen = grid[0].length;
+            this.yLen = grid.length;
 
-            for ( var i = 0; i < grid[0].length; i++)
+            this._initGrid();
+
+            for ( var i = 0; i < this.xLen; i++)
                 if (this._isAlive(i) && this._has2AliveNeighboors(i)) {
                     this._setAlive(i);
                 }
             return this.nextGrid;
         },
 
-        _initGrid : function(elem, len) {
-            if (arrays_equal(this.grid, [ [ 0 ], [ 0 ] ])) {
-                this.nextGrid = [ [ 0 ], [ 0 ] ];
+        _initGrid : function() {
+            this.nextGrid = [];
+            if (this.grid.length >= 2) {
+                for ( var i = 0; i < this.yLen; i++) {
+                    this.nextGrid.push([ 0 ]);
+                }
+
             } else {
-                this.nextGrid = [ [] ];
-                for ( var i = 0; i < len; i++) {
-                    this.nextGrid[0].push(elem);
+                this.nextGrid.push([]);
+                for ( var i = 0; i < this.xLen; i++) {
+                    this.nextGrid[0].push(0);
                 }
             }
             return this.nextGrid;
@@ -46,7 +52,7 @@ var Game = function() {
         },
 
         _isRightAlive : function(i) {
-            return i < this.grid[0].length - 1 && this.grid[0][i + 1] === 1;
+            return i < this.xLen - 1 && this.grid[0][i + 1] === 1;
         },
 
         _has2AliveNeighboors : function(i) {

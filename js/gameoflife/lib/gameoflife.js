@@ -10,15 +10,9 @@ var Game = function() {
             this.grid = grid;
             var len = grid[0].length;
             this._initGrid(0, len);
-            // for ( var i = 1; i < len - 1; i++) {
-            // if (init_grid[0][i] === 1 && init_grid[0][i - 1] === 1 &&
-            // init_grid[0][i + 1]
-            // === 1) {
-            // result[0][i] = 1;
-            // }
-            //
-            // }
-            if (this._has2AliveNeighboors() && this._isAlive()) {
+
+
+            if (len >= 3 && this._has2AliveNeighboors() && this._isAlive()) {
                 this._setAlive();
             }
             return this.nextGrid;

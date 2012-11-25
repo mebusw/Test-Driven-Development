@@ -9,11 +9,24 @@
 var Game = function() {
     return {
         tick: function (grid) {
-            if(grid.length === 1) {
-                    return [0];
+            var len = grid.length;
+            var result = this._arrayGen(0, len);
+            for (var i = 1; i < len - 1; i++) {
+                if(grid[i] ===1 && grid[i - 1] === 1 && grid[i + 1] === 1) {
+                    result[i] = 1;
+                }
+                
             }
-            return [0, 0];
-        }
+            return result;
+        },
+        
+        _arrayGen: function(elem, len) {
+            var arr = [];
+            for(var i = 0; i < len; i++) {
+                arr.push(elem);
+            }
+            return arr;
+        },
     };
     
 }

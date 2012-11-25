@@ -39,6 +39,28 @@ describe("two cell", function() {
          
 });
 
-
+describe("three cell", function() {
+         var game;
+         beforeEach(function() {
+                    game = new Game();
+                    });
+         
+         it("cell with less than two alive neignboor will die", function() {
+            expect(game.tick([0, 0, 0])).toEqual([0, 0, 0]);
+            expect(game.tick([0, 1, 0])).toEqual([0, 0, 0]);
+            expect(game.tick([1, 0, 0])).toEqual([0, 0, 0]);
+            expect(game.tick([0, 0, 1])).toEqual([0, 0, 0]);
+            expect(game.tick([1, 1, 0])).toEqual([0, 0, 0]);
+            expect(game.tick([0, 1, 1])).toEqual([0, 0, 0]);
+            });
+         it("dead cell with twp alive neighboor will dead", function() {
+            expect(game.tick([1, 0, 1])).toEqual([0, 0, 0]);
+            });
+         
+         it("alive cell with twp alive neighboor will live", function() {
+            expect(game.tick([1, 1, 1])).toEqual([0, 1, 0]);
+            });
+         
+});
 
 

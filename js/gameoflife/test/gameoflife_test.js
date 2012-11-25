@@ -97,3 +97,14 @@ describe("X axis", function() {
 
     });
 });
+
+describe("Y axis", function() {
+
+    describe("2 cells", function() {
+
+        it("two cells should die", function() {
+            expect(game.tick([ [ 0 ], [ 0 ] ])).toEqual([ [ 0 ], [ 0 ] ]);
+        });
+
+    });
+});

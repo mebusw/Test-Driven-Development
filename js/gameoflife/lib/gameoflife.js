@@ -4,9 +4,14 @@
  * Copyright (c) 2012 mebusw Licensed under the MIT license.
  */
 
+function arrays_equal(a, b) {
+    return a[0].length === b[0].length && a.toString() === b.toString();
+}
+
 var Game = function() {
     return {
         tick : function(grid) {
+
             this.grid = grid;
             this._initGrid(0, grid[0].length);
 
@@ -18,9 +23,13 @@ var Game = function() {
         },
 
         _initGrid : function(elem, len) {
-            this.nextGrid = [ [] ];
-            for ( var i = 0; i < len; i++) {
-                this.nextGrid[0].push(elem);
+            if (arrays_equal(this.grid, [ [ 0 ], [ 0 ] ])) {
+                this.nextGrid = [ [ 0 ], [ 0 ] ];
+            } else {
+                this.nextGrid = [ [] ];
+                for ( var i = 0; i < len; i++) {
+                    this.nextGrid[0].push(elem);
+                }
             }
             return this.nextGrid;
         },

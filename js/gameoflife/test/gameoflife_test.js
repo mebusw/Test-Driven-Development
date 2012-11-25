@@ -100,22 +100,26 @@ describe("X axis", function() {
 
 describe("Y axis", function() {
 
-    describe("2 cells", function() {
-
-        it("two cells should die", function() {
-            expect(game.tick([ [ 0 ], [ 0 ] ])).toEqual([ [ 0 ], [ 0 ] ]);
-            expect(game.tick([ [ 1 ], [ 0 ] ])).toEqual([ [ 0 ], [ 0 ] ]);
-            expect(game.tick([ [ 1 ], [ 1 ] ])).toEqual([ [ 0 ], [ 0 ] ]);
-        });
-
-        it("three cells should die", function() {
-            expect(game.tick([ [ 0 ], [ 0 ], [ 0 ] ])).toEqual([ [ 0 ], [ 0 ], [ 0 ] ]);
-            expect(game.tick([ [ 1 ], [ 0 ], [ 0 ] ])).toEqual([ [ 0 ], [ 0 ], [ 0 ] ]);
-            expect(game.tick([ [ 1 ], [ 1 ], [ 0 ] ])).toEqual([ [ 0 ], [ 0 ], [ 0 ] ]);
-        });
-
-        it("an alive cell with two alive neighboors will live", function() {
-             expect(game.tick([ [ 1 ], [ 1 ], [ 1 ] ])).toEqual([ [ 0 ], [ 1 ], [ 0 ] ]);
-        });
+    it("2 cells", function() {
+        expect(game.tick([ [ 0 ], [ 0 ] ])).toEqual([ [ 0 ], [ 0 ] ]);
+        expect(game.tick([ [ 1 ], [ 0 ] ])).toEqual([ [ 0 ], [ 0 ] ]);
+        expect(game.tick([ [ 1 ], [ 1 ] ])).toEqual([ [ 0 ], [ 0 ] ]);
     });
+
+    it("3 cells", function() {
+        expect(game.tick([ [ 0 ], [ 0 ], [ 0 ] ])).toEqual([ [ 0 ], [ 0 ], [ 0 ] ]);
+        expect(game.tick([ [ 1 ], [ 0 ], [ 0 ] ])).toEqual([ [ 0 ], [ 0 ], [ 0 ] ]);
+        expect(game.tick([ [ 1 ], [ 1 ], [ 0 ] ])).toEqual([ [ 0 ], [ 0 ], [ 0 ] ]);
+        expect(game.tick([ [ 1 ], [ 1 ], [ 1 ] ])).toEqual([ [ 0 ], [ 1 ], [ 0 ] ]);
+    });
+
+    it("=>4 cells", function() {
+        expect(game.tick([ [ 0 ], [ 0 ], [ 0 ], [ 0 ] ])).toEqual([ [ 0 ], [ 0 ], [ 0 ], [ 0 ] ]);
+        expect(game.tick([ [ 1 ], [ 0 ], [ 0 ], [ 0 ] ])).toEqual([ [ 0 ], [ 0 ], [ 0 ], [ 0 ] ]);
+        expect(game.tick([ [ 1 ], [ 1 ], [ 1 ], [ 0 ] ])).toEqual([ [ 0 ], [ 1 ], [ 0 ], [ 0 ] ]);
+        expect(game.tick([ [ 1 ], [ 1 ], [ 1 ], [ 1 ] ])).toEqual([ [ 0 ], [ 1 ], [ 1 ], [ 0 ] ]);
+
+        expect(game.tick([ [ 1 ], [ 1 ], [ 1 ], [ 1 ], [ 1 ] ])).toEqual([ [ 0 ], [ 1 ], [ 1 ], [ 1 ], [ 0 ] ]);
+    });
+
 });

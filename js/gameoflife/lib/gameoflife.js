@@ -22,10 +22,13 @@ var Game = function() {
                     this._setAlive(0, j);
                 }
             }
-            if (this.yLen >= 2 && this._isAlive(1, 0) && this._has2AliveNeighboors(1, 0)) {
-                this._setAlive(1, 0);
+            if (this.yLen >= 2) {
+                for ( var i = 0; i < this.yLen; i++) {
+                    if (this._isAlive(i, 0) && this._has2AliveNeighboors(i, 0)) {
+                        this._setAlive(i, 0);
+                    }
+                }
             }
-
             return this.nextGrid;
         },
 

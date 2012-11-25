@@ -11,11 +11,34 @@
  
  */
 
-describe("Game Of Life", function() {
-         it("one cell should die", function() {
-            var game = new Game([0]);
-            var next = game.tick();
-            
-            expect(next).toEqual([0]);
+describe("one cell", function() {
+         var game;
+         beforeEach(function() {
+                    game = new Game();
             });
-         });
+         
+         it("one cell should die", function() {
+            expect(game.tick([0])).toEqual([0]);
+            expect(game.tick([1])).toEqual([0]);
+            });
+
+});
+
+describe("two cell", function() {
+         var game;
+         beforeEach(function() {
+                    game = new Game();
+                    });
+         
+         it("two cells should die", function() {
+            expect(game.tick([0, 0])).toEqual([0, 0]);
+            expect(game.tick([1, 0])).toEqual([0, 0]);
+            expect(game.tick([0, 1])).toEqual([0, 0]);
+            });
+
+         
+});
+
+
+
+

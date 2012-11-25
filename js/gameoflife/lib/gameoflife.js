@@ -6,10 +6,13 @@
  * Licensed under the MIT license.
  */
 
-var Game = function(current) {
+var Game = function() {
     return {
-        tick: function () {
-            return [0];
+        tick: function (grid) {
+            if(grid.length === 1) {
+                    return [0];
+            }
+            return [0, 0];
         }
     };
     

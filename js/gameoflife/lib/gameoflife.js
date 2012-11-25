@@ -8,12 +8,10 @@ var Game = function() {
     return {
         tick : function(grid) {
             this.grid = grid;
-            var len = grid[0].length;
-            this._initGrid(0, len);
+            this._initGrid(0, grid[0].length);
 
-
-            if (len >= 3 && this._has2AliveNeighboors() && this._isAlive()) {
-                this._setAlive();
+            if (this._isAlive(1) && this._has2AliveNeighboors(1)) {
+                this._setAlive(1);
             }
             return this.nextGrid;
         },
@@ -26,23 +24,23 @@ var Game = function() {
             return this.nextGrid;
         },
 
-        _setAlive : function() {
-            this.nextGrid[0][1] = 1;
+        _setAlive : function(i) {
+            this.nextGrid[0][i] = 1;
         },
-        _isAlive : function() {
-            return this.grid[0][1] === 1;
-        },
-
-        _isLeftAlive : function() {
-            return this.grid[0][0] === 1;
+        _isAlive : function(i) {
+            return this.grid[0][i] === 1;
         },
 
-        _isRightAlive : function() {
-            return this.grid[0][2] === 1;
+        _isLeftAlive : function(i) {
+            return i > 0 && this.grid[0][i - 1] === 1;
         },
 
-        _has2AliveNeighboors : function() {
-            return this._isLeftAlive() && this._isRightAlive();
+        _isRightAlive : function(i) {
+            return i < this.grid[0].length - 1 && this.grid[0][i + 1] === 1;
+        },
+
+        _has2AliveNeighboors : function(i) {
+            return this._isLeftAlive(i) && this._isRightAlive(i);
 
         },
     };

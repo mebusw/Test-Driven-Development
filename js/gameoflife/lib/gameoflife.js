@@ -6,12 +6,13 @@
 
 var Game = function() {
     return {
-        tick : function(grid) {
-            var len = grid.length;
-            var result = this._arrayGen(0, len);
+        tick : function(init_grid) {
+            var grid_line_0 = init_grid[0];
+            var len = grid_line_0.length;
+            var result = [this._arrayGen(0, len)];
             for ( var i = 1; i < len - 1; i++) {
-                if (grid[i] === 1 && grid[i - 1] === 1 && grid[i + 1] === 1) {
-                    result[i] = 1;
+                if (grid_line_0[i] === 1 && grid_line_0[i - 1] === 1 && grid_line_0[i + 1] === 1) {
+                    result[0][i] = 1;
                 }
 
             }

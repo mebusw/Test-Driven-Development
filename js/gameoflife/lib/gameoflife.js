@@ -24,9 +24,8 @@ var Game = function() {
                     if (this._isAlive(row, col) && this._has2Or3AliveNeighbors(row, col)) {
                         this._setAlive(row, col);
                     }
-                    if (this.yLen >= 2 && this._isDead(0, 1) && this.grid[0][0] === 1 && this.grid[0][2] === 1
-                            && this.grid[1][1] === 1) {
-                        this._setAlive(0, 1);
+                    if (this.yLen >= 2 && this._isDead(row, col) && this._has3AliveNeighbors(row, col)) {
+                        this._setAlive(row, col);
                     }
                 }
             }
@@ -89,6 +88,23 @@ var Game = function() {
                 count += 1;
             }
             return count === 2 || count === 3;
+        },
+        
+        _has3AliveNeighbors : function(i, j) {
+            var count = 0;
+            if (this._isLeftAlive(i, j)) {
+                count += 1;
+            }
+            if (this._isRightAlive(i, j)) {
+                count += 1;
+            }
+            if (this._isUpAlive(i, j)) {
+                count += 1;
+            }
+            if (this._isDownAlive(i, j)) {
+                count += 1;
+            }
+            return count === 3;
         }
     };
 

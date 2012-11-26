@@ -135,12 +135,7 @@ describe("X+Y axis", function() {
     it("2x3 cells", function() {
         expect(game.tick([ [ 0, 0, 0 ], [ 0, 0, 0 ] ])).toEqual([ [ 0, 0, 0 ], [ 0, 0, 0 ] ]);
         expect(game.tick([ [ 1, 1, 1 ], [ 0, 0, 0 ] ])).toEqual([ [ 0, 1, 0 ], [ 0, 0, 0 ] ]);
-        expect(game.tick([ [ 1, 1, 1 ], [ 1, 0, 1 ] ])).toEqual([ [ 1, 1, 1 ], [ 0, 0, 0 ] ]);
         expect(game.tick([ [ 1, 1, 1 ], [ 0, 1, 0 ] ])).toEqual([ [ 0, 1, 0 ], [ 0, 0, 0 ] ]);
-    });
-
-    it("2x4 cells", function() {
-        expect(game.tick([ [ 1, 1, 1, 1 ], [ 0, 1, 0, 1 ] ])).toEqual([ [ 0, 1, 1, 1 ], [ 0, 0, 0, 0 ] ]);
     });
 
     it("3x3 cells",
@@ -159,9 +154,11 @@ describe("X+Y axis", function() {
                         [ [ 0, 1, 1, 0 ], [ 0, 0, 1, 0 ], [ 0, 1, 1, 0 ] ]);
 
             });
-    
-    it("2x3, an dead cell will live with 3 alive neighbors",
-            function() {
+
+    it("2x3, an dead cell will live with 3 alive neighbors", function() {
         expect(game.tick([ [ 1, 0, 1 ], [ 0, 1, 0 ] ])).toEqual([ [ 0, 1, 0 ], [ 0, 0, 0 ] ]);
-            });
+        expect(game.tick([ [ 1, 1, 1 ], [ 1, 0, 1 ] ])).toEqual([ [ 1, 1, 1 ], [ 0, 1, 0 ] ]);
+        expect(game.tick([ [ 1, 1, 1, 1 ], [ 0, 1, 0, 1 ] ])).toEqual([ [ 0, 1, 1, 1 ], [ 0, 0, 1, 0 ] ]);
+
+    });
 });

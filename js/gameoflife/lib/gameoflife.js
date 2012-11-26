@@ -74,23 +74,15 @@ var Game = function() {
         },
 
         _has2Or3AliveNeighbors : function(i, j) {
-            var count = 0;
-            if (this._isLeftAlive(i, j)) {
-                count += 1;
-            }
-            if (this._isRightAlive(i, j)) {
-                count += 1;
-            }
-            if (this._isUpAlive(i, j)) {
-                count += 1;
-            }
-            if (this._isDownAlive(i, j)) {
-                count += 1;
-            }
+            var count = this._countAliveNeighbors(i, j);
             return count === 2 || count === 3;
         },
-        
+
         _has3AliveNeighbors : function(i, j) {
+            return this._countAliveNeighbors(i, j) === 3;
+        },
+
+        _countAliveNeighbors : function(i, j) {
             var count = 0;
             if (this._isLeftAlive(i, j)) {
                 count += 1;
@@ -104,7 +96,7 @@ var Game = function() {
             if (this._isDownAlive(i, j)) {
                 count += 1;
             }
-            return count === 3;
+            return count;
         }
     };
 

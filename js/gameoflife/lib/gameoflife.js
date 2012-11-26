@@ -4,6 +4,8 @@
  * Copyright (c) 2012 mebusw Licensed under the MIT license.
  */
 
+"use strict";
+
 function arrays_equal(a, b) {
     return a[0].length === b[0].length && a.toString() === b.toString();
 }
@@ -17,18 +19,14 @@ var Game = function() {
 
             this._initGrid();
 
-            for ( var j = 0; j < this.xLen; j++) {
-                if (this._isAlive(0, j) && this._has2AliveNeighboors(0, j)) {
-                    this._setAlive(0, j);
-                }
-            }
-            if (this.yLen >= 2) {
-                for ( var i = 0; i < this.yLen; i++) {
-                    if (this._isAlive(i, 0) && this._has2AliveNeighboors(i, 0)) {
-                        this._setAlive(i, 0);
+            for ( var col = 0; col < this.xLen; col++) {
+                for ( var row = 0; row < this.yLen; row++) {
+                    if (this._isAlive(row, col) && this._has2AliveNeighboors(row, col)) {
+                        this._setAlive(row, col);
                     }
                 }
             }
+
             return this.nextGrid;
         },
 
@@ -83,7 +81,7 @@ var Game = function() {
                 count += 1;
             }
             return count === 2;
-        },
+        }
     };
 
-}
+};

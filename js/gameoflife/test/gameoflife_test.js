@@ -139,4 +139,24 @@ describe("X+Y axis", function() {
         expect(game.tick([ [ 1, 1, 1 ], [ 0, 1, 0 ] ])).toEqual([ [ 0, 1, 0 ], [ 0, 0, 0 ] ]);
     });
 
+    it("2x4 cells", function() {
+        expect(game.tick([ [ 1, 1, 1, 1 ], [ 0, 1, 0, 1 ] ])).toEqual([ [ 0, 1, 1, 1 ], [ 0, 0, 0, 0 ] ]);
+    });
+
+    it("3x3 cells",
+            function() {
+                expect(game.tick([ [ 0, 1, 0 ], [ 0, 1, 0 ], [ 0, 1, 0 ] ])).toEqual(
+                        [ [ 0, 0, 0 ], [ 0, 1, 0 ], [ 0, 0, 0 ] ]);
+                expect(game.tick([ [ 0, 1, 0 ], [ 1, 1, 0 ], [ 0, 1, 0 ] ])).toEqual(
+                        [ [ 0, 0, 0 ], [ 0, 1, 0 ], [ 0, 0, 0 ] ]);
+            });
+
+    it("an alive cell will die with more than 3 alive neighbors",
+            function() {
+                expect(game.tick([ [ 0, 1, 0 ], [ 1, 1, 1 ], [ 0, 1, 0 ] ])).toEqual(
+                        [ [ 0, 0, 0 ], [ 0, 0, 0 ], [ 0, 0, 0 ] ]);
+                expect(game.tick([ [ 0, 1, 1, 0 ], [ 1, 1, 1, 0 ], [ 0, 1, 1, 0 ] ])).toEqual(
+                        [ [ 0, 1, 1, 0 ], [ 0, 0, 1, 0 ], [ 0, 1, 1, 0 ] ]);
+
+            });
 });

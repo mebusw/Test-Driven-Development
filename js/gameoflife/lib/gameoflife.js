@@ -21,7 +21,7 @@ var Game = function() {
 
             for ( var col = 0; col < this.xLen; col++) {
                 for ( var row = 0; row < this.yLen; row++) {
-                    if (this._isAlive(row, col) && this._has2Or3AliveNeighboors(row, col)) {
+                    if (this._isAlive(row, col) && this._has2Or3AliveNeighbors(row, col)) {
                         this._setAlive(row, col);
                     }
                 }
@@ -66,7 +66,7 @@ var Game = function() {
             return i < this.yLen - 1 && this.grid[i + 1][j] === 1;
         },
 
-        _has2Or3AliveNeighboors : function(i, j) {
+        _has2Or3AliveNeighbors : function(i, j) {
             var count = 0;
             if (this._isLeftAlive(i, j)) {
                 count += 1;

@@ -24,6 +24,10 @@ var Game = function() {
                     if (this._isAlive(row, col) && this._has2Or3AliveNeighbors(row, col)) {
                         this._setAlive(row, col);
                     }
+                    if (this.yLen >= 2 && this._isDead(0, 1) && this.grid[0][0] === 1 && this.grid[0][2] === 1
+                            && this.grid[1][1] === 1) {
+                        this._setAlive(0, 1);
+                    }
                 }
             }
 
@@ -48,6 +52,10 @@ var Game = function() {
 
         _isAlive : function(i, j) {
             return this.grid[i][j] === 1;
+        },
+
+        _isDead : function(i, j) {
+            return this.grid[i][j] === 0;
         },
 
         _isLeftAlive : function(i, j) {

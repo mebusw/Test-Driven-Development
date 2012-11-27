@@ -14,17 +14,17 @@ var Game = function() {
     return {
         tick : function(grid) {
             this.grid = grid;
-            this.xLen = grid[0].length;
-            this.yLen = grid.length;
+            this.yLen = grid[0].length;
+            this.xLen = grid.length;
 
             this._initGrid();
 
-            for ( var col = 0; col < this.xLen; col++) {
-                for ( var row = 0; row < this.yLen; row++) {
+            for ( var col = 0; col < this.yLen; col++) {
+                for ( var row = 0; row < this.xLen; row++) {
                     if (this._isAlive(row, col) && this._has2Or3AliveNeighbors(row, col)) {
                         this._setAlive(row, col);
                     }
-                    if (this.yLen >= 2 && this._isDead(row, col) && this._has3AliveNeighbors(row, col)) {
+                    if (this.xLen >= 2 && this._isDead(row, col) && this._has3AliveNeighbors(row, col)) {
                         this._setAlive(row, col);
                     }
                 }
@@ -35,9 +35,9 @@ var Game = function() {
 
         _initGrid : function() {
             this.nextGrid = [];
-            for ( var i = 0; i < this.yLen; i++) {
+            for ( var i = 0; i < this.xLen; i++) {
                 this.nextGrid[i] = [];
-                for ( var j = 0; j < this.xLen; j++) {
+                for ( var j = 0; j < this.yLen; j++) {
                     this.nextGrid[i].push(0);
                 }
 
@@ -62,7 +62,7 @@ var Game = function() {
         },
 
         _isRightAlive : function(i, j) {
-            return j < this.xLen - 1 && this.grid[i][j + 1] === 1;
+            return j < this.yLen - 1 && this.grid[i][j + 1] === 1;
         },
 
         _isUpAlive : function(i, j) {
@@ -70,7 +70,7 @@ var Game = function() {
         },
 
         _isDownAlive : function(i, j) {
-            return i < this.yLen - 1 && this.grid[i + 1][j] === 1;
+            return i < this.xLen - 1 && this.grid[i + 1][j] === 1;
         },
 
         _has2Or3AliveNeighbors : function(i, j) {

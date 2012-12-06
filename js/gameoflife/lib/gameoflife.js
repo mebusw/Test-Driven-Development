@@ -4,6 +4,8 @@
  * Copyright (c) 2012 mebusw Licensed under the MIT license.
  */
 
+"use strict";
+
 function arrays_equal(a, b) {
     return a[0].length === b[0].length && a.toString() === b.toString();
 }
@@ -12,31 +14,30 @@ var Game = function() {
     return {
         tick : function(grid) {
             this.grid = grid;
-            this.xLen = grid[0].length;
-            this.yLen = grid.length;
+            this.yLen = grid[0].length;
+            this.xLen = grid.length;
 
             this._initGrid();
 
-            for ( var j = 0; j < this.xLen; j++) {
-                if (this._isAlive(0, j) && this._has2AliveNeighboors(0, j)) {
-                    this._setAlive(0, j);
-                }
-            }
-            if (this.yLen >= 2) {
-                for ( var i = 0; i < this.yLen; i++) {
-                    if (this._isAlive(i, 0) && this._has2AliveNeighboors(i, 0)) {
-                        this._setAlive(i, 0);
+            for ( var col = 0; col < this.yLen; col++) {
+                for ( var row = 0; row < this.xLen; row++) {
+                    if (this._isAlive(row, col) && this._has2Or3AliveNeighbors(row, col)) {
+                        this._setAlive(row, col);
+                    }
+                    if (this.xLen >= 2 && this._isDead(row, col) && this._has3AliveNeighbors(row, col)) {
+                        this._setAlive(row, col);
                     }
                 }
             }
+
             return this.nextGrid;
         },
 
         _initGrid : function() {
             this.nextGrid = [];
-            for ( var i = 0; i < this.yLen; i++) {
+            for ( var i = 0; i < this.xLen; i++) {
                 this.nextGrid[i] = [];
-                for ( var j = 0; j < this.xLen; j++) {
+                for ( var j = 0; j < this.yLen; j++) {
                     this.nextGrid[i].push(0);
                 }
 
@@ -52,12 +53,16 @@ var Game = function() {
             return this.grid[i][j] === 1;
         },
 
+        _isDead : function(i, j) {
+            return this.grid[i][j] === 0;
+        },
+
         _isLeftAlive : function(i, j) {
             return j > 0 && this.grid[i][j - 1] === 1;
         },
 
         _isRightAlive : function(i, j) {
-            return j < this.xLen - 1 && this.grid[i][j + 1] === 1;
+            return j < this.yLen - 1 && this.grid[i][j + 1] === 1;
         },
 
         _isUpAlive : function(i, j) {
@@ -65,10 +70,19 @@ var Game = function() {
         },
 
         _isDownAlive : function(i, j) {
-            return i < this.yLen - 1 && this.grid[i + 1][j] === 1;
+            return i < this.xLen - 1 && this.grid[i + 1][j] === 1;
         },
 
-        _has2AliveNeighboors : function(i, j) {
+        _has2Or3AliveNeighbors : function(i, j) {
+            var count = this._countAliveNeighbors(i, j);
+            return count === 2 || count === 3;
+        },
+
+        _has3AliveNeighbors : function(i, j) {
+            return this._countAliveNeighbors(i, j) === 3;
+        },
+
+        _countAliveNeighbors : function(i, j) {
             var count = 0;
             if (this._isLeftAlive(i, j)) {
                 count += 1;
@@ -82,8 +96,8 @@ var Game = function() {
             if (this._isDownAlive(i, j)) {
                 count += 1;
             }
-            return count === 2;
-        },
+            return count;
+        }
     };
 
-}
+};

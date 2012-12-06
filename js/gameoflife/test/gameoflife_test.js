@@ -54,7 +54,7 @@ describe("X axis", function() {
 
     describe("3 cells", function() {
 
-        it("cell with less than two alive neignboor will die", function() {
+        it("a cell with less than two alive neignboor will die -- under-population", function() {
             expect(game.tick([ [ 0, 0, 0 ] ])).toEqual([ [ 0, 0, 0 ] ]);
             expect(game.tick([ [ 0, 1, 0 ] ])).toEqual([ [ 0, 0, 0 ] ]);
             expect(game.tick([ [ 1, 0, 0 ] ])).toEqual([ [ 0, 0, 0 ] ]);
@@ -62,11 +62,11 @@ describe("X axis", function() {
             expect(game.tick([ [ 1, 1, 0 ] ])).toEqual([ [ 0, 0, 0 ] ]);
             expect(game.tick([ [ 0, 1, 1 ] ])).toEqual([ [ 0, 0, 0 ] ]);
         });
-        it("dead cell with twp alive neighboor will dead", function() {
+        it("a dead cell with two alive neighboor will die", function() {
             expect(game.tick([ [ 1, 0, 1 ] ])).toEqual([ [ 0, 0, 0 ] ]);
         });
 
-        it("alive cell with twp alive neighboor will live", function() {
+        it("an alive cell with two alive neighboor will live -- keep living", function() {
             expect(game.tick([ [ 1, 1, 1 ] ])).toEqual([ [ 0, 1, 0 ] ]);
         });
 
@@ -74,21 +74,18 @@ describe("X axis", function() {
 
     describe(">=4 cells", function() {
 
-        it("one or two cells alive, but with less than two alive neignboor will die", function() {
+        it("an alive cell with less than two alive neignboor will die", function() {
             expect(game.tick([ [ 0, 0, 0, 0 ] ])).toEqual([ [ 0, 0, 0, 0 ] ]);
             expect(game.tick([ [ 0, 1, 0, 0 ] ])).toEqual([ [ 0, 0, 0, 0 ] ]);
             expect(game.tick([ [ 0, 0, 1, 0 ] ])).toEqual([ [ 0, 0, 0, 0 ] ]);
             expect(game.tick([ [ 1, 0, 0, 1 ] ])).toEqual([ [ 0, 0, 0, 0 ] ]);
             expect(game.tick([ [ 1, 1, 0, 0 ] ])).toEqual([ [ 0, 0, 0, 0 ] ]);
             expect(game.tick([ [ 1, 0, 1, 0 ] ])).toEqual([ [ 0, 0, 0, 0 ] ]);
-        });
-
-        it("three alive cells, but with less than two alive neignboor will die", function() {
             expect(game.tick([ [ 1, 1, 0, 1 ] ])).toEqual([ [ 0, 0, 0, 0 ] ]);
             expect(game.tick([ [ 1, 0, 1, 1 ] ])).toEqual([ [ 0, 0, 0, 0 ] ]);
         });
 
-        it("three more alive cells, with two alive neignboor will live", function() {
+        it("alive cells, with two alive neignboor will live", function() {
             expect(game.tick([ [ 1, 1, 1, 0 ] ])).toEqual([ [ 0, 1, 0, 0 ] ]);
             expect(game.tick([ [ 0, 1, 1, 1 ] ])).toEqual([ [ 0, 0, 1, 0 ] ]);
             expect(game.tick([ [ 1, 1, 1, 1 ] ])).toEqual([ [ 0, 1, 1, 0 ] ]);
@@ -122,4 +119,47 @@ describe("Y axis", function() {
         expect(game.tick([ [ 1 ], [ 1 ], [ 1 ], [ 1 ], [ 1 ] ])).toEqual([ [ 0 ], [ 1 ], [ 1 ], [ 1 ], [ 0 ] ]);
     });
 
+});
+
+describe("X+Y axis", function() {
+
+    it("2x2 cells", function() {
+        expect(game.tick([ [ 0, 0 ], [ 0, 0 ] ])).toEqual([ [ 0, 0 ], [ 0, 0 ] ]);
+        expect(game.tick([ [ 1, 0 ], [ 0, 1 ] ])).toEqual([ [ 0, 0 ], [ 0, 0 ] ]);
+        expect(game.tick([ [ 1, 0 ], [ 1, 1 ] ])).toEqual([ [ 0, 0 ], [ 1, 0 ] ]);
+    });
+
+    it("2x3 cells", function() {
+        expect(game.tick([ [ 0, 0, 0 ], [ 0, 0, 0 ] ])).toEqual([ [ 0, 0, 0 ], [ 0, 0, 0 ] ]);
+        expect(game.tick([ [ 1, 1, 1 ], [ 0, 0, 0 ] ])).toEqual([ [ 0, 1, 0 ], [ 0, 0, 0 ] ]);
+        expect(game.tick([ [ 1, 1, 1 ], [ 0, 1, 0 ] ])).toEqual([ [ 0, 1, 0 ], [ 0, 0, 0 ] ]);
+    });
+
+    it("3x3 cells",
+            function() {
+                expect(game.tick([ [ 0, 1, 0 ], [ 0, 1, 0 ], [ 0, 1, 0 ] ])).toEqual(
+                        [ [ 0, 0, 0 ], [ 0, 1, 0 ], [ 0, 0, 0 ] ]);
+                expect(game.tick([ [ 0, 1, 0 ], [ 1, 1, 0 ], [ 0, 1, 0 ] ])).toEqual(
+                        [ [ 0, 0, 0 ], [ 0, 1, 0 ], [ 0, 0, 0 ] ]);
+            });
+
+    it(">=3x3, an alive cell will die with more than 3 alive neighbors -- overcrowding",
+            function() {
+                expect(game.tick([ [ 0, 1, 0 ], [ 1, 1, 1 ], [ 0, 1, 0 ] ])).toEqual(
+                        [ [ 0, 0, 0 ], [ 0, 0, 0 ], [ 0, 0, 0 ] ]);
+                expect(game.tick([ [ 0, 1, 1, 0 ], [ 1, 1, 1, 0 ], [ 0, 1, 1, 0 ] ])).toEqual(
+                        [ [ 0, 1, 1, 0 ], [ 0, 0, 1, 0 ], [ 0, 1, 1, 0 ] ]);
+
+            });
+
+    it("2x3, a dead cell will live with exactly 3 alive neighbors -- reproduction", function() {
+        expect(game.tick([ [ 1, 0, 1 ], [ 0, 1, 0 ] ])).toEqual([ [ 0, 1, 0 ], [ 0, 0, 0 ] ]);
+        expect(game.tick([ [ 1, 1, 1 ], [ 1, 0, 1 ] ])).toEqual([ [ 1, 1, 1 ], [ 0, 1, 0 ] ]);
+        expect(game.tick([ [ 1, 1, 1, 1 ], [ 0, 1, 0, 1 ] ])).toEqual([ [ 0, 1, 1, 1 ], [ 0, 0, 1, 0 ] ]);
+    });
+    
+    it("3x3, a dead cell will still die with 4 alive neighbors", function() {
+                expect(game.tick([ [ 0, 1, 0 ], [ 1, 0, 1 ], [ 0, 1, 0 ] ])).toEqual(
+                        [ [ 0, 0, 0 ], [ 0, 0, 0 ], [ 0, 0, 0 ] ]);
+    });
 });

@@ -14,15 +14,22 @@ class Game(object):
         Constructor
         '''
         self.value = list('23456789TJQKA')
+        self.suite = list('DCHS')
+        self.categories = {}
     
     def category(self, hand):
         self._parseHand(hand)
-        self._findHighestCard()
-        self._countCards()
 
-        for v in self.counter.itervalues():
-            if v > 1:
-                return 'pair'
+        self._countCards()
+        
+        self._findHighestCard()        
+        
+        if self._countPair() == 2:
+            return 'two pair'
+
+        if self._countPair() == 1:
+            return 'pair'
+
         return 'high card'
     
     def _parseHand(self, hand):
@@ -30,7 +37,15 @@ class Game(object):
             
     def _findHighestCard(self):
         self.highest = reduce(lambda x, y: 
-                              x if self.value.index(x[0]) >= self.value.index(y[0]) else y, self.cards)
+                              x if self._isFirstCardHigherThanSecond(x, y) else y, self.counter)
+
+    def _isFirstCardHigherThanSecond(self, first, second):
+        if self.value.index(first[0]) > self.value.index(second[0]) \
+        or self.value.index(first[0]) == self.value.index(second[0]) \
+        and self.suite.index(first[1]) > self.suite.index(second[1]):
+            return True
+        return False
+            
         
     def _countCards(self):
         self.counter = {}
@@ -39,4 +54,10 @@ class Game(object):
                 self.counter[c] += 1
             else:
                 self.counter[c] = 1
-        
+
+    def _countPair(self):
+        self.categories['pair'] = 0
+        for v in self.counter.itervalues():
+            if v > 1:
+                self.categories['pair'] += 1
+        return self.categories['pair']

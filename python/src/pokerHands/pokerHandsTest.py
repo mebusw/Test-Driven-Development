@@ -6,10 +6,11 @@ Created on 2012-12-4
 import unittest
 from pokerHands import Game
 
+#TODO
+#sort by value then suit
+#game.counter should be ordered to find the highest
 
-
-
-class Test(unittest.TestCase):
+class GameTest(unittest.TestCase):
 
 
     def setUp(self):
@@ -30,11 +31,22 @@ class Test(unittest.TestCase):
         self.assertEqual(['2C', '3H', '4S', '8C', 'AH'], self.game.cards)
         self.assertEqual('AH', self.game.highest)
 
+    def testHighCardWithSameValue(self):        
+        hand = '2H 3D 5S KS KD'
+        self.assertEqual('high card', self.game.category(hand))
+        self.assertEqual('KS', self.game.highest)
+
+
     def testPair(self):
         hand = '2H 2H 5S 9C KD'
         self.assertEqual('pair', self.game.category(hand))
         self.assertEqual({'2H':2, '5S':1, '9C':1, 'KD':1}, self.game.counter)
+#        self.assertEqual('2H', self.game.highest)
 
+    def testTwoPair(self):
+        hand = '2H 2H 5S 5S KD'
+        self.assertEqual('two pair', self.game.category(hand))
+        self.assertEqual({'2H':2, '5S':2, 'KD':1}, self.game.counter)
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

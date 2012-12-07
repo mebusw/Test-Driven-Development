@@ -15,7 +15,7 @@ class Game(object):
         '''
         self.VALUES = list('23456789TJQKA')
         self.SUITES = list('DCHS')
-        self.categories = {}
+        self.categories = {'pair':0, 'three':0, 'four':0, 'straight':0, 'flush':0}
     
     def category(self, hand):
         self._parseAndSortHand(hand)
@@ -26,7 +26,6 @@ class Game(object):
     
     def _parseAndSortHand(self, hand):
         self.cards = hand.split(' ')  
-#        self.cards.sort(cmp=) 
             
     def _countCards(self):
         self.counter = {}
@@ -39,12 +38,12 @@ class Game(object):
 
     def _sortCounters(self):
         self.sortedCounter = sorted(self.counter.items(), cmp=(lambda x, y: self._compareCounterItems(x, y)), reverse=True)
-        self.highest = self.sortedCounter[0]
 
     def _compareCounterItems(self, first, second):
-        '''return positive if first greater than second, negative if less, or 0 if equal
-            @attention: input is not an element of a dict, but one of the dict items
+        '''
+            @attention: input is not an element of a dict, but one of the dict.items
             @param first: ('5H', 2) not {'5H':2}
+            @return positive if first greater than second, negative if less, or 0 if equal
         ''' 
         if first[1] > second[1]:
             return 1
@@ -55,8 +54,9 @@ class Game(object):
                 
     
     def _compareCards(self, first, second):
-        '''return positive if first greater than second, negative if less, or 0 if equal
+        '''
             @param first: '5H'
+            @return positive if first greater than second, negative if less, or 0 if equal
         ''' 
         v = self.VALUES.index(first[0]) - self.VALUES.index(second[0])
         if v <> 0:
@@ -65,36 +65,45 @@ class Game(object):
             
         
     def _matchCategories(self):
-        if self._isStraight():
+        self._findDuplicates()
+        self._findFlush()
+        self._findStraight()
+        
+        if self.categories['four'] == 1:
+            return 'four of a kind'
+        
+        if self.categories['three'] == 1 and self.categories['pair'] == 1:
+            return 'full house'
+        
+        if self.categories['flush'] == 1:
+            return 'flush'
+
+        if self.categories['straight'] == 1:
             return 'straight'
         
-        if self._findThree() == 1:
+        if self.categories['three'] == 1:
             return 'three of a kind'
 
-        if self._findPairs() == 2:
+        if self.categories['pair'] == 2:
             return 'two pairs'
 
-        if self._findPairs() == 1:
+        if self.categories['pair'] == 1:
             return 'pair'
 
         return 'high card'
 
-    def _findPairs(self):
-        self.categories['pair'] = 0
+    def _findDuplicates(self):
         for v in self.counter.itervalues():
-            if v == 2:
-                self.categories['pair'] += 1
-        return self.categories['pair']
-    
-    def _findThree(self):
-        self.categories['three'] = 0
-        for v in self.counter.itervalues():
+            if v == 4:
+                self.categories['four'] += 1
             if v == 3:
                 self.categories['three'] += 1
-        return self.categories['three']
+            if v == 2:
+                self.categories['pair'] += 1
 
-    def _isStraight(self):
-        return self._isAllCardsIdentical() and self._isConsecutiveValues()
+    def _findStraight(self):
+        if self._isAllCardsIdentical() and self._isConsecutiveValues():
+            self.categories['straight'] = 1
 
 
     def _isAllCardsIdentical(self):
@@ -106,3 +115,12 @@ class Game(object):
         if (MAX_LEN - 1) == self.VALUES.index(highest[0][0]) - self.VALUES.index(lowest[0][0]):
             return True        
     
+    def _findFlush(self):
+        if self._isAllCardsIdentical() and self._isSameSuite():
+            self.categories['flush'] = 1
+
+    def _isSameSuite(self):
+        suites = set()
+        for c in self.sortedCounter:
+            suites.add(c[0][1])
+        return 1 == len(suites)

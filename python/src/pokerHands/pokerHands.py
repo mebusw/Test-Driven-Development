@@ -18,14 +18,15 @@ class Game(object):
         self.categories = {}
     
     def category(self, hand):
-        self._parseHand(hand)
+        self._parseAndSortHand(hand)
         self._countCards()        
         self._findHighestCard()        
         return self._matchCategories()
 
     
-    def _parseHand(self, hand):
-        self.cards = hand.split(' ')   
+    def _parseAndSortHand(self, hand):
+        self.cards = hand.split(' ')  
+#        self.cards.sort(cmp=) 
             
     def _countCards(self):
         self.counter = {}
@@ -43,20 +44,24 @@ class Game(object):
     def _isFirstCounterHigherThanSecond(self, first, second):
         if self.counter[first] > self.counter[second] \
         or self.counter[first] == self.counter[second] \
-        and self._isFirstCardHigherThanSecond(first, second):
+        and self._compareCards(first, second) > 0:
             return True
         return False
                 
     
-    def _isFirstCardHigherThanSecond(self, first, second):
-        if self.value.index(first[0]) > self.value.index(second[0]) \
-        or self.value.index(first[0]) == self.value.index(second[0]) \
-        and self.suite.index(first[1]) > self.suite.index(second[1]):
-            return True
-        return False
+    def _compareCards(self, first, second):
+        '''return positive if first greater than second, negative if less, or 0 if equal
+        ''' 
+        v = self.value.index(first[0]) - self.value.index(second[0])
+        if v <> 0:
+            return v
+        return self.suite.index(first[1]) - self.suite.index(second[1])
             
         
     def _matchCategories(self):
+        if self._isStraight():
+            return 'straight'
+        
         if self._findThree() == 1:
             return 'three of a kind'
 
@@ -81,3 +86,9 @@ class Game(object):
             if v == 3:
                 self.categories['three'] += 1
         return self.categories['three']
+
+    def _isStraight(self):
+        #reduce(lambda x, y: if  , self.counter)
+        return False
+    
+    

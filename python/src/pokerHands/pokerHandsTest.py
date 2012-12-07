@@ -7,7 +7,7 @@ import unittest
 from pokerHands import Game
 
 #TODO
-#sort by value then suit
+#//sort by value then suit
 #game.counter should be ordered to find the highest
 
 class GameTest(unittest.TestCase):
@@ -47,11 +47,18 @@ class GameTest(unittest.TestCase):
         hand = '2H 2H 5S 5S KD'
         self.assertEqual('two pairs', self.game.category(hand))
         self.assertEqual({'2H':2, '5S':2, 'KD':1}, self.game.counter)
+        self.assertEqual('5S', self.game.highest)
 
     def testThreeOfAKind(self):
         hand = '2H 5S 5S 5S KD'
         self.assertEqual('three of a kind', self.game.category(hand))
         self.assertEqual({'2H':1, '5S':3, 'KD':1}, self.game.counter)
+        self.assertEqual('5S', self.game.highest)
+
+    def testStraight(self):
+        hand = '2H 3S 4S 5S 6D'
+#        self.assertEqual('straight', self.game.category(hand))
+
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

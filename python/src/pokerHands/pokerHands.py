@@ -20,7 +20,7 @@ class Game(object):
     def category(self, hand):
         self._parseAndSortHand(hand)
         self._countCards()        
-        self._findHighestCard()        
+        self._sortCounters()        
         return self._matchCategories()
 
     
@@ -37,16 +37,23 @@ class Game(object):
                 self.counter[c] = 1
 
 
-    def _findHighestCard(self):
-        self.highest = reduce(lambda x, y: 
-                              x if self._isFirstCounterHigherThanSecond(x, y) else y, self.counter)
+    def _sortCounters(self):
+#        self.highest = reduce(lambda x, y: 
+#                              x if self._compareCounter(x, y) > 0 else y, self.counter)
+        print self.counter
+        sorted(self.counter.items(), cmp=lambda x, y: _compareCounter([1], y[1]), reverse=True)
+        print self.counter
+        self.highest = self.counter.items()[0]
 
-    def _isFirstCounterHigherThanSecond(self, first, second):
-        if self.counter[first] > self.counter[second] \
-        or self.counter[first] == self.counter[second] \
-        and self._compareCards(first, second) > 0:
-            return True
-        return False
+    def _compareCounter(self, first, second):
+        '''return positive if first greater than second, negative if less, or 0 if equal
+        ''' 
+        if self.counter[first] > self.counter[second]:
+            return 1
+        elif self.counter[first] < self.counter[second]:
+            return -1
+        else:
+            return self._compareCards(first, second)
                 
     
     def _compareCards(self, first, second):

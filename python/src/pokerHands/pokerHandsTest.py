@@ -8,7 +8,7 @@ from pokerHands import Game
 
 #TODO
 #//sort by value then suit
-#game.counter should be ordered to find the highest
+#game.counter should be ordered to find the highest    sorted(a.items(), lambda x,y: cmp(x[1],y[1]))
 
 class GameTest(unittest.TestCase):
 

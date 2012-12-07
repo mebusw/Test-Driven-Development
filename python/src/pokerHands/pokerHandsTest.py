@@ -41,12 +41,17 @@ class GameTest(unittest.TestCase):
         hand = '2H 2H 5S 9C KD'
         self.assertEqual('pair', self.game.category(hand))
         self.assertEqual({'2H':2, '5S':1, '9C':1, 'KD':1}, self.game.counter)
-#        self.assertEqual('2H', self.game.highest)
+        self.assertEqual('2H', self.game.highest)
 
-    def testTwoPair(self):
+    def testTwoPairs(self):
         hand = '2H 2H 5S 5S KD'
-        self.assertEqual('two pair', self.game.category(hand))
+        self.assertEqual('two pairs', self.game.category(hand))
         self.assertEqual({'2H':2, '5S':2, 'KD':1}, self.game.counter)
+
+    def testThreeOfAKind(self):
+        hand = '2H 5S 5S 5S KD'
+        self.assertEqual('three of a kind', self.game.category(hand))
+        self.assertEqual({'2H':1, '5S':3, 'KD':1}, self.game.counter)
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

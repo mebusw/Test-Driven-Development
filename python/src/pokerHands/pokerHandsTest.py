@@ -8,7 +8,7 @@ from pokerHands import Game
 
 #TODO
 #//sort by value then suit
-#game.counter should be ordered to find the highest    sorted(a.items(), lambda x,y: cmp(x[1],y[1]))
+#//game.counter should be ordered to find the highest    sorted(a.items(), lambda x,y: cmp(x[1],y[1]))
 
 class GameTest(unittest.TestCase):
 
@@ -24,36 +24,37 @@ class GameTest(unittest.TestCase):
     def testHighCard(self):
         hand = '2H 3D 5S 9C KD'
         self.assertEqual('high card', self.game.category(hand))
-        self.assertEqual('KD', self.game.highest)
+        self.assertEqual('KD', self.game.highest[0])
         
         hand = '2C 3H 4S 8C AH'
         self.assertEqual('high card', self.game.category(hand))
         self.assertEqual(['2C', '3H', '4S', '8C', 'AH'], self.game.cards)
-        self.assertEqual('AH', self.game.highest)
+        self.assertEqual('AH', self.game.highest[0])
 
     def testHighCardWithSameValue(self):        
         hand = '2H 3D 5S KS KD'
         self.assertEqual('high card', self.game.category(hand))
-        self.assertEqual('KS', self.game.highest)
+        self.assertEqual('KS', self.game.highest[0])
 
 
     def testPair(self):
         hand = '2H 2H 5S 9C KD'
         self.assertEqual('pair', self.game.category(hand))
         self.assertEqual({'2H':2, '5S':1, '9C':1, 'KD':1}, self.game.counter)
-        self.assertEqual('2H', self.game.highest)
+        self.assertEqual('2H', self.game.highest[0])
 
     def testTwoPairs(self):
         hand = '2H 2H 5S 5S KD'
         self.assertEqual('two pairs', self.game.category(hand))
         self.assertEqual({'2H':2, '5S':2, 'KD':1}, self.game.counter)
-        self.assertEqual('5S', self.game.highest)
+        self.assertEqual('5S', self.game.highest[0])
 
     def testThreeOfAKind(self):
         hand = '2H 5S 5S 5S KD'
         self.assertEqual('three of a kind', self.game.category(hand))
         self.assertEqual({'2H':1, '5S':3, 'KD':1}, self.game.counter)
-        self.assertEqual('5S', self.game.highest)
+        self.assertEqual([('5S', 3), ('KD', 1), ('2H', 1)], self.game.sortedCounter)
+        self.assertEqual('5S', self.game.highest[0])
 
     def testStraight(self):
         hand = '2H 3S 4S 5S 6D'

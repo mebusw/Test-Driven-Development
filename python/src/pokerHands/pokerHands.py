@@ -38,22 +38,18 @@ class Game(object):
 
 
     def _sortCounters(self):
-#        self.highest = reduce(lambda x, y: 
-#                              x if self._compareCounter(x, y) > 0 else y, self.counter)
-        print self.counter
-        sorted(self.counter.items(), cmp=lambda x, y: _compareCounter([1], y[1]), reverse=True)
-        print self.counter
-        self.highest = self.counter.items()[0]
+        self.sortedCounter = sorted(self.counter.items(), cmp=(lambda x, y: self._compareCounter(x, y)), reverse=True)
+        self.highest = self.sortedCounter[0]
 
     def _compareCounter(self, first, second):
         '''return positive if first greater than second, negative if less, or 0 if equal
         ''' 
-        if self.counter[first] > self.counter[second]:
+        if first[1] > second[1]:
             return 1
-        elif self.counter[first] < self.counter[second]:
+        elif first[1] < second[1]:
             return -1
         else:
-            return self._compareCards(first, second)
+            return self._compareCards(first[0], second[0])
                 
     
     def _compareCards(self, first, second):

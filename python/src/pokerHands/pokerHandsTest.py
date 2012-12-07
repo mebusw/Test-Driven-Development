@@ -58,8 +58,11 @@ class GameTest(unittest.TestCase):
 
     def testStraight(self):
         hand = '2H 3S 4S 5S 6D'
-#        self.assertEqual('straight', self.game.category(hand))
+        self.assertEqual('straight', self.game.category(hand))
+        self.assertEqual('6D', self.game.highest[0])
 
+        hand = '2H 3S 4S 5S 7D'
+        self.assertEqual('high card', self.game.category(hand))
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

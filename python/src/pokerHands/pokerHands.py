@@ -3,18 +3,18 @@ Created on 2012-12-4
 
 @author: mebusw
 '''
+MAX_LEN = 5
 
 class Game(object):
     '''
     classdocs
     '''
-
     def __init__(self):
         '''
         Constructor
         '''
-        self.value = list('23456789TJQKA')
-        self.suite = list('DCHS')
+        self.VALUES = list('23456789TJQKA')
+        self.SUITES = list('DCHS')
         self.categories = {}
     
     def category(self, hand):
@@ -38,11 +38,13 @@ class Game(object):
 
 
     def _sortCounters(self):
-        self.sortedCounter = sorted(self.counter.items(), cmp=(lambda x, y: self._compareCounter(x, y)), reverse=True)
+        self.sortedCounter = sorted(self.counter.items(), cmp=(lambda x, y: self._compareCounterItems(x, y)), reverse=True)
         self.highest = self.sortedCounter[0]
 
-    def _compareCounter(self, first, second):
+    def _compareCounterItems(self, first, second):
         '''return positive if first greater than second, negative if less, or 0 if equal
+            @attention: input is not an element of a dict, but one of the dict items
+            @param first: ('5H', 2) not {'5H':2}
         ''' 
         if first[1] > second[1]:
             return 1
@@ -54,11 +56,12 @@ class Game(object):
     
     def _compareCards(self, first, second):
         '''return positive if first greater than second, negative if less, or 0 if equal
+            @param first: '5H'
         ''' 
-        v = self.value.index(first[0]) - self.value.index(second[0])
+        v = self.VALUES.index(first[0]) - self.VALUES.index(second[0])
         if v <> 0:
             return v
-        return self.suite.index(first[1]) - self.suite.index(second[1])
+        return self.SUITES.index(first[1]) - self.SUITES.index(second[1])
             
         
     def _matchCategories(self):
@@ -91,7 +94,15 @@ class Game(object):
         return self.categories['three']
 
     def _isStraight(self):
-        #reduce(lambda x, y: if  , self.counter)
-        return False
-    
+        return self._isAllCardsIdentical() and self._isConsecutiveValues()
+
+
+    def _isAllCardsIdentical(self):
+        return MAX_LEN == len(self.sortedCounter)
+
+    def _isConsecutiveValues(self):
+        highest = self.sortedCounter[0]
+        lowest = self.sortedCounter[4]
+        if (MAX_LEN - 1) == self.VALUES.index(highest[0][0]) - self.VALUES.index(lowest[0][0]):
+            return True        
     

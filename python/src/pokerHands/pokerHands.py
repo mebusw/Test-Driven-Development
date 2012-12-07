@@ -4,6 +4,10 @@ Created on 2012-12-4
 @author: mebusw
 '''
 MAX_LEN = 5
+RANK = ['straight flush', 'four of a kind', 'full house', 'flush', \
+        'straight', 'three of a kind', 'two pairs', 'pair', 'high card']
+VALUES = list('23456789TJQKA')
+SUITES = list('DCHS')
 
 class Game(object):
     '''
@@ -13,11 +17,9 @@ class Game(object):
         '''
         Constructor
         '''
-        self.VALUES = list('23456789TJQKA')
-        self.SUITES = list('DCHS')
-        self.categories = {'pair':0, 'three':0, 'four':0, 'straight':0, 'flush':0}
     
     def category(self, hand):
+        self.categories = {'pair':0, 'three':0, 'four':0, 'straight':0, 'flush':0}
         self._parseAndSortHand(hand)
         self._countCards()        
         self._sortCounters()        
@@ -29,11 +31,16 @@ class Game(object):
             
     def _countCards(self):
         self.counter = {}
+        self.valueCounter = {}
         for c in self.cards:
             if self.counter.has_key(c):
                 self.counter[c] += 1
             else:
                 self.counter[c] = 1
+            if self.valueCounter.has_key(c[0]):
+                self.valueCounter[c[0]] += 1
+            else:
+                self.valueCounter[c[0]] = 1
 
 
     def _sortCounters(self):
@@ -50,18 +57,18 @@ class Game(object):
         elif first[1] < second[1]:
             return -1
         else:
-            return self._compareCards(first[0], second[0])
+            return self.compareCards(first[0], second[0])
                 
     
-    def _compareCards(self, first, second):
+    def compareCards(self, first, second):
         '''
             @param first: '5H'
             @return positive if first greater than second, negative if less, or 0 if equal
         ''' 
-        v = self.VALUES.index(first[0]) - self.VALUES.index(second[0])
+        v = VALUES.index(first[0]) - VALUES.index(second[0])
         if v <> 0:
             return v
-        return self.SUITES.index(first[1]) - self.SUITES.index(second[1])
+        return SUITES.index(first[1]) - SUITES.index(second[1])
             
         
     def _matchCategories(self):
@@ -69,31 +76,29 @@ class Game(object):
         self._findFlush()
         self._findStraight()
         
-        if self.categories['four'] == 1:
-            return 'four of a kind'
-        
-        if self.categories['three'] == 1 and self.categories['pair'] == 1:
-            return 'full house'
-        
-        if self.categories['flush'] == 1:
-            return 'flush'
+        if self.categories['flush'] == 1 and self.categories['straight'] == 1:
+            self.rank = 0
+        elif self.categories['four'] == 1:
+            self.rank = 1
+        elif self.categories['three'] == 1 and self.categories['pair'] == 1:
+            self.rank = 2
+        elif self.categories['flush'] == 1:
+            self.rank = 3
+        elif self.categories['straight'] == 1:
+            self.rank = 4
+        elif self.categories['three'] == 1:
+            self.rank = 5
+        elif self.categories['pair'] == 2:
+            self.rank = 6
+        elif self.categories['pair'] == 1:
+            self.rank = 7
+        else:
+            self.rank = 8
 
-        if self.categories['straight'] == 1:
-            return 'straight'
-        
-        if self.categories['three'] == 1:
-            return 'three of a kind'
-
-        if self.categories['pair'] == 2:
-            return 'two pairs'
-
-        if self.categories['pair'] == 1:
-            return 'pair'
-
-        return 'high card'
+        return RANK[self.rank]
 
     def _findDuplicates(self):
-        for v in self.counter.itervalues():
+        for v in self.valueCounter.itervalues():
             if v == 4:
                 self.categories['four'] += 1
             if v == 3:
@@ -112,7 +117,7 @@ class Game(object):
     def _isConsecutiveValues(self):
         highest = self.sortedCounter[0]
         lowest = self.sortedCounter[4]
-        if (MAX_LEN - 1) == self.VALUES.index(highest[0][0]) - self.VALUES.index(lowest[0][0]):
+        if (MAX_LEN - 1) == VALUES.index(highest[0][0]) - VALUES.index(lowest[0][0]):
             return True        
     
     def _findFlush(self):

@@ -8,7 +8,6 @@ public class Template {
     }
 
     public String replaceValues(TemplatePlaceholderValues replacementValues) {
-        return template.replace(replacementValues.firstPlaceholder().name(),
-                replacementValues.firstPlaceholder().value());
+        return replacementValues.replaceValuesIn(template);
     }
 }

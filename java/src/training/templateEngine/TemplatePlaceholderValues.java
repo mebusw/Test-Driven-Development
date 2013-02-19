@@ -8,8 +8,9 @@ public class TemplatePlaceholderValues {
         return placeholder;
     }
 
-    public PlaceHolder firstPlaceholder() {
-        return placeholder;
+    public String replaceValuesIn(String template) {
+        //return template.replace(placeholder.name(), placeholder.value());
+        return placeholder.replaceValuesIn(template);
     }
 
 }

@@ -2,9 +2,26 @@ package training.templateEngine;
 
 public class PlaceHolder {
 
-    public void hasValue(String string) {
+    private String name;
+    private String value = "";
+
+    public PlaceHolder(String name) {
+        this.name = name;
+    }
+
+    public void hasValue(String value) {
+        this.value = value;
+
+    }
+
+    public String name() {
         // TODO Auto-generated method stub
-        
+        return name;
+    }
+
+    public String value() {
+        // TODO Auto-generated method stub
+        return value;
     }
 
 }

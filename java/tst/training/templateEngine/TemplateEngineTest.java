@@ -33,4 +33,12 @@ public class TemplateEngineTest {
         replacementValues.placeholder("$name").hasValue("John");
         assertEquals("Hi, John", template.replaceValues(replacementValues));
     }
+
+    @Test
+    public void templateWhereOnePlaceholderIsReplacedAndOneIsNot()
+            throws Exception {
+        template.set("Hi, $name $last_name");
+        replacementValues.placeholder("$last_name").hasValue("Doe");
+        assertEquals("Hi, $name Doe", template.replaceValues(replacementValues));
+    }
 }

@@ -1,16 +1,23 @@
 package training.templateEngine;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TemplatePlaceholderValues {
-    private PlaceHolder placeholder = new PlaceHolder("");
+    private List<PlaceHolder> placeholders = new ArrayList<PlaceHolder>();
 
     public PlaceHolder placeholder(String name) {
-        placeholder.setName(name);
+        PlaceHolder placeholder = new PlaceHolder(name);
+        placeholders.add(placeholder);
         return placeholder;
     }
 
     public String replaceValuesIn(String template) {
-        //return template.replace(placeholder.name(), placeholder.value());
-        return placeholder.replaceValuesIn(template);
+        String replacedTemplate = template;
+        for (PlaceHolder placeholder : placeholders) {
+            replacedTemplate = placeholder.replaceValuesIn(replacedTemplate);
+        }
+        return replacedTemplate;
     }
 
 }

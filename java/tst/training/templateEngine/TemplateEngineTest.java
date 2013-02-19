@@ -42,11 +42,11 @@ public class TemplateEngineTest {
         assertEquals("Hi, $name Doe", template.replaceValues(replacementValues));
     }
 
-//    @Test
-//    public void templateWherePlaceholdersAreReplaced() throws Exception {
-//        template.set("Hi, $first_name $last_name");
-//        replacementValues.placeholder("$first_name").hasValue("John");
-//        replacementValues.placeholder("$last_name").hasValue("Doe");
-//        assertEquals("Hi, John Doe", template.replaceValues(replacementValues));
-//    }
+    @Test
+    public void templateWherePlaceholdersAreReplaced() throws Exception {
+        template.set("Hi, $first_name $last_name");
+        replacementValues.placeholder("$first_name").hasValue("John");
+        replacementValues.placeholder("$last_name").hasValue("Doe");
+        assertEquals("Hi, John Doe", template.replaceValues(replacementValues));
+    }
 }

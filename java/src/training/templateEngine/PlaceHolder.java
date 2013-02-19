@@ -14,16 +14,6 @@ public class PlaceHolder {
 
     }
 
-//    public String name() {
-//        // TODO Auto-generated method stub
-//        return name;
-//    }
-//
-//    public String value() {
-//        // TODO Auto-generated method stub
-//        return value;
-//    }
-
     public void setName(String name) {
         this.name = name;
 

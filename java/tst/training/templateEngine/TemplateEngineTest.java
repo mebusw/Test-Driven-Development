@@ -7,9 +7,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class TemplateEngineTest {
+    private Template template;
+    private TemplatePlaceholderValues replacementValues;
 
     @Before
     public void setUp() throws Exception {
+        template = new Template();
+        replacementValues = new TemplatePlaceholderValues();
+
     }
 
     @After
@@ -18,16 +23,12 @@ public class TemplateEngineTest {
 
     @Test
     public void templatesWithoutPlaceHoldersDoNotChange() throws Exception {
-        Template template = new Template();
-        TemplatePlaceholderValues replacementValues = new TemplatePlaceholderValues();
         template.set("Nothing here");
         assertEquals("Nothing here", template.replaceValues(replacementValues));
     }
 
     @Test
     public void templateWithOnePlaceholderReplacesItToValue() throws Exception {
-        Template template = new Template();
-        TemplatePlaceholderValues replacementValues = new TemplatePlaceholderValues();
         template.set("Hi, $name");
         replacementValues.placeholder("$name").hasValue("John");
         assertEquals("Hi, John", template.replaceValues(replacementValues));

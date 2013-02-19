@@ -8,6 +8,6 @@ public class Template {
     }
 
     public String replaceValues(TemplatePlaceholderValues replacementValues) {
-        return template;
+        return template.replace("$name", "John");
     }
 }

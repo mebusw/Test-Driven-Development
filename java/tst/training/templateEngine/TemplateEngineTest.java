@@ -24,4 +24,12 @@ public class TemplateEngineTest {
         assertEquals("Nothing here", template.replaceValues(replacementValues));
     }
 
+    @Test
+    public void templateWithOnePlaceholderReplacesItToValue() throws Exception {
+        Template template = new Template();
+        TemplatePlaceholderValues replacementValues = new TemplatePlaceholderValues();
+        template.set("Hi, $name");
+        replacementValues.placeholder("$name").hasValue("John");
+        assertEquals("Hi, John", template.replaceValues(replacementValues));
+    }
 }

@@ -2,7 +2,7 @@ package training.templateEngine;
 
 public class PlaceHolder {
 
-    private String name;
+    private String name = "";
     private String value = "";
 
     public PlaceHolder(String name) {
@@ -22,6 +22,11 @@ public class PlaceHolder {
     public String value() {
         // TODO Auto-generated method stub
         return value;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+
     }
 
 }

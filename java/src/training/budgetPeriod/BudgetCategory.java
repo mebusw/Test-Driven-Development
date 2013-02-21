@@ -5,14 +5,14 @@ import java.util.Date;
 import java.util.List;
 
 public class BudgetCategory {
-    public long getAmount(Date startDate, Date endDate) {
+    public long getTotalAmountPeriod(Date startDate, Date endDate) {
         if (startDate.after(endDate))
             throw new RuntimeException("Start date cannot be before End Date!");
 
-        return getAmount(new Period(startDate, endDate));
+        return getTotalAmountPeriod(new Period(startDate, endDate));
     }
 
-    private long getAmount(Period period) {
+    private long getTotalAmountPeriod(Period period) {
         // If Start and End are in the same budget period
         if (getBudgetPeriodType().getStartOfBudgetPeriod(period.getStartDate()).equals(
                 getBudgetPeriodType().getStartOfBudgetPeriod(period.getEndDate()))) {
@@ -32,7 +32,7 @@ public class BudgetCategory {
             for (String periodKey : getBudgetPeriods(
                     getBudgetPeriodType().getStartOfNextBudgetPeriod(period.getStartDate()), getBudgetPeriodType()
                             .getStartOfPreviousBudgetPeriod(period.getEndDate()))) {
-                totalInMiddle += getAmount(getPeriodDate(periodKey));
+                totalInMiddle += getAmountFromBudgetPeriodContainingDate(getPeriodDate(periodKey));
             }
 
             double totalEndPeriod = getAmountInPeriod(
@@ -45,11 +45,15 @@ public class BudgetCategory {
     }
 
     private double getAmountInPeriod(Date startDate, Date endDate) {
-        long amountOfPeriod = getAmount(startDate);
+        long amountOfPeriod = getAmountFromBudgetPeriodContainingDate(startDate);
         long totalDaysInPeriod = getBudgetPeriodType().getDaysInPeriod(startDate);
         long daysInPeriod = DateUtil.getDaysBetween(startDate, endDate, true);
         double totalInPeriod = ((double) amountOfPeriod / (double) totalDaysInPeriod) * daysInPeriod;
         return totalInPeriod;
+    }
+
+    private BudgetCategoryTypeMonthly getBudgetPeriodType() {
+        return new BudgetCategoryTypeMonthly();
     }
 
     // //////// Below are stubs
@@ -63,12 +67,9 @@ public class BudgetCategory {
         return new ArrayList<String>();
     }
 
-    private long getAmount(Date startDate) {
+    private long getAmountFromBudgetPeriodContainingDate(Date date) {
         // TODO Auto-generated method stub
         return 9999;
     }
 
-    private BudgetCategoryTypeMonthly getBudgetPeriodType() {
-        return new BudgetCategoryTypeMonthly();
-    }
 }

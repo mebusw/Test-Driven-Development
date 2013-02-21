@@ -11,36 +11,38 @@ public class BudgetCategory {
     }
 
     private long getTotalAmountPeriod(Period period) {
-        BudgetPeriod firstBudgetPeriod = createBudgetPeriodFromDate(period.getStartDate());
-        BudgetPeriod lastBudgetPeriod = createBudgetPeriodFromDate(period.getEndDate());
+        BudgetPeriod firstBudgetPeriod = createFirstBudgetPeriod(period);
+        BudgetPeriod lastBudgetPeriod = createEndBudgetPeriod(period);
 
         if (firstBudgetPeriod.equals(lastBudgetPeriod)) {
-            return (long) getAmountForPeriodWithinBudgetPeriod(period, firstBudgetPeriod);
+            return (long) getAmountForOverlappingDays(period, firstBudgetPeriod);
         }
 
-        double totalStartPeriod = getAmountForPeriodWithinBudgetPeriod(new Period(period.getStartDate(),
-                firstBudgetPeriod.getEndDate()), firstBudgetPeriod);
+        double totalStartPeriod = getAmountForOverlappingDays(period, firstBudgetPeriod);
 
         double totalInMiddle = 0;
         for (BudgetPeriod budgetPeriod : firstBudgetPeriod.nextBudgetPeriod().createBugdetPeriodListTill(
                 lastBudgetPeriod.previousBudgetPeriod())) {
-            totalInMiddle += getAmountFromBudgetPeriod(budgetPeriod);
+            totalInMiddle += getAmountForOverlappingDays(period, budgetPeriod);
         }
 
-        double totalEndPeriod = getAmountForPeriodWithinBudgetPeriod(
-                new Period(lastBudgetPeriod.getStartDate(), period.getEndDate()), lastBudgetPeriod);
+        double totalEndPeriod = getAmountForOverlappingDays(period, lastBudgetPeriod);
 
         return (long) (totalStartPeriod + totalInMiddle + totalEndPeriod);
     }
 
-    private BudgetPeriod createBudgetPeriodFromDate(Date date) {
-        return new BudgetPeriod(getBudgetPeriodType(), date);
+    private BudgetPeriod createFirstBudgetPeriod(Period period) {
+        return new BudgetPeriod(getBudgetPeriodType(), period.getStartDate());
     }
 
-    private double getAmountForPeriodWithinBudgetPeriod(Period period, BudgetPeriod firstBudgetPeriod) {
+    private BudgetPeriod createEndBudgetPeriod(Period period) {
+        return new BudgetPeriod(getBudgetPeriodType(), period.getEndDate());
+    }
+
+    private double getAmountForOverlappingDays(Period period, BudgetPeriod firstBudgetPeriod) {
         long amountOfPeriod = getAmountFromBudgetPeriod(firstBudgetPeriod);
         long totalDaysInPeriod = firstBudgetPeriod.getAmountOfDays();
-        long daysInPeriod = period.getAmountOfDays();
+        long daysInPeriod = period.getAmountOfOverlappingDays(firstBudgetPeriod.getPeriod());
         return ((double) amountOfPeriod / (double) totalDaysInPeriod) * daysInPeriod;
     }
 

@@ -50,4 +50,8 @@ public class BudgetPeriod {
         return budgetPeriodKeys;
     }
 
+    public Period getPeriod() {
+        return this.period;
+    }
+
 }

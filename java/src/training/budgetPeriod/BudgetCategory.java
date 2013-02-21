@@ -40,6 +40,8 @@ public class BudgetCategory {
 
             return (long) (totalStartPeriod + totalInMiddle + totalEndPeriod);
         }
+        throw new RuntimeException(
+                "You should not be here. We have returned all legitimate numbers from getAmount(Date, Date) in BudgetCategoryImpl.Please contact Wyatt Olson with details on how you got here (what steps did you perform in Buddi to get this error message).");
     }
 
     private BudgetPeriod createBudgetPeriodFromDate(Date date) {

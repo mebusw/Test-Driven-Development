@@ -27,7 +27,7 @@ public class BudgetCategory {
         for (String periodKey : getBudgetPeriods(getBudgetPeriodType()
                 .getStartOfNextBudgetPeriod(period.getStartDate()), getBudgetPeriodType()
                 .getStartOfPreviousBudgetPeriod(period.getEndDate()))) {
-            totalInMiddle += getAmountFromBudgetPeriodContainingDate(getPeriodDate(periodKey));
+            totalInMiddle += getAmountFromBudgetPeriod(getPeriodDate(periodKey));
         }
 
         double totalEndPeriod = getAmountForPeriodWithinBudgetPeriod(
@@ -41,11 +41,10 @@ public class BudgetCategory {
     }
 
     private double getAmountForPeriodWithinBudgetPeriod(Period period, BudgetPeriod firstBudgetPeriod) {
-        long amountOfPeriod = getAmountFromBudgetPeriodContainingDate(period.getStartDate());
-        long totalDaysInPeriod = getBudgetPeriodType().getDaysInPeriod(period.getStartDate());
-        long daysInPeriod = DateUtil.getDaysBetween(period.getStartDate(), period.getEndDate(), true);
-        double totalInPeriod = ((double) amountOfPeriod / (double) totalDaysInPeriod) * daysInPeriod;
-        return totalInPeriod;
+        long amountOfPeriod = getAmountFromBudgetPeriod(period);
+        long totalDaysInPeriod = firstBudgetPeriod.getAmountOfDays();
+        long daysInPeriod = period.getAmountOfDays();
+        return ((double) amountOfPeriod / (double) totalDaysInPeriod) * daysInPeriod;
     }
 
     private BudgetCategoryTypeMonthly getBudgetPeriodType() {
@@ -53,18 +52,15 @@ public class BudgetCategory {
     }
 
     // //////// Below are stubs
-    private Date getPeriodDate(String periodKey) {
-        // TODO Auto-generated method stub
-        return new Date();
+    private Period getPeriodDate(String periodKey) {
+        return new Period();
     }
 
     private List<String> getBudgetPeriods(Date budgetPeriodOffset, Date budgetPeriodOffset2) {
-        // TODO Auto-generated method stub
         return new ArrayList<String>();
     }
 
-    private long getAmountFromBudgetPeriodContainingDate(Date date) {
-        // TODO Auto-generated method stub
+    private long getAmountFromBudgetPeriod(Period period) {
         return 9999;
     }
 

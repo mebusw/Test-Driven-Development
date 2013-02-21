@@ -4,12 +4,15 @@ import java.util.Date;
 
 public class Period {
 
-    private final Date startDate;
-    private final Date endDate;
+    private Date startDate;
+    private Date endDate;
 
     public Period(Date startDate, Date endDate) {
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+    public Period() {
     }
 
     public Date getStartDate() {
@@ -18,6 +21,10 @@ public class Period {
 
     public Date getEndDate() {
         return endDate;
+    }
+
+    public long getAmountOfDays() {
+        return DateUtil.getDaysBetween(startDate, endDate, true);
     }
 
 }

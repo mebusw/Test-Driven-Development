@@ -21,26 +21,20 @@ public class BudgetCategory {
                     period.getEndDate());
         }
 
-        // If the area between Start and End overlap at least two budget
-        // periods.
-        if (firstBudgetPeriod.nextBudgetPeriod().getStartDate().equals(lastBudgetPeriod.getStartDate())
-                || firstBudgetPeriod.nextBudgetPeriod().getStartDate().before(lastBudgetPeriod.getStartDate())) {
-            double totalStartPeriod = getAmgetAmountForPeriodWithinBudgetPeriodOfStartDateountInPeriod(
-                    period.getStartDate(), firstBudgetPeriod.getEndDate());
+        double totalStartPeriod = getAmgetAmountForPeriodWithinBudgetPeriodOfStartDateountInPeriod(
+                period.getStartDate(), firstBudgetPeriod.getEndDate());
 
-            double totalInMiddle = 0;
-            for (String periodKey : getBudgetPeriods(
-                    getBudgetPeriodType().getStartOfNextBudgetPeriod(period.getStartDate()), getBudgetPeriodType()
-                            .getStartOfPreviousBudgetPeriod(period.getEndDate()))) {
-                totalInMiddle += getAmountFromBudgetPeriodContainingDate(getPeriodDate(periodKey));
-            }
-
-            double totalEndPeriod = getAmgetAmountForPeriodWithinBudgetPeriodOfStartDateountInPeriod(
-                    lastBudgetPeriod.getStartDate(), period.getEndDate());
-
-            return (long) (totalStartPeriod + totalInMiddle + totalEndPeriod);
+        double totalInMiddle = 0;
+        for (String periodKey : getBudgetPeriods(getBudgetPeriodType()
+                .getStartOfNextBudgetPeriod(period.getStartDate()), getBudgetPeriodType()
+                .getStartOfPreviousBudgetPeriod(period.getEndDate()))) {
+            totalInMiddle += getAmountFromBudgetPeriodContainingDate(getPeriodDate(periodKey));
         }
-        return 0;
+
+        double totalEndPeriod = getAmgetAmountForPeriodWithinBudgetPeriodOfStartDateountInPeriod(
+                lastBudgetPeriod.getStartDate(), period.getEndDate());
+
+        return (long) (totalStartPeriod + totalInMiddle + totalEndPeriod);
     }
 
     private BudgetPeriod createBudgetPeriodFromDate(Date date) {

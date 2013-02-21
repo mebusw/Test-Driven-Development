@@ -2,6 +2,7 @@ package training.budgetPeriod;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 public class BudgetCategory {
@@ -27,7 +28,7 @@ public class BudgetCategory {
         for (String periodKey : getBudgetPeriods(getBudgetPeriodType()
                 .getStartOfNextBudgetPeriod(period.getStartDate()), getBudgetPeriodType()
                 .getStartOfPreviousBudgetPeriod(period.getEndDate()))) {
-            totalInMiddle += getAmountFromBudgetPeriod(getPeriodDate(periodKey));
+            totalInMiddle += getAmountFromBudgetPeriodContainingDate(getPeriodDate(periodKey));
         }
 
         double totalEndPeriod = getAmountForPeriodWithinBudgetPeriod(
@@ -36,12 +37,17 @@ public class BudgetCategory {
         return (long) (totalStartPeriod + totalInMiddle + totalEndPeriod);
     }
 
+    private double getAmountFromBudgetPeriodContainingDate(Period periodDate) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
     private BudgetPeriod createBudgetPeriodFromDate(Date date) {
         return new BudgetPeriod(getBudgetPeriodType(), date);
     }
 
     private double getAmountForPeriodWithinBudgetPeriod(Period period, BudgetPeriod firstBudgetPeriod) {
-        long amountOfPeriod = getAmountFromBudgetPeriod(period);
+        long amountOfPeriod = getAmountFromBudgetPeriod(firstBudgetPeriod);
         long totalDaysInPeriod = firstBudgetPeriod.getAmountOfDays();
         long daysInPeriod = period.getAmountOfDays();
         return ((double) amountOfPeriod / (double) totalDaysInPeriod) * daysInPeriod;
@@ -56,11 +62,22 @@ public class BudgetCategory {
         return new Period();
     }
 
-    private List<String> getBudgetPeriods(Date budgetPeriodOffset, Date budgetPeriodOffset2) {
-        return new ArrayList<String>();
+    private List<String> getBudgetPeriods(Date startDate, Date endDate) {
+        List<String> budgetPeriodKeys = new LinkedList<String>();
+        Date temp = getBudgetPeriodType().getStartOfBudgetPeriod(startDate);
+        while (temp.before(getBudgetPeriodType().getEndOfBudgetPeriod(endDate))) {
+            budgetPeriodKeys.add(getPeriodKey(temp));
+            temp = getBudgetPeriodType().getBudgetPeriodOffset(temp, 1);
+        }
+        return budgetPeriodKeys;
     }
 
-    private long getAmountFromBudgetPeriod(Period period) {
+    private String getPeriodKey(Date temp) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    private long getAmountFromBudgetPeriod(BudgetPeriod firstBudgetPeriod) {
         return 9999;
     }
 

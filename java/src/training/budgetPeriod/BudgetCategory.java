@@ -17,12 +17,11 @@ public class BudgetCategory {
         BudgetPeriod lastBudgetPeriod = createBudgetPeriodFromDate(period.getEndDate());
 
         if (firstBudgetPeriod.equals(lastBudgetPeriod)) {
-            return (long) getAmgetAmountForPeriodWithinBudgetPeriodOfStartDateountInPeriod(period.getStartDate(),
-                    period.getEndDate());
+            return (long) getAmountForPeriodWithinBudgetPeriod(period, firstBudgetPeriod);
         }
 
-        double totalStartPeriod = getAmgetAmountForPeriodWithinBudgetPeriodOfStartDateountInPeriod(
-                period.getStartDate(), firstBudgetPeriod.getEndDate());
+        double totalStartPeriod = getAmountForPeriodWithinBudgetPeriod(new Period(period.getStartDate(),
+                firstBudgetPeriod.getEndDate()), firstBudgetPeriod);
 
         double totalInMiddle = 0;
         for (String periodKey : getBudgetPeriods(getBudgetPeriodType()
@@ -31,8 +30,8 @@ public class BudgetCategory {
             totalInMiddle += getAmountFromBudgetPeriodContainingDate(getPeriodDate(periodKey));
         }
 
-        double totalEndPeriod = getAmgetAmountForPeriodWithinBudgetPeriodOfStartDateountInPeriod(
-                lastBudgetPeriod.getStartDate(), period.getEndDate());
+        double totalEndPeriod = getAmountForPeriodWithinBudgetPeriod(
+                new Period(lastBudgetPeriod.getStartDate(), period.getEndDate()), lastBudgetPeriod);
 
         return (long) (totalStartPeriod + totalInMiddle + totalEndPeriod);
     }
@@ -41,10 +40,10 @@ public class BudgetCategory {
         return new BudgetPeriod(getBudgetPeriodType(), date);
     }
 
-    private double getAmgetAmountForPeriodWithinBudgetPeriodOfStartDateountInPeriod(Date startDate, Date endDate) {
-        long amountOfPeriod = getAmountFromBudgetPeriodContainingDate(startDate);
-        long totalDaysInPeriod = getBudgetPeriodType().getDaysInPeriod(startDate);
-        long daysInPeriod = DateUtil.getDaysBetween(startDate, endDate, true);
+    private double getAmountForPeriodWithinBudgetPeriod(Period period, BudgetPeriod firstBudgetPeriod) {
+        long amountOfPeriod = getAmountFromBudgetPeriodContainingDate(period.getStartDate());
+        long totalDaysInPeriod = getBudgetPeriodType().getDaysInPeriod(period.getStartDate());
+        long daysInPeriod = DateUtil.getDaysBetween(period.getStartDate(), period.getEndDate(), true);
         double totalInPeriod = ((double) amountOfPeriod / (double) totalDaysInPeriod) * daysInPeriod;
         return totalInPeriod;
     }

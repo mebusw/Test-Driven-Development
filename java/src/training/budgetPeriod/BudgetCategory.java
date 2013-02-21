@@ -14,21 +14,12 @@ public class BudgetCategory {
         BudgetPeriod firstBudgetPeriod = createFirstBudgetPeriod(period);
         BudgetPeriod lastBudgetPeriod = createEndBudgetPeriod(period);
 
-        if (firstBudgetPeriod.equals(lastBudgetPeriod)) {
-            return (long) getAmountForOverlappingDays(period, firstBudgetPeriod);
+        double total = 0;
+        for (BudgetPeriod budgetPeriod : firstBudgetPeriod.createBugdetPeriodListTill(lastBudgetPeriod)) {
+            total += getAmountForOverlappingDays(period, budgetPeriod);
         }
 
-        double totalStartPeriod = getAmountForOverlappingDays(period, firstBudgetPeriod);
-
-        double totalInMiddle = 0;
-        for (BudgetPeriod budgetPeriod : firstBudgetPeriod.nextBudgetPeriod().createBugdetPeriodListTill(
-                lastBudgetPeriod.previousBudgetPeriod())) {
-            totalInMiddle += getAmountForOverlappingDays(period, budgetPeriod);
-        }
-
-        double totalEndPeriod = getAmountForOverlappingDays(period, lastBudgetPeriod);
-
-        return (long) (totalStartPeriod + totalInMiddle + totalEndPeriod);
+        return (long) total;
     }
 
     private BudgetPeriod createFirstBudgetPeriod(Period period) {

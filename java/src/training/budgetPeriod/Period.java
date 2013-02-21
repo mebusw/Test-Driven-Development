@@ -12,9 +12,6 @@ public class Period {
         this.endDate = endDate;
     }
 
-    public Period() {
-    }
-
     public Date getStartDate() {
         return startDate;
     }

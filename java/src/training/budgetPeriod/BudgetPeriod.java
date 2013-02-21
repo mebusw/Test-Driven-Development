@@ -1,6 +1,8 @@
 package training.budgetPeriod;
 
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 public class BudgetPeriod {
     private Period period;
@@ -36,4 +38,16 @@ public class BudgetPeriod {
     public long getAmountOfDays() {
         return type.getDaysInPeriod(period.getStartDate());
     }
+
+    public List<BudgetPeriod> createBugdetPeriodListTill(BudgetPeriod lastBudgetPeriod) {
+        List<BudgetPeriod> budgetPeriodKeys = new LinkedList<BudgetPeriod>();
+        BudgetPeriod currentBudgetPeriod = this;
+
+        while (currentBudgetPeriod.getStartDate().before(lastBudgetPeriod.getEndDate())) {
+            budgetPeriodKeys.add(currentBudgetPeriod);
+            currentBudgetPeriod = currentBudgetPeriod.nextBudgetPeriod();
+        }
+        return budgetPeriodKeys;
+    }
+
 }

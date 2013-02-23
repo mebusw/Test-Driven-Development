@@ -22,6 +22,12 @@ public class ArgsTest {
     }
 
     @Test
+    public void testGetNonExistingBoolean() throws ParseException {
+        Args args = new Args("l,p#,d*", new String[] { "-l" });
+        assertEquals(false, args.getBoolean('y'));
+    }
+    
+    @Test
     public void testParsingMultiBoolean() throws ParseException {
         Args args = new Args("l,m", new String[] { "-lm" });
         assertEquals(true, args.getBoolean('l'));

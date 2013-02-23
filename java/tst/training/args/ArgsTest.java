@@ -26,7 +26,7 @@ public class ArgsTest {
         Args args = new Args("l,p#,d*", new String[] { "-l" });
         assertEquals(false, args.getBoolean('y'));
     }
-    
+
     @Test
     public void testParsingMultiBoolean() throws ParseException, ArgsException {
         Args args = new Args("l,m", new String[] { "-lm" });
@@ -39,4 +39,14 @@ public class ArgsTest {
         Args args = new Args("l,p#,d*", new String[] { "-l", "-p", "123", "-d", "ABC", "-y" });
         assertEquals("Arguments(s)  -y  unexpected", args.errorMessage());
     }
+
+    @Test
+    public void testParsingDouble() throws ParseException, ArgsException {
+        Args args = new Args("x##", new String[] { "-x", "42.3" });
+        assertTrue(args.isValid());
+        assertEquals(1, args.cardinality());
+        assertTrue(args.has('x'));
+        assertTrue(new Double(42.3).equals(args.getDouble('x')));
+    }
+
 }

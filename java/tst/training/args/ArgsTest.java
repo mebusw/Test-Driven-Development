@@ -10,25 +10,25 @@ import training.args.Args;
 public class ArgsTest {
 
     @Test
-    public void testUsage() throws ParseException {
+    public void testUsage() throws ParseException, ArgsException {
         Args args = new Args("l,p#,d*", new String[] { "-l", "-p123", "-dABC" });
         assertEquals("-[l,p#,d*]", args.usage());
     }
 
     @Test
-    public void testParsingBoolean() throws ParseException {
+    public void testParsingBoolean() throws ParseException, ArgsException {
         Args args = new Args("l,p#,d*", new String[] { "-l" });
         assertEquals(true, args.getBoolean('l'));
     }
 
     @Test
-    public void testGetNonExistingBoolean() throws ParseException {
+    public void testGetNonExistingBoolean() throws ParseException, ArgsException {
         Args args = new Args("l,p#,d*", new String[] { "-l" });
         assertEquals(false, args.getBoolean('y'));
     }
     
     @Test
-    public void testParsingMultiBoolean() throws ParseException {
+    public void testParsingMultiBoolean() throws ParseException, ArgsException {
         Args args = new Args("l,m", new String[] { "-lm" });
         assertEquals(true, args.getBoolean('l'));
         assertEquals(true, args.getBoolean('m'));

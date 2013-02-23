@@ -17,6 +17,7 @@ public class Args {
     private Map<Character, ArgumentMarshaler> booleanArgs = new HashMap<Character, ArgumentMarshaler>();
     private Map<Character, ArgumentMarshaler> stringArgs = new HashMap<Character, ArgumentMarshaler>();
     private Map<Character, ArgumentMarshaler> intArgs = new HashMap<Character, ArgumentMarshaler>();
+    private Map<Character, ArgumentMarshaler> marshalers = new HashMap<Character, ArgumentMarshaler>();
     private Set<Character> argsFound = new HashSet<Character>();
 
     private int currentArgument;
@@ -29,7 +30,7 @@ public class Args {
     private ErrorCode errorCode = ErrorCode.OK;
     private String errorParameter;
 
-    public Args(String schema, String[] args) throws ParseException {
+    public Args(String schema, String[] args) throws ParseException, ArgsException {
         this.schema = schema;
         this.args = args;
         valid = parse();
@@ -39,7 +40,7 @@ public class Args {
         return valid;
     }
 
-    private boolean parse() throws ParseException {
+    private boolean parse() throws ParseException, ArgsException {
         if (schema.length() == 0 && args.length == 0)
             return true;
         parseSchema();
@@ -82,18 +83,25 @@ public class Args {
     }
 
     private void parseStringSchemaElement(char elementId) {
-        stringArgs.put(elementId, new StringArgumentMashaler());
+        ArgumentMarshaler m = new StringArgumentMashaler();
+        stringArgs.put(elementId, m);
+        marshalers.put(elementId, m);
+
     }
 
     private void parseBooleanSchemaElement(char elementId) {
-        booleanArgs.put(elementId, new BooleanArgumentMashaler());
+        ArgumentMarshaler m = new BooleanArgumentMashaler();
+        booleanArgs.put(elementId, m);
+        marshalers.put(elementId, m);
     }
 
     private void parseIntergerSchemaElement(char elementId) {
-        booleanArgs.put(elementId, new IntergerArgumentMashaler());
+        ArgumentMarshaler m = new IntergerArgumentMashaler();
+        intArgs.put(elementId, m);
+        marshalers.put(elementId, m);
     }
 
-    private boolean parseArguments() {
+    private boolean parseArguments() throws ArgsException {
         for (currentArgument = 0; currentArgument < args.length; currentArgument++) {
             String arg = args[currentArgument];
             parseArgument(arg);
@@ -101,17 +109,17 @@ public class Args {
         return true;
     }
 
-    private void parseArgument(String arg) {
+    private void parseArgument(String arg) throws ArgsException {
         if (arg.startsWith("-"))
             parseElements(arg);
     }
 
-    private void parseElements(String arg) {
+    private void parseElements(String arg) throws ArgsException {
         for (int i = 1; i < arg.length(); i++)
             parseElement(arg.charAt(i));
     }
 
-    private void parseElement(char argChar) {
+    private void parseElement(char argChar) throws ArgsException {
         if (setArgument(argChar)) {
             argsFound.add(argChar);
         } else {
@@ -120,24 +128,21 @@ public class Args {
         }
     }
 
-    private boolean setArgument(char argChar) {
-        boolean set = true;
-        if (isBoolean(argChar))
+    private boolean setArgument(char argChar) throws ArgsException {
+        ArgumentMarshaler m = marshalers.get(argChar);
+        if (m instanceof BooleanArgumentMashaler)
             setBooleanArg(argChar, true);
-        else if (isString(argChar))
-            try {
-                setStringArg(argChar, "");
-            } catch (ArgsException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+        else if (m instanceof StringArgumentMashaler)
+            setStringArg(argChar, "");
+        else if (m instanceof IntergerArgumentMashaler)
+            setIntArg(argChar);
         else
-            set = false;
-        return set;
+            return false;
+        return true;
     }
 
     private void setStringArg(char argChar, String string) throws ArgsException {
-        currentArgument++;
+//        currentArgument++;
         try {
             stringArgs.get(argChar).set(args[currentArgument]);
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -148,8 +153,9 @@ public class Args {
         }
     }
 
-    private boolean isString(char argChar) {
-        return stringArgs.containsKey(argChar);
+    private boolean isStringArg(ArgumentMarshaler m) {
+        return m instanceof StringArgumentMashaler;
+
     }
 
     private void setBooleanArg(char argChar, boolean value) {
@@ -160,12 +166,12 @@ public class Args {
         }
     }
 
-    private boolean isBoolean(char argChar) {
-        return booleanArgs.containsKey(argChar);
+    private boolean isBooleanArg(ArgumentMarshaler m) {
+        return m instanceof BooleanArgumentMashaler;
     }
 
     private void setIntArg(char argChar) throws ArgsException {
-        currentArgument++;
+//        currentArgument++;
         String parameter = null;
         try {
             parameter = args[currentArgument];
@@ -183,6 +189,10 @@ public class Args {
             throw e;
 
         }
+    }
+
+    private boolean isIntArg(ArgumentMarshaler m) {
+        return m instanceof IntergerArgumentMashaler;
     }
 
     public int cardinality() {

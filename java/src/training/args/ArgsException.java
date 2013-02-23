@@ -4,7 +4,7 @@ import training.args.ArgsException.ErrorCode;
 
 public class ArgsException extends Exception {
     public enum ErrorCode {
-        OK, MISSING_STRING, MISSING_INTEGER, INVALID_INTEGER, MISSING_DOUBLE, INVALID_DOUBLE, UNEXPECTED_ARGUMENT
+        OK, MISSING_STRING, MISSING_INTEGER, INVALID_INTEGER, MISSING_DOUBLE, INVALID_DOUBLE, UNEXPECTED_ARGUMENT, INVALID_ARGUMENT_NAME, INVALID_FORMAT
     }
 
     private char errorArgumentId = '\0';

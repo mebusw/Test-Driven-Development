@@ -62,13 +62,13 @@ public class Args {
         } else if (elementTail.equals("##")) {
             marshalers.put(elementId, new DoubleArgumentMashaler());
         } else {
-            throw new ArgsException(String.format("Argument: %c has invalid format: %s.", elementId, elementTail));
+            throw new ArgsException(ArgsException.ErrorCode.INVALID_FORMAT, elementId, null);
         }
     }
 
     private void validateSchemaElementId(char elementId) throws ArgsException {
         if (!Character.isLetter(elementId)) {
-            throw new ArgsException("Bad character:" + elementId + " in Args format: " + schema);
+            throw new ArgsException(ArgsException.ErrorCode.INVALID_ARGUMENT_NAME, elementId, null);
         }
     }
 
@@ -104,11 +104,11 @@ public class Args {
             return false;
         try {
             m.set(currentArgument);
+            return true;
         } catch (ArgsException e) {
-            valid = false;
+            e.setErrorArgumentId(argChar);
             throw e;
         }
-        return true;
     }
 
     public int cardinality() {
@@ -200,8 +200,7 @@ class StringArgumentMashaler implements ArgumentMarshaler {
         try {
             stringValue = currentArgument.next();
         } catch (NoSuchElementException e) {
-            // errorCode = ArgsException.ErrorCode.MISSING_STRING;
-            throw new ArgsException();
+            throw new ArgsException(ArgsException.ErrorCode.MISSING_STRING, '\0', null);
         }
 
     }
@@ -222,12 +221,9 @@ class IntegerArgumentMashaler implements ArgumentMarshaler {
             parameter = currentArgument.next();
             intValue = Integer.parseInt(parameter);
         } catch (NoSuchElementException e) {
-            // errorCode = ErrorCode.MISSING_INTEGER;
-            throw new ArgsException();
+            throw new ArgsException(ArgsException.ErrorCode.MISSING_INTEGER, '\0', null);
         } catch (NumberFormatException e) {
-            // errorParameter = parameter;
-            // errorCode = ErrorCode.INVALID_INTEGER;
-            throw new ArgsException();
+            throw new ArgsException(ArgsException.ErrorCode.INVALID_INTEGER, '\0', parameter);
         }
     }
 }
@@ -247,12 +243,9 @@ class DoubleArgumentMashaler implements ArgumentMarshaler {
             parameter = currentArgument.next();
             doubleValue = Double.parseDouble(parameter);
         } catch (NoSuchElementException e) {
-            // errorCode = ErrorCode.MISSING_DOUBLE;
-            throw new ArgsException();
+            throw new ArgsException(ArgsException.ErrorCode.MISSING_DOUBLE, '\0', null);
         } catch (NumberFormatException e) {
-            // errorParameter = parameter;
-            // errorCode = ErrorCode.INVALID_DOUBLE;
-            throw new ArgsException();
+            throw new ArgsException(ArgsException.ErrorCode.INVALID_DOUBLE, '\0', parameter);
         }
     }
 }

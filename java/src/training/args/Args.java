@@ -122,11 +122,11 @@ public class Args {
             return false;
         try {
             if (m instanceof BooleanArgumentMashaler)
-                setBooleanArg(m);
+                m.set(currentArgument);
             else if (m instanceof StringArgumentMashaler)
-                setStringArg(m);
+                m.set(currentArgument);
             else if (m instanceof IntegerArgumentMashaler)
-                setIntArg(m);
+                m.set(currentArgument);
         } catch (ArgsException e) {
             valid = false;
             errorArgumentId = argChar;
@@ -135,41 +135,6 @@ public class Args {
         return true;
     }
 
-    private void setStringArg(ArgumentMarshaler m) throws ArgsException {
-        try {
-            m.set(currentArgument.next());
-        } catch (ArrayIndexOutOfBoundsException e) {
-            valid = false;
-            errorCode = ErrorCode.MISSING_STRING;
-            throw new ArgsException();
-        }
-    }
-
-    private void setBooleanArg(ArgumentMarshaler m) {
-        try {
-            m.set("true");
-        } catch (ArgsException e) {
-
-        }
-    }
-
-    private void setIntArg(ArgumentMarshaler m) throws ArgsException {
-        String parameter = null;
-        try {
-            parameter = currentArgument.next();
-            m.set(parameter);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            valid = false;
-            errorCode = ErrorCode.MISSING_INTEGER;
-            throw new ArgsException();
-        } catch (ArgsException e) {
-            valid = false;
-            errorParameter = parameter;
-            errorCode = ErrorCode.INVALID_INTEGER;
-            throw e;
-
-        }
-    }
 
     public int cardinality() {
         return argsFound.size();
@@ -248,6 +213,8 @@ public class Args {
 abstract class ArgumentMarshaler {
     public abstract void set(String s) throws ArgsException;
 
+    public abstract void set(Iterator<String> currentArgument) throws ArgsException;
+
     public abstract Object get();
 }
 
@@ -256,12 +223,17 @@ class BooleanArgumentMashaler extends ArgumentMarshaler {
 
     @Override
     public void set(String s) {
-        booleanValue = true;
+
     }
 
     @Override
     public Object get() {
         return booleanValue;
+    }
+
+    @Override
+    public void set(Iterator<String> currentArgument) throws ArgsException {
+        booleanValue = true;
     }
 
 }
@@ -277,6 +249,17 @@ class StringArgumentMashaler extends ArgumentMarshaler {
     @Override
     public Object get() {
         return stringValue;
+    }
+
+    @Override
+    public void set(Iterator<String> currentArgument) throws ArgsException {
+        try {
+            stringValue = currentArgument.next();
+        } catch (NoSuchElementException e) {
+            // errorCode = ErrorCode.MISSING_STRING;
+            throw new ArgsException();
+        }
+
     }
 }
 
@@ -295,5 +278,22 @@ class IntegerArgumentMashaler extends ArgumentMarshaler {
     @Override
     public Object get() {
         return intValue;
+    }
+
+    @Override
+    public void set(Iterator<String> currentArgument) throws ArgsException {
+        String parameter = null;
+        try {
+            parameter = currentArgument.next();
+            set(parameter);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            // errorCode = ErrorCode.MISSING_INTEGER;
+            throw new ArgsException();
+        } catch (ArgsException e) {
+            // errorParameter = parameter;
+            // errorCode = ErrorCode.INVALID_INTEGER;
+            throw e;
+
+        }
     }
 }

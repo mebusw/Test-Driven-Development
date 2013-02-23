@@ -11,7 +11,7 @@ public class ArgsTest {
 
     @Test
     public void testUsage() throws ParseException, ArgsException {
-        Args args = new Args("l,p#,d*", new String[] { "-l", "-p123", "-dABC" });
+        Args args = new Args("l,p#,d*", new String[] { "-l", "-p", "123", "-d", "ABC" });
         assertEquals("-[l,p#,d*]", args.usage());
     }
 
@@ -36,7 +36,7 @@ public class ArgsTest {
 
     @Test
     public void testErrorMessageForUnexpectedSchema() throws Exception {
-        Args args = new Args("l,p#,d*", new String[] { "-l", "-p123", "-dABC" });
-        assertEquals("Arguments(s)  -123ABCp  unexpected", args.errorMessage());
+        Args args = new Args("l,p#,d*", new String[] { "-l", "-p", "123", "-d", "ABC", "-y" });
+        assertEquals("Arguments(s)  -y  unexpected", args.errorMessage());
     }
 }

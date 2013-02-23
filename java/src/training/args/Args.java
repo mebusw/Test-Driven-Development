@@ -121,12 +121,7 @@ public class Args {
         if (m == null)
             return false;
         try {
-            if (m instanceof BooleanArgumentMashaler)
-                m.set(currentArgument);
-            else if (m instanceof StringArgumentMashaler)
-                m.set(currentArgument);
-            else if (m instanceof IntegerArgumentMashaler)
-                m.set(currentArgument);
+            m.set(currentArgument);
         } catch (ArgsException e) {
             valid = false;
             errorArgumentId = argChar;
@@ -134,7 +129,6 @@ public class Args {
         }
         return true;
     }
-
 
     public int cardinality() {
         return argsFound.size();
@@ -210,21 +204,14 @@ public class Args {
 
 }
 
-abstract class ArgumentMarshaler {
-    public abstract void set(String s) throws ArgsException;
-
+interface ArgumentMarshaler {
     public abstract void set(Iterator<String> currentArgument) throws ArgsException;
 
     public abstract Object get();
 }
 
-class BooleanArgumentMashaler extends ArgumentMarshaler {
+class BooleanArgumentMashaler implements ArgumentMarshaler {
     private boolean booleanValue = false;
-
-    @Override
-    public void set(String s) {
-
-    }
 
     @Override
     public Object get() {
@@ -238,13 +225,8 @@ class BooleanArgumentMashaler extends ArgumentMarshaler {
 
 }
 
-class StringArgumentMashaler extends ArgumentMarshaler {
+class StringArgumentMashaler implements ArgumentMarshaler {
     private String stringValue = "";
-
-    @Override
-    public void set(String s) {
-        stringValue = s;
-    }
 
     @Override
     public Object get() {
@@ -263,17 +245,8 @@ class StringArgumentMashaler extends ArgumentMarshaler {
     }
 }
 
-class IntegerArgumentMashaler extends ArgumentMarshaler {
+class IntegerArgumentMashaler implements ArgumentMarshaler {
     private int intValue = 0;
-
-    @Override
-    public void set(String s) throws ArgsException {
-        try {
-            intValue = Integer.parseInt(s);
-        } catch (NumberFormatException e) {
-            throw new ArgsException();
-        }
-    }
 
     @Override
     public Object get() {
@@ -285,15 +258,14 @@ class IntegerArgumentMashaler extends ArgumentMarshaler {
         String parameter = null;
         try {
             parameter = currentArgument.next();
-            set(parameter);
-        } catch (ArrayIndexOutOfBoundsException e) {
+            intValue = Integer.parseInt(parameter);
+        } catch (NoSuchElementException e) {
             // errorCode = ErrorCode.MISSING_INTEGER;
             throw new ArgsException();
-        } catch (ArgsException e) {
+        } catch (NumberFormatException e) {
             // errorParameter = parameter;
             // errorCode = ErrorCode.INVALID_INTEGER;
             throw e;
-
         }
     }
 }

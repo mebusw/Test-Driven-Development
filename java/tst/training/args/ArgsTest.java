@@ -2,33 +2,35 @@ package training.args;
 
 import static org.junit.Assert.*;
 
+import java.text.ParseException;
+
 import org.junit.Test;
 import training.args.Args;
 
 public class ArgsTest {
 
     @Test
-    public void testUsage() {
+    public void testUsage() throws ParseException {
         Args args = new Args("l,p#,d*", new String[] { "-l", "-p123", "-dABC" });
         assertEquals("-[l,p#,d*]", args.usage());
     }
 
     @Test
-    public void testParsingBoolean() {
+    public void testParsingBoolean() throws ParseException {
         Args args = new Args("l,p#,d*", new String[] { "-l" });
         assertEquals(true, args.getBoolean('l'));
     }
 
     @Test
-    public void testParsingMultiBoolean() {
+    public void testParsingMultiBoolean() throws ParseException {
         Args args = new Args("l,m", new String[] { "-lm" });
         assertEquals(true, args.getBoolean('l'));
         assertEquals(true, args.getBoolean('m'));
     }
 
     @Test
-    public void testErrorMessageForUnexpectedSchema() {
+    public void testErrorMessageForUnexpectedSchema() throws Exception {
         Args args = new Args("l,p#,d*", new String[] { "-l", "-p123", "-dABC" });
-        assertEquals("Arguments(s)  -123ABCdp  unexpected", args.errorMessage());
+        assertEquals("Arguments(s)  -123ABCp  unexpected", args.errorMessage());
     }
 }

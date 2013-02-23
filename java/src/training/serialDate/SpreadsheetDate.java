@@ -53,7 +53,7 @@
  *
  */
 
-package org.jfree.date;
+package training.serialDate;
 
 import java.util.Calendar;
 import java.util.Date;

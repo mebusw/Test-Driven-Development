@@ -56,7 +56,7 @@
  * 
  */
 
-package org.jfree.date;
+package training.serialDate;
 
 import java.io.Serializable;
 import java.text.DateFormatSymbols;

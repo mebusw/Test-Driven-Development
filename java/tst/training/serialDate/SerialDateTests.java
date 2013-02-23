@@ -44,7 +44,7 @@
  *
  */
 
-package org.jfree.date.junit;
+package training.serialDate;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -56,8 +56,8 @@ import java.io.ObjectOutputStream;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import org.jfree.date.MonthConstants;
-import org.jfree.date.SerialDate;
+import training.serialDate.MonthConstants;
+import training.serialDate.SerialDate;
 
 /**
  * Some JUnit tests for the {@link SerialDate} class.

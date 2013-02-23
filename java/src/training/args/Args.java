@@ -16,17 +16,19 @@ public class Args {
     private boolean valid;
     private Set<Character> unexpectedArguments = new TreeSet<Character>();
     private Map<Character, ArgumentMarshaler> booleanArgs = new HashMap<Character, ArgumentMarshaler>();
-    private Map<Character, String> stringArgs = new HashMap<Character, String>();
+    private Map<Character, ArgumentMarshaler> stringArgs = new HashMap<Character, ArgumentMarshaler>();
+    private Map<Character, ArgumentMarshaler> intArgs = new HashMap<Character, ArgumentMarshaler>();
     private Set<Character> argsFound = new HashSet<Character>();
 
     private int currentArgument;
     private char errorArgument = '\0';
 
     enum ErrorCode {
-        OK, MISSING_STRING
+        OK, MISSING_STRING, MISSING_INTEGER, INVALID_INTEGER
     }
 
     private ErrorCode errorCode = ErrorCode.OK;
+    private String errorParameter;
 
     public Args(String schema, String[] args) throws ParseException {
         this.schema = schema;
@@ -81,11 +83,15 @@ public class Args {
     }
 
     private void parseStringSchemaElement(char elementId) {
-        stringArgs.put(elementId, "");
+        stringArgs.put(elementId, new StringArgumentMashaler());
     }
 
     private void parseBooleanSchemaElement(char elementId) {
         booleanArgs.put(elementId, new BooleanArgumentMashaler());
+    }
+
+    private void parseIntergerSchemaElement(char elementId) {
+        booleanArgs.put(elementId, new IntergerArgumentMashaler());
     }
 
     private boolean parseArguments() {
@@ -120,20 +126,26 @@ public class Args {
         if (isBoolean(argChar))
             setBooleanArg(argChar, true);
         else if (isString(argChar))
-            setStringArg(argChar, "");
+            try {
+                setStringArg(argChar, "");
+            } catch (ArgsException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         else
             set = false;
         return set;
     }
 
-    private void setStringArg(char argChar, String string) {
+    private void setStringArg(char argChar, String string) throws ArgsException {
         currentArgument++;
         try {
-            stringArgs.put(argChar, args[currentArgument]);
+            stringArgs.get(argChar).setString(args[currentArgument]);
         } catch (ArrayIndexOutOfBoundsException e) {
             valid = false;
             errorArgument = argChar;
             errorCode = ErrorCode.MISSING_STRING;
+            throw new ArgsException();
         }
     }
 
@@ -147,6 +159,27 @@ public class Args {
 
     private boolean isBoolean(char argChar) {
         return booleanArgs.containsKey(argChar);
+    }
+
+    private void setIntArg(char argChar) throws ArgsException {
+        currentArgument++;
+        String parameter = null;
+        try {
+            parameter = args[currentArgument];
+            intArgs.get(argChar).setInteger(Integer.parseInt(parameter));
+        } catch (ArrayIndexOutOfBoundsException e) {
+            valid = false;
+            errorArgument = argChar;
+            errorCode = ErrorCode.MISSING_INTEGER;
+            throw new ArgsException();
+        } catch (NumberFormatException e) {
+            valid = false;
+            errorArgument = argChar;
+            errorParameter = parameter;
+            errorCode = ErrorCode.INVALID_INTEGER;
+            throw new ArgsException();
+
+        }
     }
 
     public int cardinality() {
@@ -189,11 +222,13 @@ public class Args {
     }
 
     public String getString(char arg) {
-        return blankIfNull(stringArgs.get(arg));
+        ArgumentMarshaler am = stringArgs.get(arg);
+        return am == null ? "" : am.getString();
     }
 
-    private String blankIfNull(String s) {
-        return s == null ? "" : s;
+    public int getInt(char arg) {
+        ArgumentMarshaler am = intArgs.get(arg);
+        return am == null ? 0 : am.getInteger();
     }
 
     public boolean has(char arg) {
@@ -204,13 +239,32 @@ public class Args {
 
 class ArgumentMarshaler {
     private boolean booleanValue = false;
+    private String stringValue = "";
+    private int intValue = 0;
 
     public void setBoolean(boolean value) {
         booleanValue = value;
     }
 
+    public int getInteger() {
+
+        return intValue;
+    }
+
+    public void setInteger(int i) {
+        intValue = i;
+    }
+
     public boolean getBoolean() {
         return booleanValue;
+    }
+
+    public String getString() {
+        return stringValue;
+    }
+
+    public void setString(String string) {
+        stringValue = string;
     }
 }
 

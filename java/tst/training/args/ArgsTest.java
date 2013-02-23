@@ -36,14 +36,18 @@ public class ArgsTest {
 
     @Test
     public void testErrorMessageForUnexpectedSchema() throws Exception {
-        Args args = new Args("l,p#,d*", new String[] { "-l", "-p", "123", "-d", "ABC", "-y" });
-        assertEquals("Arguments(s)  -y  unexpected", args.errorMessage());
+        try {
+            Args args = new Args("", new String[] { "-x" });
+            fail();
+        } catch (ArgsException e) {
+            assertEquals(ArgsException.ErrorCode.UNEXPECTED_ARGUMENT, e.getErrorCode());
+            assertEquals('x', e.getErrorArgumentId());
+        }
     }
 
     @Test
     public void testParsingDouble() throws ParseException, ArgsException {
         Args args = new Args("x##", new String[] { "-x", "42.3" });
-        assertTrue(args.isValid());
         assertEquals(1, args.cardinality());
         assertTrue(args.has('x'));
         assertTrue(new Double(42.3).equals(args.getDouble('x')));

@@ -3,6 +3,7 @@ package training.args;
 import java.text.ParseException;
 import java.util.*;
 
+import training.args.ArgsException.ErrorCode;
 import training.orders.ExceedOrderAmountException;
 
 /**
@@ -12,25 +13,17 @@ import training.orders.ExceedOrderAmountException;
 public class Args {
     private String schema;
     private boolean valid;
-    private String[] args;
     private Set<Character> unexpectedArguments = new TreeSet<Character>();
     private Map<Character, ArgumentMarshaler> marshalers = new HashMap<Character, ArgumentMarshaler>();
     private Set<Character> argsFound = new HashSet<Character>();
 
     private Iterator<String> currentArgument;
-    private char errorArgumentId = '\0';
     private List<String> argsList;
 
-    enum ErrorCode {
-        OK, MISSING_STRING, MISSING_INTEGER, INVALID_INTEGER, MISSING_DOUBLE, INVALID_DOUBLE
-    }
-
-    private ErrorCode errorCode = ErrorCode.OK;
-    private String errorParameter;
+    private ArgsException.ErrorCode errorCode = ArgsException.ErrorCode.OK;
 
     public Args(String schema, String[] args) throws ParseException, ArgsException {
         this.schema = schema;
-        this.args = args;
         this.argsList = Arrays.asList(args);
         valid = parse();
     }
@@ -39,15 +32,15 @@ public class Args {
         return valid;
     }
 
-    private boolean parse() throws ParseException, ArgsException {
-        if (schema.length() == 0 && args.length == 0)
+    private boolean parse() throws ArgsException {
+        if (schema.length() == 0 && argsList.size() == 0)
             return true;
         parseSchema();
         parseArguments();
-        return unexpectedArguments.size() == 0;
+        return valid;
     }
 
-    private boolean parseSchema() throws ParseException {
+    private boolean parseSchema() throws ArgsException {
         for (String element : schema.split(",")) {
             if (element.length() > 0) {
                 parseSchemaElement(element.trim());
@@ -56,7 +49,7 @@ public class Args {
         return true;
     }
 
-    private void parseSchemaElement(String element) throws ParseException {
+    private void parseSchemaElement(String element) throws ArgsException {
         char elementId = element.charAt(0);
         String elementTail = element.substring(1);
         validateSchemaElementId(elementId);
@@ -69,26 +62,14 @@ public class Args {
         } else if (elementTail.equals("##")) {
             marshalers.put(elementId, new DoubleArgumentMashaler());
         } else {
-            throw new ParseException(String.format("Argument: %c has invalid format: %s.", elementId, elementTail), 0);
+            throw new ArgsException(String.format("Argument: %c has invalid format: %s.", elementId, elementTail));
         }
     }
 
-    private void validateSchemaElementId(char elementId) throws ParseException {
+    private void validateSchemaElementId(char elementId) throws ArgsException {
         if (!Character.isLetter(elementId)) {
-            throw new ParseException("Bad character:" + elementId + " in Args format: " + schema, 0);
+            throw new ArgsException("Bad character:" + elementId + " in Args format: " + schema);
         }
-    }
-
-    private boolean isBooleanSchemaElement(String elementTail) {
-        return elementTail.length() == 0;
-    }
-
-    private boolean isStringSchemaElement(String elementTail) {
-        return elementTail.equals("*");
-    }
-
-    private boolean isIntegerSchemaElement(String elementTail) {
-        return elementTail.equals("#");
     }
 
     private boolean parseArguments() throws ArgsException {
@@ -113,8 +94,7 @@ public class Args {
         if (setArgument(argChar)) {
             argsFound.add(argChar);
         } else {
-            unexpectedArguments.add(argChar);
-            valid = false;
+            throw new ArgsException(ArgsException.ErrorCode.UNEXPECTED_ARGUMENT, argChar, null);
         }
     }
 
@@ -126,7 +106,6 @@ public class Args {
             m.set(currentArgument);
         } catch (ArgsException e) {
             valid = false;
-            errorArgumentId = argChar;
             throw e;
         }
         return true;
@@ -141,37 +120,6 @@ public class Args {
             return "-[" + schema + "]";
         else
             return "";
-    }
-
-    public String errorMessage() throws Exception {
-        if (unexpectedArguments.size() > 0) {
-            return unexpectedArgumentMessage();
-        } else {
-            switch (errorCode) {
-            case MISSING_DOUBLE:
-                return String.format("Could not find double parameter for -%c", errorArgumentId);
-            case INVALID_DOUBLE:
-                return String.format("Argument -%c expects a double but was '%s'.", errorArgumentId, errorParameter);
-            case MISSING_INTEGER:
-                return String.format("Could not find integer parameter for -%c", errorArgumentId);
-            case INVALID_INTEGER:
-                return String.format("Argument -%c expects an integer but was '%s'.", errorArgumentId, errorParameter);
-            case MISSING_STRING:
-                return String.format("Could not find string parameter for -%c", errorArgumentId);
-            case OK:
-                throw new Exception("TILT: should not get here.");
-            }
-        }
-        return "";
-    }
-
-    private String unexpectedArgumentMessage() {
-        StringBuffer message = new StringBuffer("Arguments(s)  -");
-        for (char c : unexpectedArguments) {
-            message.append(c);
-        }
-        message.append("  unexpected");
-        return message.toString();
     }
 
     public boolean getBoolean(char arg) {
@@ -252,7 +200,7 @@ class StringArgumentMashaler implements ArgumentMarshaler {
         try {
             stringValue = currentArgument.next();
         } catch (NoSuchElementException e) {
-            // errorCode = ErrorCode.MISSING_STRING;
+            // errorCode = ArgsException.ErrorCode.MISSING_STRING;
             throw new ArgsException();
         }
 
@@ -279,7 +227,7 @@ class IntegerArgumentMashaler implements ArgumentMarshaler {
         } catch (NumberFormatException e) {
             // errorParameter = parameter;
             // errorCode = ErrorCode.INVALID_INTEGER;
-            throw e;
+            throw new ArgsException();
         }
     }
 }
@@ -304,7 +252,7 @@ class DoubleArgumentMashaler implements ArgumentMarshaler {
         } catch (NumberFormatException e) {
             // errorParameter = parameter;
             // errorCode = ErrorCode.INVALID_DOUBLE;
-            throw e;
+            throw new ArgsException();
         }
     }
 }

@@ -11,14 +11,15 @@ import training.orders.ExceedOrderAmountException;
  */
 public class Args {
     private String schema;
-    private String[] args;
     private boolean valid;
+    private String[] args;
     private Set<Character> unexpectedArguments = new TreeSet<Character>();
     private Map<Character, ArgumentMarshaler> marshalers = new HashMap<Character, ArgumentMarshaler>();
     private Set<Character> argsFound = new HashSet<Character>();
 
-    private int currentArgument;
+    private Iterator<String> currentArgument;
     private char errorArgumentId = '\0';
+    private List<String> argsList;
 
     enum ErrorCode {
         OK, MISSING_STRING, MISSING_INTEGER, INVALID_INTEGER
@@ -30,6 +31,7 @@ public class Args {
     public Args(String schema, String[] args) throws ParseException, ArgsException {
         this.schema = schema;
         this.args = args;
+        this.argsList = Arrays.asList(args);
         valid = parse();
     }
 
@@ -88,8 +90,8 @@ public class Args {
     }
 
     private boolean parseArguments() throws ArgsException {
-        for (currentArgument = 0; currentArgument < args.length; currentArgument++) {
-            String arg = args[currentArgument];
+        for (currentArgument = argsList.iterator(); currentArgument.hasNext();) {
+            String arg = currentArgument.next();
             parseArgument(arg);
         }
         return true;
@@ -116,6 +118,8 @@ public class Args {
 
     private boolean setArgument(char argChar) throws ArgsException {
         ArgumentMarshaler m = marshalers.get(argChar);
+        if (m == null)
+            return false;
         try {
             if (m instanceof BooleanArgumentMashaler)
                 setBooleanArg(m);
@@ -123,20 +127,17 @@ public class Args {
                 setStringArg(m);
             else if (m instanceof IntegerArgumentMashaler)
                 setIntArg(m);
-            else
-                return false;
-            return true;
         } catch (ArgsException e) {
             valid = false;
             errorArgumentId = argChar;
             throw e;
         }
+        return true;
     }
 
     private void setStringArg(ArgumentMarshaler m) throws ArgsException {
-         currentArgument++;
         try {
-            m.set(args[currentArgument]);
+            m.set(currentArgument.next());
         } catch (ArrayIndexOutOfBoundsException e) {
             valid = false;
             errorCode = ErrorCode.MISSING_STRING;
@@ -153,10 +154,9 @@ public class Args {
     }
 
     private void setIntArg(ArgumentMarshaler m) throws ArgsException {
-         currentArgument++;
         String parameter = null;
         try {
-            parameter = args[currentArgument];
+            parameter = currentArgument.next();
             m.set(parameter);
         } catch (ArrayIndexOutOfBoundsException e) {
             valid = false;
@@ -285,7 +285,6 @@ class IntegerArgumentMashaler extends ArgumentMarshaler {
 
     @Override
     public void set(String s) throws ArgsException {
-        System.out.println(s);
         try {
             intValue = Integer.parseInt(s);
         } catch (NumberFormatException e) {

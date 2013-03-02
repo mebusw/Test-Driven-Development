@@ -10,43 +10,52 @@ public class LightScheduler {
     private static final int TURN_ON = 1;
     private static final int TURN_OFF = 0;
 
-    private int eventId;
-    private int eventDay;
-    private int eventMinuteOfDay;
-
     private LightController lightContoller;
     private TimeService timeService;
-    private int event;
+    private ScheduledEvent scheduledEvent;
 
     public LightScheduler(LightController lightContoller, TimeService timeService) {
         this.lightContoller = lightContoller;
+        this.scheduledEvent = new ScheduledEvent();
         this.timeService = timeService;
-        eventId = UNUSED;
+        scheduledEvent.setEventId(UNUSED);
     }
 
     public void wakeUp() {
-        if (eventId == UNUSED)
+
+        Time time = this.timeService.getTime();
+        processEventDueNow(time, scheduledEvent);
+    }
+
+    protected void processEventDueNow(Time time, ScheduledEvent scheduledEvent) {
+        if (scheduledEvent.getEventId() == UNUSED)
             return;
-        if (eventMinuteOfDay != timeService.getTime().getMinuteOfDay()) {
+        if (scheduledEvent.getEventMinuteOfDay() != time.getMinuteOfDay()) {
             return;
         }
-        if (event == TURN_ON)
-            lightContoller.on(eventId);
+        operateLight(scheduledEvent);
+    }
 
-        else if (event == TURN_OFF)
-            lightContoller.off(eventId);
+    protected void operateLight(ScheduledEvent lightEvent) {
+        if (lightEvent.getEventType() == TURN_ON)
+            lightContoller.on(lightEvent.getEventId());
+        else if (lightEvent.getEventType() == TURN_OFF)
+            lightContoller.off(lightEvent.getEventId());
     }
 
     public void scheduleTurnOn(int id, int day, int minuteOfDay) {
-        eventId = id;
-        eventMinuteOfDay = minuteOfDay;
-        event = TURN_ON;
+        scheduleEvent(id, minuteOfDay, TURN_ON);
     }
 
     public void scheduleTurnOff(int id, int day, int minuteOfDay) {
-        eventId = id;
-        eventMinuteOfDay = minuteOfDay;
-        event = TURN_OFF;
+        scheduleEvent(id, minuteOfDay, TURN_OFF);
+
+    }
+
+    private void scheduleEvent(int id, int minuteOfDay, int event) {
+        scheduledEvent.setEventId(id);
+        scheduledEvent.setEventMinuteOfDay(minuteOfDay);
+        scheduledEvent.setEventType(event);
     }
 
 }

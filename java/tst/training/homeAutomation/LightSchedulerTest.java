@@ -2,8 +2,9 @@ package training.homeAutomation;
 
 import static org.junit.Assert.*;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
-
+import java.util.Calendar;
 import org.mockito.*;
 import org.junit.*;
 import static org.mockito.Mockito.*;
@@ -20,15 +21,25 @@ public class LightSchedulerTest {
     @Mock
     private TimeService timeFake;
 
+    private LightScheduler lightScheduler;
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+        lightScheduler = new LightScheduler();
     }
 
     @Test
-    public void testNoChangeToLightsDuringInitialization() {
+    public void testNoScheduleNothingHappens() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        calendar.set(Calendar.MINUTE, 100);
+
+        when(timeFake.getTime()).thenReturn(calendar.getTime());
         verify(contollerSpy, never()).on(anyInt());
-        when(timeFake.getTime()).thenReturn(new Date());
+
+        lightScheduler.wakeUp();
+
     }
 
 }

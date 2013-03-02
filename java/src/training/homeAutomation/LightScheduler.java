@@ -1,11 +1,10 @@
 package training.homeAutomation;
 
 enum Day {
-    EVERYDAY, MONDAY
+    EVERYDAY, WEEKEND, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
 }
 
 public class LightScheduler {
-    public static final int EVERYDAY = 99;
     public static final int UNUSED = -1;
     private static final int TURN_ON = 1;
     private static final int TURN_OFF = 0;
@@ -30,10 +29,23 @@ public class LightScheduler {
     protected void processEventDueNow(Time time, ScheduledEvent scheduledEvent) {
         if (scheduledEvent.getEventId() == UNUSED)
             return;
-        if (scheduledEvent.getEventMinuteOfDay() != time.getMinuteOfDay()) {
+        if (!doesLightRespondToday(time.getDay(), scheduledEvent.getEventDay()))
             return;
-        }
+        if (scheduledEvent.getEventMinuteOfDay() != time.getMinuteOfDay())
+            return;
+
         operateLight(scheduledEvent);
+    }
+
+    protected boolean doesLightRespondToday(Day today, Day reactionDay) {
+        if (reactionDay == Day.EVERYDAY)
+            return true;
+        if (reactionDay == Day.WEEKEND && (today == Day.SATURDAY || today == Day.SUNDAY))
+            return true;
+        if (reactionDay == today)
+            return true;
+        return false;
+
     }
 
     protected void operateLight(ScheduledEvent lightEvent) {
@@ -43,19 +55,21 @@ public class LightScheduler {
             lightContoller.off(lightEvent.getEventId());
     }
 
-    public void scheduleTurnOn(int id, int day, int minuteOfDay) {
-        scheduleEvent(id, minuteOfDay, TURN_ON);
+    public void scheduleTurnOn(int id, Day day, int minuteOfDay) {
+        scheduleEvent(id, day, minuteOfDay, TURN_ON);
     }
 
-    public void scheduleTurnOff(int id, int day, int minuteOfDay) {
-        scheduleEvent(id, minuteOfDay, TURN_OFF);
+    public void scheduleTurnOff(int id, Day day, int minuteOfDay) {
+        scheduleEvent(id, day, minuteOfDay, TURN_OFF);
 
     }
 
-    private void scheduleEvent(int id, int minuteOfDay, int event) {
+    private void scheduleEvent(int id, Day day, int minuteOfDay, int event) {
         scheduledEvent.setEventId(id);
         scheduledEvent.setEventMinuteOfDay(minuteOfDay);
         scheduledEvent.setEventType(event);
+        scheduledEvent.setEventDay(day);
+
     }
 
 }

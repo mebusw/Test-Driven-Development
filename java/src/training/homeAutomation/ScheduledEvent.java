@@ -2,7 +2,7 @@ package training.homeAutomation;
 
 public class ScheduledEvent {
     private int eventId;
-    private int eventDay;
+    private Day eventDay;
     private int eventMinuteOfDay;
     private int eventType;
 
@@ -18,11 +18,11 @@ public class ScheduledEvent {
         this.eventId = eventId;
     }
 
-    public int getEventDay() {
+    public Day getEventDay() {
         return eventDay;
     }
 
-    public void setEventDay(int eventDay) {
+    public void setEventDay(Day eventDay) {
         this.eventDay = eventDay;
     }
 

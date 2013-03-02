@@ -29,20 +29,24 @@ public class LightSchedulerTest {
         lightScheduler = new LightScheduler(contollerSpy, timeFake);
     }
 
-//    @Test
-//    public void testNoScheduleNothingHappens() {
-//        when(timeFake.getTime()).thenReturn(new Time());
-//
-//        lightScheduler.wakeUp();
-//
-//        verify(contollerSpy, never()).on(anyInt());
-//    }
+    protected void givenTime(Day day, int minuteOfDay) {
+        when(timeFake.getTime()).thenReturn(new Time(day, minuteOfDay));
+    }
+
+    @Ignore
+    public void testNoScheduleNothingHappens() {
+        givenTime(Day.MONDAY, 6);
+
+        lightScheduler.wakeUp();
+
+        verify(contollerSpy, never()).on(anyInt());
+    }
 
     @Test
     public void testScheduleOnEverydayNotTimeYet() {
-        when(timeFake.getTime()).thenReturn(new Time(Day.MONDAY, 5));
+        givenTime(Day.MONDAY, 6);
 
-        lightScheduler.scheduleTurnOn(3, LightScheduler.EVERYDAY, 6);
+        lightScheduler.scheduleTurnOn(3, Day.EVERYDAY, 7);
         lightScheduler.wakeUp();
 
         verify(contollerSpy, never()).on(anyInt());
@@ -50,9 +54,9 @@ public class LightSchedulerTest {
 
     @Test
     public void testScheduleOnEverydayItsTime() {
-        when(timeFake.getTime()).thenReturn(new Time(Day.MONDAY, 6));
+        givenTime(Day.MONDAY, 6);
 
-        lightScheduler.scheduleTurnOn(3, LightScheduler.EVERYDAY, 6);
+        lightScheduler.scheduleTurnOn(3, Day.EVERYDAY, 6);
         lightScheduler.wakeUp();
 
         verify(contollerSpy, times(1)).on(3);
@@ -60,12 +64,62 @@ public class LightSchedulerTest {
 
     @Test
     public void testScheduleOffEverydayItsTime() {
-        when(timeFake.getTime()).thenReturn(new Time(Day.MONDAY, 6));
+        givenTime(Day.MONDAY, 6);
 
-        lightScheduler.scheduleTurnOff(3, LightScheduler.EVERYDAY, 6);
+        lightScheduler.scheduleTurnOff(3, Day.EVERYDAY, 6);
         lightScheduler.wakeUp();
 
         verify(contollerSpy, times(1)).off(3);
     }
 
+    @Test
+    public void testScheduleTuesdayButItsMonday() {
+        givenTime(Day.MONDAY, 6);
+
+        lightScheduler.scheduleTurnOff(3, Day.TUESDAY, 6);
+        lightScheduler.wakeUp();
+
+        verify(contollerSpy, never()).off(anyInt());
+    }
+
+    @Test
+    public void testScheduleTuesdayAndItsTuesday() {
+        givenTime(Day.TUESDAY, 6);
+
+        lightScheduler.scheduleTurnOn(3, Day.TUESDAY, 6);
+        lightScheduler.wakeUp();
+
+        verify(contollerSpy).on(3);
+    }
+
+    
+    @Test
+    public void testScheduleWeekendButItsFriday() {
+        givenTime(Day.FRIDAY, 6);
+
+        lightScheduler.scheduleTurnOn(3, Day.WEEKEND, 6);
+        lightScheduler.wakeUp();
+
+        verify(contollerSpy, never()).on(anyInt());
+    }
+
+    @Test
+    public void testScheduleWeekendButItsSaturday() {
+        givenTime(Day.SATURDAY, 6);
+
+        lightScheduler.scheduleTurnOn(3, Day.WEEKEND, 6);
+        lightScheduler.wakeUp();
+
+        verify(contollerSpy).on(3);
+    }
+    
+    @Test
+    public void testScheduleWeekendButItsSunday() {
+        givenTime(Day.SUNDAY, 6);
+
+        lightScheduler.scheduleTurnOn(3, Day.WEEKEND, 6);
+        lightScheduler.wakeUp();
+
+        verify(contollerSpy).on(3);
+    }
 }

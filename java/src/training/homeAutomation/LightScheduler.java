@@ -4,7 +4,7 @@ enum Day {
     EVERYDAY, WEEKEND, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
 }
 
-public class LightScheduler {
+public class LightScheduler implements TimeServiceCallback{
     public static final int UNUSED = -1;
     private static final int TURN_ON = 1;
     private static final int TURN_OFF = 0;
@@ -18,6 +18,7 @@ public class LightScheduler {
         this.scheduledEvent = new ScheduledEvent();
         this.timeService = timeService;
         scheduledEvent.setEventId(UNUSED);
+        timeService.setPeriodicAlarmInSeconds(60, this);
     }
 
     public void wakeUp() {
@@ -70,6 +71,12 @@ public class LightScheduler {
         scheduledEvent.setEventType(event);
         scheduledEvent.setEventDay(day);
 
+    }
+
+    @Override
+    public void callback() {
+        // TODO Auto-generated method stub
+        
     }
 
 }

@@ -26,20 +26,35 @@ public class LightSchedulerTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        lightScheduler = new LightScheduler();
+        lightScheduler = new LightScheduler(contollerSpy, timeFake);
     }
 
     @Test
     public void testNoScheduleNothingHappens() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        calendar.set(Calendar.MINUTE, 100);
-
-        when(timeFake.getTime()).thenReturn(calendar.getTime());
-        verify(contollerSpy, never()).on(anyInt());
+        when(timeFake.getTime()).thenReturn(new Time());
 
         lightScheduler.wakeUp();
 
+        verify(contollerSpy, never()).on(anyInt());
     }
 
+    @Test
+    public void testScheduleOnEverydayNotTimeYet() {
+        when(timeFake.getTime()).thenReturn(new Time(Time.MONDAY, 5));
+
+        lightScheduler.scheduleTurnOn(3, LightScheduler.EVERYDAY, 6);
+        lightScheduler.wakeUp();
+
+        verify(contollerSpy, never()).on(anyInt());
+    }
+
+    @Test
+    public void testScheduleOnEverydayItsTime() {
+        when(timeFake.getTime()).thenReturn(new Time(Time.MONDAY, 6));
+
+        lightScheduler.scheduleTurnOn(3, LightScheduler.EVERYDAY, 6);
+        lightScheduler.wakeUp();
+        
+        verify(contollerSpy, times(1)).on(3);
+    }
 }

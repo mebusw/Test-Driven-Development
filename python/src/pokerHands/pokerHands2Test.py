@@ -21,8 +21,8 @@ class GameTest(unittest.TestCase):
     def testHighCards(self):
         self.assertGreater(Hand('2C 3H 4S 8C AH'), Hand('2H 3D 5S 9C KD'))
 
-    # def testFlushBeatHighCards(self):
-    #     self.assertGreater(Hand('2H 3D 5S 9C KD'), Hand('2C 3H 4S 8C AH'))
+    def testFlushBeatHighCards(self):
+        self.assertGreater(Hand('9S 3S 4S KS 6S'), Hand('2C 3H 4S 8C AH'))
 
         
 if __name__ == "__main__":

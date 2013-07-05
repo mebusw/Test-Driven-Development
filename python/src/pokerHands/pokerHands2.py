@@ -40,6 +40,10 @@ class Hand(object):
     def _isStraight(self):
         return all([z[0] == z[1] + 1 for z in zip(self.rankedCards[:-1], self.rankedCards[1:])])
 
+    def _reduceD(self, cards):
+        print [pair[0] for pair in zip(cards[:-1], cards[1:]) if pair[0] == pair[1]]
+        return reduce(lambda cards, y: [pair[0] for pair in zip(cards[:-1], cards[1:]) if pair[0] == pair[1]], range(1), cards)#self.rankedCards)
+
     def _findDuplicates(self):
         self._duplicates = {}
         for c in self.cards:

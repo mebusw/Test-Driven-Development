@@ -11,6 +11,9 @@ class Hand(object):
         self.cards = cardString.split(' ')
         self.rankedCards = map(lambda card: RANKS[card[0]], self.cards)
         self.rankedCards.sort(reverse=True)
+
+        if self.rankedCards == [14, 5, 4, 3, 2]:
+            self.rankedCards = [5, 4, 3, 2, 1]
         
         self.pairs = []
         self.fourKinds = []
@@ -46,11 +49,11 @@ class Hand(object):
 
     def _findDuplicates(self):
         self._duplicates = {}
-        for c in self.cards:
-            if self._duplicates.has_key(c[0]):
-                self._duplicates[c[0]] += 1
+        for c in self.rankedCards:
+            if self._duplicates.has_key(c):
+                self._duplicates[c] += 1
             else:
-                self._duplicates[c[0]] = 1
+                self._duplicates[c] = 1
 
         for k, v in self._duplicates.iteritems():
             if v == 4:

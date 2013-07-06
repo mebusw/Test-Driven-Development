@@ -52,9 +52,8 @@ class HandTest(unittest.TestCase):
         print Hand('5C 6C 7C 8C 9C')._reduceD([3,3,3])
         print reduce(lambda x,y: x, range(6), [1,1])
 
-    # def testStraight_Minimal(self):
-    #     self.assertGreater(Hand('2C 3H 4S 5C 6H'), Hand('AC 2H 3S 4C 5H'))
-    #     self.assertGreater(Hand('AC 2H 3S 4C 5H'), Hand('2C 3H 4S 5C 6H'))              
+    def testStraight_Minimal(self):
+        self.assertGreater(Hand('2C 3H 4S 5C 6H'), Hand('AC 2H 3S 4C 5H'))
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

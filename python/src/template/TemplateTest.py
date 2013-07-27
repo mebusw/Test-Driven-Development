@@ -21,34 +21,23 @@ from Template import *
 
 class CarControllerTest(unittest.TestCase):
     def setUp(self):
-        pass
+        self.template = Template('${one}, ${two}, ${three}')
+    	self.template.set('one', '1')
+    	self.template.set('two', '2')
+    	self.template.set('three', '3')
 
     def tearDown(self):
         pass
 
-    def testOneVariable(self):
-    	template = Template('Hello, ${name}')
-    	template.set('name', 'Reader')
-    	self.assertEqual("Hello, Reader", template.evaluate())
-
-    def testDifferentTemplate(self):
-    	template = Template('Hi, ${name}')
-    	template.set('name', 'someone else')
-    	self.assertEqual("Hi, someone else", template.evaluate())
-
     def testMultipleVariables(self):
-    	template = Template('${one}, ${two}, ${three}')
-    	template.set('one', '1')
-    	template.set('two', '2')
-    	template.set('three', '3')
-    	self.assertEqual("1, 2, 3", template.evaluate())
+    	self.assertTemplateEnaluatesTo("1, 2, 3")
 
     def testUnknownVariableAreIgnored(self):
-    	template = Template('Hello, ${name}')
-    	template.set('name', 'Reader')
-    	template.set('doesnotexitst', 'Hi')
-    	self.assertEqual("Hello, Reader", template.evaluate())
+    	self.template.set('doesnotexitst', 'Hi')
+    	self.assertTemplateEnaluatesTo("1, 2, 3")
 
+    def assertTemplateEnaluatesTo(self, expected):
+		self.assertEqual(expected, self.template.evaluate())    	
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

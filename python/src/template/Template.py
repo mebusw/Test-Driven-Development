@@ -22,19 +22,29 @@ class Template(object):
 	def evaluate(self):
 		parser = TemplateParser()
 		segments = parser.parse(self.templateText)
+		return self._concatenate(segments)
+
+	def _concatenate(self, segments):
 		self.result = ''
 		for seg in segments:
-			self._append(seg, self.result)
+			self._append(seg)
 		return self.result
 
-	def _append(self, seg, result):
-		if seg.startswith('${') and seg.endswith('}'):
-			k = seg[2:-1]
-			if not k in self.variables:
-				raise MissingValueException('No value for %s' % seg)
-			self.result += self.variables[k]
+	def _append(self, seg):
+		if self._isVariable(seg):
+			self._evaluateVariable(seg)
 		else:
 			self.result += seg
+
+	def _isVariable(self, seg):
+		return seg.startswith('${') and seg.endswith('}')
+
+	def _evaluateVariable(self, seg):
+		k = seg[2:-1]
+		if not k in self.variables:
+			raise MissingValueException('No value for %s' % seg)
+		self.result += self.variables[k]
+	
 
 class TemplateParser(object):
 	def parse(self, templateText):
@@ -67,5 +77,3 @@ class TemplateParser(object):
 		if len(segments) == 0:
 			segments.append('')
 
-#r = re.finditer('\$\{[^}]*\}', '${a}:${b}:${c}')
-#print rr.group(), rr.start(), rr.end()

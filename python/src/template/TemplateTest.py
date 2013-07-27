@@ -51,11 +51,9 @@ class TemplateTest(unittest.TestCase):
     		#TODO
 
     def testMissingValueRaisesException(self):
-    	try:
+    	with self.assertRaises(MissingValueException) as cm:
     		Template('${foo}').evaluate()
-    		self.fail('should raise exception if a variable was left without a value!')
-    	except MissingValueException as e:
-    		self.assertEqual('No value for ${foo}', e.message)
+    	self.assertEqual('No value for ${foo}', cm.exception.message)
 
 
     def assertTemplateEnaluatesTo(self, expected):
@@ -78,8 +76,24 @@ class TemplatePerformanceTest(unittest.TestCase):
     	self.template.evaluate()
     	expectedTimeGap = 0.2
     	actualTimeGap = time.clock()
-    	self.assertTrue(actualTimeGap < 0.2)
+    	self.assertLess(actualTimeGap, 0.2)
 
+class TemplateParserTest(unittest.TestCase):
+    def setUp(self):
+    	self.parser = TemplateParser()
+
+    def testEmptyTemplateRendersAsEmptyString(self):   	
+    	segments = self.parser.parse('')
+    	self.assertEqual(1, len(segments))
+    	self.assertEqual('', segments[0])
+
+    def testWithOnlyPlainText(self):
+    	segments = self.parser.parse('plain text only')
+    	self.assertSegments(segments, 'plain text only')
+
+    def assertSegments(self, actual, *expected):
+    	self.assertEqual(len(expected), len(actual))
+    	self.assertEqual(expected, actual)
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

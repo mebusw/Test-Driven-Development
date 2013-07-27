@@ -35,3 +35,6 @@ class Template(object):
 		if r:
 			raise MissingValueException('No value for %s' % r.group())
 
+class TemplateParser(object):
+	def parse(self, templateText):
+		return (templateText,)

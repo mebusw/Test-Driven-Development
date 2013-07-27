@@ -10,10 +10,13 @@ Created on 2013-7-27
 class Template(object):
 	def __init__(self, templateText):
 		self.templateText = templateText
+		self.variables = {}
 
 	def set(self, variable, value):
-		self.variableValue = value
+		self.variables[variable] = value
 
 	def evaluate(self):
-		return self.templateText.replace('${name}', self.variableValue)
-		# return 'Hello, %s' % self.variableValue
+		result = self.templateText
+		for (k, v) in self.variables.iteritems():
+			result = result.replace('${%s}' % k, v)
+		return result

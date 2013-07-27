@@ -41,14 +41,10 @@ class TemplateTest(unittest.TestCase):
     	self.assertTemplateEnaluatesTo("1, 2, 3")
 
     def testVariableGetProcessedJustOnce(self):
-    	try:
-	    	self.template.set('one', '${one}')
-	    	self.template.set('two', '${three}')
-	    	self.template.set('three', '${two}')
-	    	self.assertTemplateEnaluatesTo("${one}, ${two}, ${three}")
-    	except MissingValueException as e:
-    		pass
-    		#TODO
+    	self.template.set('one', '${one}')
+    	self.template.set('two', '${three}')
+    	self.template.set('three', '${two}')
+    	self.assertTemplateEnaluatesTo("${one}, ${three}, ${two}")
 
     def testMissingValueRaisesException(self):
     	with self.assertRaises(MissingValueException) as cm:

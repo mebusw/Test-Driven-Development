@@ -20,20 +20,21 @@ class Template(object):
 		self.variables[variable] = value
 
 	def evaluate(self):
-		result = self._replaceVariables()
-		self._checkForMissingValues(result)
-		return result
+		parser = TemplateParser()
+		segments = parser.parse(self.templateText)
+		self.result = ''
+		for seg in segments:
+			self._append(seg, self.result)
+		return self.result
 
-	def _replaceVariables(self):
-		result = self.templateText
-		for (k, v) in self.variables.iteritems():
-			result = result.replace('${%s}' % k, v)
-		return result
-
-	def _checkForMissingValues(self, result):
-		r = re.search('.*\$\{.+\}.*', result)
-		if r:
-			raise MissingValueException('No value for %s' % r.group())
+	def _append(self, seg, result):
+		if seg.startswith('${') and seg.endswith('}'):
+			k = seg[2:-1]
+			if not k in self.variables:
+				raise MissingValueException('No value for %s' % seg)
+			self.result += self.variables[k]
+		else:
+			self.result += seg
 
 class TemplateParser(object):
 	def parse(self, templateText):

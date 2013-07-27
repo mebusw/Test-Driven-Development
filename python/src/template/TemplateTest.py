@@ -7,8 +7,10 @@ Created on 2013-7-27
 '''
 import unittest
 from mock import MagicMock, Mock
+import time
 
 from Template import *
+
 
 ''' TODO
 * template variable can be replaced
@@ -16,10 +18,12 @@ from Template import *
 * ignore non-exist variable
 * template support latin characters
 * variable support latin characters
-
+* able to handle '${foo}" as value of variable '${bar}'
+* evaluate should complete within 200ms for 100 words + 5 variables of 15+ chars
+* handle when set variable to variable
 '''
 
-class CarControllerTest(unittest.TestCase):
+class TemplateTest(unittest.TestCase):
     def setUp(self):
         self.template = Template('${one}, ${two}, ${three}')
     	self.template.set('one', '1')
@@ -36,8 +40,46 @@ class CarControllerTest(unittest.TestCase):
     	self.template.set('doesnotexitst', 'Hi')
     	self.assertTemplateEnaluatesTo("1, 2, 3")
 
+    def testVariableGetProcessedJustOnce(self):
+    	try:
+	    	self.template.set('one', '${one}')
+	    	self.template.set('two', '${three}')
+	    	self.template.set('three', '${two}')
+	    	self.assertTemplateEnaluatesTo("${one}, ${two}, ${three}")
+    	except MissingValueException as e:
+    		pass
+    		#TODO
+
+    def testMissingValueRaisesException(self):
+    	try:
+    		Template('${foo}').evaluate()
+    		self.fail('should raise exception if a variable was left without a value!')
+    	except MissingValueException as e:
+    		self.assertEqual('No value for ${foo}', e.message)
+
+
     def assertTemplateEnaluatesTo(self, expected):
 		self.assertEqual(expected, self.template.evaluate())    	
+
+class TemplatePerformanceTest(unittest.TestCase):
+    def setUp(self):
+        self.template = Template('''Returns one or more subgroups of the match. 
+        	If there is a single argument, the result is a single string; 
+        	if there are multiple arguments, the result is a tuple with one item per argument. 
+        	Without arguments, group1 defaults to zero (the whole match is returned).
+        	${onezzzzzzzzzzz}, ${twozzzzzzzzzzz}, ${threezzzzzzzzz}, ${fourzzzzzzzzzz}, ${fivezzzzzzzzzz}''')
+    	self.template.set('onezzzzzzzzzzz', '1')
+    	self.template.set('twozzzzzzzzzzz', '2')
+    	self.template.set('threezzzzzzzzz', '3')
+    	self.template.set('fourzzzzzzzzzz', '4')
+    	self.template.set('fivezzzzzzzzzz', '5')
+
+    def testTemplateWith100WordsAnd5Variables(self):
+    	self.template.evaluate()
+    	expectedTimeGap = 0.2
+    	actualTimeGap = time.clock()
+    	self.assertTrue(actualTimeGap < 0.2)
+
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

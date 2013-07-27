@@ -91,9 +91,15 @@ class TemplateParserTest(unittest.TestCase):
     	segments = self.parser.parse('plain text only')
     	self.assertSegments(segments, 'plain text only')
 
+    def testParsingMultipleVariables(self):
+    	segments = self.parser.parse('${a}:${b}:${c}')
+    	self.assertSegments(segments, '${a}', ':', '${b}', ':', '${c}')
+
+
     def assertSegments(self, actual, *expected):
     	self.assertEqual(len(expected), len(actual))
     	self.assertEqual(expected, actual)
+
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

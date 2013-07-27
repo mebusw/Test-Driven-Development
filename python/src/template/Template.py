@@ -37,4 +37,34 @@ class Template(object):
 
 class TemplateParser(object):
 	def parse(self, templateText):
-		return (templateText,)
+		segments = []
+		index = self._collectSegments(segments, templateText)
+		self._addTail(segments, templateText, index)
+		self._addEmptyStringIfTemplateWasEmpty(segments)
+		return tuple(segments)
+
+	def _collectSegments(self, segments, src):
+		index = 0
+		for matchObject in re.finditer('\$\{[^}]*\}', src):
+			self._addPrecedingPlainText(segments, src, matchObject, index)
+			self._addVariable(segments, src, matchObject)
+			index = matchObject.end()
+		return index
+
+	def _addPrecedingPlainText(self, segments, src, matchObject, index):
+		if index != matchObject.start():
+			segments.append(src[index:matchObject.start()])
+
+	def _addVariable(self, segments, src, matchObject):
+		segments.append(src[matchObject.start():matchObject.end()])
+
+	def _addTail(self, segments, src, index):
+		if index < len(src):
+			segments.append(src[index:])
+
+	def _addEmptyStringIfTemplateWasEmpty(self, segments):
+		if len(segments) == 0:
+			segments.append('')
+
+#r = re.finditer('\$\{[^}]*\}', '${a}:${b}:${c}')
+#print rr.group(), rr.start(), rr.end()

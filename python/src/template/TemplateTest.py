@@ -34,17 +34,17 @@ class TemplateTest(unittest.TestCase):
         pass
 
     def testMultipleVariables(self):
-        self.assertTemplateEnaluatesTo("1, 2, 3")
+        self.assertTemplateEvaluatesTo("1, 2, 3")
 
     def testUnknownVariableAreIgnored(self):
         self.template.set('doesnotexitst', 'Hi')
-        self.assertTemplateEnaluatesTo("1, 2, 3")
+        self.assertTemplateEvaluatesTo("1, 2, 3")
 
     def testVariableGetProcessedJustOnce(self):
         self.template.set('one', '${one}')
         self.template.set('two', '${three}')
         self.template.set('three', '${two}')
-        self.assertTemplateEnaluatesTo("${one}, ${three}, ${two}")
+        self.assertTemplateEvaluatesTo("${one}, ${three}, ${two}")
 
     def testMissingValueRaisesException(self):
         with self.assertRaises(MissingValueException) as cm:
@@ -52,7 +52,7 @@ class TemplateTest(unittest.TestCase):
         self.assertEqual('No value for ${foo}', cm.exception.message)
 
 
-    def assertTemplateEnaluatesTo(self, expected):
+    def assertTemplateEvaluatesTo(self, expected):
         self.assertEqual(expected, self.template.evaluate())        
 
 class TemplatePerformanceTest(unittest.TestCase):

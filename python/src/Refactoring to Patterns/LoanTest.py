@@ -7,7 +7,7 @@ import unittest
 from mock import MagicMock, Mock
 import time
 from datetime import date
-from Loan import Loan
+from Loan import Loan, CapitalStrategy
 
 class LoanTest(unittest.TestCase):
     def setUp(self):
@@ -27,8 +27,9 @@ class LoanTest(unittest.TestCase):
         print (d - date(2013, 8, 15)).days
 
     def testNewLoan(self):
-        termLoan = Loan.createTermLoan(300, 0.5, 0.8)
+        termLoan = Loan.createTermLoan(300, 0.5, 0.8, CapitalStrategy())
         self.assertEquals(300, termLoan.commitment)
+        self.assertEquals(120, termLoan.capital())
 
         revolver = Loan.createRevolver(300, 0.5, 0.8, date(2013, 8, 15))
         self.assertTrue(None != revolver.expiry)

@@ -8,16 +8,17 @@ from datetime import date
 
 
 class Loan():
-    def __init__(self, commitment, riskRating, maturity, expiry=None, outstanding=None):
+    def __init__(self, commitment, riskRating, maturity, capitalStrategy=None, expiry=None, outstanding=None):
         self.commitment = commitment
         self.riskRating = riskRating
         self.maturity = maturity
         self.expiry = expiry
         self.outstanding = outstanding
+        self.capitalStrategy = capitalStrategy
 
     @staticmethod
-    def createTermLoan(commitment, riskRating, maturity):
-        return Loan(commitment, riskRating, maturity)
+    def createTermLoan(commitment, riskRating, maturity, capitalStrategy):
+        return Loan(commitment, riskRating, maturity, capitalStrategy)
 
     @staticmethod
     def createRevolver(commitment, riskRating, maturity, expiry):
@@ -28,49 +29,60 @@ class Loan():
         return Loan(commitment, riskRating, maturity, outstanding=outstanding)
 
     def capital(self):
-        if None == self.expiry and None != self.maturity:
-            return self.commitment * self.duration() * self.riskFactor()
-        if None != self.expiry and None == self.maturity:
-            if self.getUnusedPercentage() != 1.0:
-                return self.commitment * self.getUnusedPercentage() * self.duration() * self.riskFactor()
-            else:
-                return self.ourstandingRiskAmount() * self.duration() * self.riskFactor() \
-                    + self.unusedRiskAmount() * self.duration() * self.unusedRiskFactor()
-        return 0.0
-
-    def ourstandingRiskAmount(self):
-        return self.outstanding
-
-    def unusedRiskAmount(self):
-        return self.commitment - self.outstanding
+        return self.capitalStrategy.capital(self)
 
     def duration(self):
-        if None == self.expiry and None != self.maturity:
-            return self.weightedAverageDuration()
-        if None != self.expiry and None == self.maturity:
-            return self.yearsTo(self.expiry)
-        return 0.0
+        return self.capitalStrategy.duration(self)
 
-    def weightedAverageDuration(self):
+
+
+
+class CapitalStrategy:
+    def capital(self, loan):
+        print loan.expiry, loan.maturity
+        if None == loan.expiry and None != loan.maturity:
+            return loan.commitment * loan.duration() * self.riskFactor(loan)
+        if None != loan.expiry and None == loan.maturity:
+            if loan.getUnusedPercentage() != 1.0:
+                return loan.commitment * loan.getUnusedPercentage() * loan.duration() * self.riskFactor(loan)
+            else:
+                return loan.ourstandingRiskAmount() * loan.duration() * self.riskFactor(loan) \
+                    + loan.unusedRiskAmount() * loan.duration() * self.unusedRiskFactor(loan)
+        return 3.0
+    def riskFactor(self, loan):
+        return loan.riskRating * 1.0
+
+    def unusedRiskFactor(self, loan):
+        return loan.riskRating * 1.0
+
+    def duration(self, loan):
+        if None == loan.expiry and None != loan.maturity:
+            return self.weightedAverageDuration(loan)
+        if None != loan.expiry and None == loan.maturity:
+            return self.yearsTo(loan.expiry)
+        return 1.0
+
+    def weightedAverageDuration(self, loan):
         duration = 1.0
         weightedAverage = 80
         sumOfPayments = 100
-        self.payments = []
+        loan.payments = []
 
-        for payment in self.payments:
+        for payment in loan.payments:
             sumOfPayments += payments.amount
             weightedAverage += self.yearsTo(payment.date) * payment.amount
 
-        if self.commitment != 0.0:
-            duration = weightedAverage / sumOfPayments
+        if loan.commitment != 0.0:
+            duration = weightedAverage * 1.0 / sumOfPayments
         return duration
 
-    def yearsTo(self, endDate):
+    def yearsTo(self, endDate, loan):
         beginDate = date(2013, 8, 15)
         return (endDate - beginDate).days / 365
 
-    def riskFactor(self):
-        return self.riskRating * 1.0
+    def ourstandingRiskAmount(self, loan):
+        return loan.outstanding
 
-    def unusedRiskFactor(self):
-        return self.riskRating * 1.0
+    def unusedRiskAmount(self, loan):
+        return loan.commitment - loan.outstanding
+

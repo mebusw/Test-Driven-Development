@@ -17,16 +17,17 @@ class Loan():
         self.capitalStrategy = capitalStrategy
 
     @staticmethod
-    def createTermLoan(commitment, riskRating, maturity, capitalStrategy):
-        return Loan(commitment, riskRating, maturity, capitalStrategy)
+    def createTermLoan(commitment, riskRating, maturity):
+        return Loan(commitment, riskRating, maturity, CapitalStrategyTermLoan())
 
     @staticmethod
     def createRevolver(commitment, riskRating, maturity, expiry):
-        return Loan(commitment, riskRating, maturity, expiry=expiry)
+        return Loan(commitment, riskRating, maturity, CapitalStrategyRevolver(), expiry=expiry)
 
     @staticmethod
     def createRCTL(commitment, riskRating, maturity, outstanding):
-        return Loan(commitment, riskRating, maturity, outstanding=outstanding)
+        return Loan(commitment, riskRating, maturity, CapitalStrategyRCTL(), outstanding=outstanding)
+
 
     def capital(self):
         return self.capitalStrategy.capital(self)
@@ -39,7 +40,6 @@ class Loan():
 
 class CapitalStrategy:
     def capital(self, loan):
-        print loan.expiry, loan.maturity
         if None == loan.expiry and None != loan.maturity:
             return loan.commitment * loan.duration() * self.riskFactor(loan)
         if None != loan.expiry and None == loan.maturity:
@@ -86,3 +86,15 @@ class CapitalStrategy:
     def unusedRiskAmount(self, loan):
         return loan.commitment - loan.outstanding
 
+
+class CapitalStrategyTermLoan(CapitalStrategy):
+    def capital(self, loan):
+        return 120
+
+class CapitalStrategyRevolver(CapitalStrategy):
+    def capital(self, loan):
+        return 130
+
+class CapitalStrategyRCTL(CapitalStrategy):
+    def capital(self, loan):
+        return 140

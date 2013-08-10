@@ -20,22 +20,24 @@ class LoanTest(unittest.TestCase):
         stubStatusPanel = Mock('StatusPanel')
         self.assertEquals(2, 2)
         d = date.today()
-        print date.fromtimestamp(time.time())
-        print date(2013, 8, 15)
-        print d.timetuple()
-        print d.strftime("%A %d. %B %Y")
-        print (d - date(2013, 8, 15)).days
+        # print date.fromtimestamp(time.time())
+        # print date(2013, 8, 15)
+        # print d.timetuple()
+        # print d.strftime("%A %d. %B %Y")
+        # print (d - date(2013, 8, 15)).days
 
     def testNewLoan(self):
-        termLoan = Loan.createTermLoan(300, 0.5, 0.8, CapitalStrategy())
+        termLoan = Loan.createTermLoan(300, 0.5, 0.8)
         self.assertEquals(300, termLoan.commitment)
         self.assertEquals(120, termLoan.capital())
 
         revolver = Loan.createRevolver(300, 0.5, 0.8, date(2013, 8, 15))
         self.assertTrue(None != revolver.expiry)
+        self.assertEquals(130, revolver.capital())
         
         RCTL = Loan.createRCTL(300, 0.5, 0.8, 200)
         self.assertEquals(200, RCTL.outstanding)
+        self.assertEquals(140, RCTL.capital())
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

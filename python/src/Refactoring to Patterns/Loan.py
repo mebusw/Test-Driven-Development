@@ -15,6 +15,18 @@ class Loan():
         self.expiry = expiry
         self.outstanding = outstanding
 
+    @staticmethod
+    def createTermLoan(commitment, riskRating, maturity):
+        return Loan(commitment, riskRating, maturity)
+
+    @staticmethod
+    def createRevolver(commitment, riskRating, maturity, expiry):
+        return Loan(commitment, riskRating, maturity, expiry=expiry)
+
+    @staticmethod
+    def createRCTL(commitment, riskRating, maturity, outstanding):
+        return Loan(commitment, riskRating, maturity, outstanding=outstanding)
+
     def capital(self):
         if None == self.expiry and None != self.maturity:
             return self.commitment * self.duration() * self.riskFactor()

@@ -27,8 +27,14 @@ class LoanTest(unittest.TestCase):
         print (d - date(2013, 8, 15)).days
 
     def testNewLoan(self):
-        loan = Loan(300, 0.5, 0.8)
-        print loan.capital()
+        termLoan = Loan.createTermLoan(300, 0.5, 0.8)
+        self.assertEquals(300, termLoan.commitment)
+
+        revolver = Loan.createRevolver(300, 0.5, 0.8, date(2013, 8, 15))
+        self.assertTrue(None != revolver.expiry)
+        
+        RCTL = Loan.createRCTL(300, 0.5, 0.8, 200)
+        self.assertEquals(200, RCTL.outstanding)
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

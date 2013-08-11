@@ -38,12 +38,6 @@ class OrderWriterTest(unittest.TestCase):
         self.assertEquals(expected, ordersWriter.getContents())
 
 class TagNodeTest(unittest.TestCase):
-    def setUp(self):
-        pass
-
-    def tearDown(self):
-        pass
-
     def testSimpleTagWIthOneAttributeAndValue(self):
         priceTag = TagNode('price')
         priceTag.addAttribute('currency', 'USD')
@@ -68,6 +62,48 @@ class TagNodeTest(unittest.TestCase):
         expected = "<orders><order><product></product></order></orders>"
 
         self.assertEquals(expected, str(ordersTag))        
+
+    def testParents(self):
+        root = TagNode('root')
+        self.assertIsNone(root.parent)
+
+        child = TagNode('child')
+        root.add(child)
+        self.assertEquals(root, child.parent)        
+        self.assertEquals('root', child.parent.name)        
+
+class TagBuilderTest(unittest.TestCase):
+    def testBuildOneNode(self):
+        expected = "<flavors></flavors>"
+        builder = TagBuilder("flavors")
+
+        self.assertEquals(expected, str(builder))        
+
+    def testBuildOneChild(self):
+        builder = TagBuilder("flavors")
+        builder.addChild('flavor')
+        expected = "<flavors><flavor></flavor></flavors>"
+
+        self.assertEquals(expected, str(builder))        
+
+    def testBuildChildrenOfChildren(self):
+        builder = TagBuilder("flavors")
+        builder.addChild('flavor')
+        builder.addChild('requirements')
+        builder.addChild('requirement')
+        expected = "<flavors><flavor><requirements><requirement></requirement></requirements></flavor></flavors>"
+
+        self.assertEquals(expected, str(builder))        
+
+    def testBuildSibling(self):
+        builder = TagBuilder("flavors")
+        builder.addChild('flavor1')
+        builder.addSibling('flavor2')
+        expected = "<flavors><flavor1></flavor1><flavor2></flavor2></flavors>"
+
+        self.assertEquals(expected, str(builder))        
+
+
 
 
 if __name__ == "__main__":

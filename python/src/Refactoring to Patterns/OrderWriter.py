@@ -47,6 +47,7 @@ class TagNode:
         self.value = ""
         self.attribute = ""
         self.children = []
+        self.parent = None
 
     def addAttribute(self, attribute, value):
         self.attribute += " %s='%s'" % (attribute, value)
@@ -56,6 +57,7 @@ class TagNode:
 
     def add(self, child):
         self.children.append(child)
+        child.parent = self
 
     def __str__(self):
         result = "<%s%s>" % (self.name, self.attribute)
@@ -63,3 +65,21 @@ class TagNode:
             result += str(child)
         result += "%s</%s>" % (self.value, self.name)
         return result
+
+class TagBuilder:
+    def __init__(self, rootTagName):
+        self.rootNode = TagNode(rootTagName)
+        self.currrentNode = self.rootNode
+
+    def __str__(self):
+        return str(self.rootNode)
+
+    def addChild(self, childTagName):
+        self._addTo(self.currrentNode, childTagName)
+
+    def addSibling(self, siblingTagName):
+        self._addTo(self.currrentNode.parent, siblingTagName)
+
+    def _addTo(self, parentNode, tagName):
+        self.currrentNode = TagNode(tagName)
+        parentNode.add(self.currrentNode)

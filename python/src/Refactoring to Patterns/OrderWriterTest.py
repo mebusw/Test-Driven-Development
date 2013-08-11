@@ -127,6 +127,7 @@ class TagBuilderTest(unittest.TestCase):
                 builder.addChild('requirements')
                 builder.addChild('requirement')
         self.assertEqual('Missing parent tag: %s' % wrongParentName, cm.exception.message)
+
         
 
 

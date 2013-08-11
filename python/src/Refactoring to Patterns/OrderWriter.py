@@ -11,8 +11,28 @@ class OrderWriter():
     def __init__(self, orders):
         self.orders = orders
 
-    def getContents(self):
+    def getContents1(self):
         return self.writeOrdersTo()
+
+    def getContents(self):
+        builder = TagBuilder("orders")
+        for order in self.orders:
+            builder.addToParent('orders', 'order')
+            builder.addAttribute('id', order['id'])
+            for product in order['products']:
+                builder.addToParent('order', 'product')
+                builder.addAttribute('id', product['id'])
+                builder.addAttribute('color', product['color'])
+                if 'size' in product:
+                    builder.addAttribute('size', product['size'])
+                
+                builder.addValue(product['name'])
+                
+                builder.addChild('price')
+                builder.addAttribute('currency', product['currency'])
+                builder.addValue(product['price'])      
+
+        return str(builder)
 
     def writeOrdersTo(self):
         ordersTag = TagNode('orders')

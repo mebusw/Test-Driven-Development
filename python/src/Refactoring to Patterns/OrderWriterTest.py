@@ -103,7 +103,31 @@ class TagBuilderTest(unittest.TestCase):
 
         self.assertEquals(expected, str(builder))        
 
+    def testRepeatingChildrenOfChildren(self):
+        builder = TagBuilder("flavors")
+        for i in xrange(2):
+            builder.addToParent('flavors', 'flavor')
+            builder.addChild('requirements')
+            builder.addChild('requirement')
+        expected = "<flavors>" \
+            + "<flavor><requirements><requirement></requirement></requirements></flavor>" * 2 \
+            + "</flavors>"
 
+        self.assertEquals(expected, str(builder))        
+
+    def testParentNameNotFound(self):
+        expected = "<flavors>" \
+                + "<flavor><requirements><requirement></requirement></requirements></flavor>" * 2 \
+                + "</flavors>"
+        wrongParentName = 'xyz'
+        with self.assertRaises(Exception) as cm:
+            builder = TagBuilder("flavors")
+            for i in xrange(2):
+                builder.addToParent(wrongParentName, 'flavor')
+                builder.addChild('requirements')
+                builder.addChild('requirement')
+        self.assertEqual('Missing parent tag: %s' % wrongParentName, cm.exception.message)
+        
 
 
 if __name__ == "__main__":

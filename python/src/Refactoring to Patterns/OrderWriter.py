@@ -80,6 +80,27 @@ class TagBuilder:
     def addSibling(self, siblingTagName):
         self._addTo(self.currrentNode.parent, siblingTagName)
 
+    def addToParent(self, parentTagName, childTagName):
+        parentNode = self._findParentBy(parentTagName)
+        if None == parentNode:
+            raise Exception('Missing parent tag: %s' % parentTagName)
+        self._addTo(parentNode, childTagName)
+
     def _addTo(self, parentNode, tagName):
         self.currrentNode = TagNode(tagName)
         parentNode.add(self.currrentNode)
+
+    def _findParentBy(self, parentName):
+        parentNode = self.currrentNode
+        while None != parentNode:
+            if parentName == parentNode.name:
+                return parentNode
+            parentNode = parentNode.parent
+        return None
+
+    ### below are not test covered
+    def addAttribute(self, name, value):
+        self.currrentNode.addAttribute(name, value)
+    def addValue(self, value):
+        self.currrentNode.addValue(value)
+    ###

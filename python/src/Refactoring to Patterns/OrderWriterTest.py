@@ -37,6 +37,9 @@ class OrderWriterTest(unittest.TestCase):
 
         self.assertEquals(expected, ordersWriter.getContents())
 
+
+
+
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()     

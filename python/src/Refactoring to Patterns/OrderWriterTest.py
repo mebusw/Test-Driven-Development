@@ -37,7 +37,20 @@ class OrderWriterTest(unittest.TestCase):
 
         self.assertEquals(expected, ordersWriter.getContents())
 
+class TagNodeTest(unittest.TestCase):
+    def setUp(self):
+        pass
 
+    def tearDown(self):
+        pass
+
+    def testSimpleTagWIthOneAttributeAndValue(self):
+        priceTag = TagNode('price')
+        priceTag.addAttribute('currency', 'USD')
+        priceTag.addValue('8.95')
+        expected = "<price currency='USD'>8.95</price>"
+
+        self.assertEquals(expected, str(priceTag))
 
 
 if __name__ == "__main__":

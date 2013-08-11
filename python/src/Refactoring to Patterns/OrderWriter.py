@@ -14,58 +14,52 @@ class OrderWriter():
     def getContents(self):
         return self.writeOrdersTo()
 
-
     def writeOrdersTo(self):
-        xml = ""
-        xml += "<orders>"
+        ordersTag = TagNode('orders')
         for order in self.orders:
-            xml += "<order"
-            xml += " id='"
-            xml += order['id']
-            xml += "'>"
-            xml += self.writeProductsTo(order)
-            xml += "</order>"
-        xml += "</orders>"
-        return xml
+            orderTag = TagNode('order')
+            orderTag.addAttribute('id', order['id'])
+            self.writeProductsTo(orderTag, order)
+            ordersTag.add(orderTag)
+        return str(ordersTag)
 
-    def writeProductsTo(self, order):
-        xml = ""
+    def writeProductsTo(self, orderTag, order):
         for product in order['products']:
-            xml += "<product"
-            xml += " id='"
-            xml += product['id']
-            xml += "'"
-            xml += " color='"
-            xml += product['color']
-            xml += "'"
+            productTag = TagNode('product')
+            productTag.addAttribute('id', product['id'])
+            productTag.addAttribute('color', product['color'])
             if 'size' in product:
-                xml += " size='"
-                xml += product['size']
-                xml += "'"
-            xml += ">"
-            xml += self.writePriceTo(product)
-            xml += product['name']
-            xml += "</product>"
-        return xml
+                productTag.addAttribute('size', product['size'])
+            self.writePriceTo(productTag, product)
+            productTag.addValue(product['name'])
+            orderTag.add(productTag)
+        return str(orderTag)
 
-    def writePriceTo(self, product):
+    def writePriceTo(self, productTag, product):
         priceTag = TagNode('price')
-        priceTag.addAttribute('currency', 'USD')
-        priceTag.addValue('8.95')       
-        return str(priceTag)
+        priceTag.addAttribute('currency', product['currency'])
+        priceTag.addValue(product['price'])       
+        productTag.add(priceTag)
 
 class TagNode:
     def __init__(self, name):
         self.name = name
         self.value = ""
         self.attribute = ""
+        self.children = []
 
     def addAttribute(self, attribute, value):
-        self.attribute = " %s='%s'" % (attribute, value)
+        self.attribute += " %s='%s'" % (attribute, value)
 
     def addValue(self, value):
         self.value = value
 
-    def __str__(self):
-        return "<%s%s>%s</%s>" % (self.name, self.attribute, self.value, self.name)
+    def add(self, child):
+        self.children.append(child)
 
+    def __str__(self):
+        result = "<%s%s>" % (self.name, self.attribute)
+        for child in self.children:
+            result += str(child)
+        result += "%s</%s>" % (self.value, self.name)
+        return result

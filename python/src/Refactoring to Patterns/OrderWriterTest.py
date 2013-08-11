@@ -52,6 +52,23 @@ class TagNodeTest(unittest.TestCase):
 
         self.assertEquals(expected, str(priceTag))
 
+    def testCompositeTagOneChild(self):
+        productTag = TagNode('product')
+        productTag.add(TagNode('price'))
+        expected = "<product><price></price></product>"
+
+        self.assertEquals(expected, str(productTag))        
+
+    def testAddingChildrenAndGrandchildren(self):
+        ordersTag = TagNode('orders')
+        orderTag = TagNode('order')
+        productTag = TagNode('product')
+        ordersTag.add(orderTag)
+        orderTag.add(productTag)
+        expected = "<orders><order><product></product></order></orders>"
+
+        self.assertEquals(expected, str(ordersTag))        
+
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

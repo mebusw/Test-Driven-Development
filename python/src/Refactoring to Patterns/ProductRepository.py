@@ -15,20 +15,11 @@ class ProductRepository():
     def add(self, product):
         self.products.append(product)
 
-    def selectByOne(self, spec):
+    def selectBy(self, spec):
         for p in self.products:
             if spec.isSatisfiedBy(p):
                 self.foundProducts.append(p)
         return self.foundProducts
-
-    def selectByMany(self, specs):
-        compositeSpec = CompositeSpec(specs)
-
-        for product in self.products:
-            if compositeSpec.isSatisfiedBy(product):
-                self.foundProducts.append(product)                        
-        return self.foundProducts
-
 
 
 class Product():
@@ -59,8 +50,11 @@ class BelowPriceSpec(Spec):
         return product.price < self.name
 
 class CompositeSpec(Spec):
-    def __init__(self, specs):
-        self.specs = specs
+    def __init__(self):
+        self.specs = []
+
+    def add(self, spec):
+        self.specs.append(spec)
 
     def isSatisfiedBy(self, product):
         satisfiesAllSpecs = True

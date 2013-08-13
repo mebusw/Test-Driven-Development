@@ -21,17 +21,17 @@ class ProductRepositoryTest(unittest.TestCase):
         self.repository.add(toyConvertible)
 
     def testFindByColor(self):
-        foundProducts = self.repository.selectByOne(ColorSpec('red'))
+        foundProducts = self.repository.selectBy(ColorSpec('red'))
         
         self.assertEquals(2, len(foundProducts))
 
     def testFindByColorSizeAndBelowPrice(self):
-        specs = []
-        specs.append(ColorSpec('red'))
-        specs.append(SizeSpec('small'))
-        specs.append(BelowPriceSpec(10))
+        specs = CompositeSpec()
+        specs.add(ColorSpec('red'))
+        specs.add(SizeSpec('small'))
+        specs.add(BelowPriceSpec(10))
 
-        foundProducts = self.repository.selectByOne(CompositeSpec(specs))
+        foundProducts = self.repository.selectBy(specs)
         
         self.assertEquals(0, len(foundProducts))
 

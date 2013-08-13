@@ -9,31 +9,33 @@ from datetime import date
 
 class CatalogApp():
     def __init__(self):
-        pass
+        self.handlers = {}
+        self.createHandlers()
+
+    def createHandlers(self):
+        self.handlers['new_workshop'] = NewWorkshopHandler(self)
+        self.handlers['all_workshops'] = AllWorkshopsHandler(self)
 
     def executeActionAndGetResponse(self, actionName, *parameters):
         if actionName == 'new_workshop':
-            return NewWorkshopHandler(self).getNewWorkshopResponse(parameters)
+            return self.handlers['new_workshop'].execute(parameters)
         elif actionName == 'all_workshops':
-            return AllWorkshopsHandler(self).getAllWorkshopsResponse(parameters)
+            return self.handlers['all_workshops'].execute(parameters)
         else:
             return 3
 
 
-
-class NewWorkshopHandler:
+class Handler:
     def __init__(self, catalogApp):
         self.catalogApp = catalogApp
 
-    def getNewWorkshopResponse(self, *parameters):
+class NewWorkshopHandler(Handler):
+    def execute(self, *parameters):
         ### do sth.
         self.catalogApp.executeActionAndGetResponse('all_workshops', parameters)
         return 1
 
-class AllWorkshopsHandler:
-    def __init__(self, catalogApp):
-        self.catalogApp = catalogApp
-
-    def getAllWorkshopsResponse(self, *parameters):
+class AllWorkshopsHandler(Handler):
+    def execute(self, *parameters):
         ### do sth. else
         return 2

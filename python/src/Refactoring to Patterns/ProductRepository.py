@@ -22,13 +22,18 @@ class ProductRepository():
         return self.foundProducts
 
     def selectByMany(self, specs):
-        for p in self.products:
-            satisfiesAllSpecs = True
-            for s in specs:
-                satisfiesAllSpecs &= s.isSatisfiedBy(p)
-            if satisfiesAllSpecs:
-                self.foundProducts.append(p)
+        compositeSpec = CompositeSpec(specs)
+
+        for product in self.products:
+            if self._isSatisfiedBy(product, compositeSpec):
+                self.foundProducts.append(product)                        
         return self.foundProducts
+
+    def _isSatisfiedBy(self, product, compositeSpec):
+        satisfiesAllSpecs = True
+        for s in compositeSpec.specs:
+            satisfiesAllSpecs &= s.isSatisfiedBy(product)
+        return satisfiesAllSpecs
 
 class Product():
     def __init__(self, sid, name, color, price, size):
@@ -56,3 +61,7 @@ class SizeSpec(Spec):
 class BelowPriceSpec(Spec):
     def isSatisfiedBy(self, product):
         return product.price < self.name
+
+class CompositeSpec(Spec):
+    def __init__(self, specs):
+        self.specs = specs

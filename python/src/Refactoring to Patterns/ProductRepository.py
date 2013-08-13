@@ -25,15 +25,11 @@ class ProductRepository():
         compositeSpec = CompositeSpec(specs)
 
         for product in self.products:
-            if self._isSatisfiedBy(product, compositeSpec):
+            if compositeSpec.isSatisfiedBy(product):
                 self.foundProducts.append(product)                        
         return self.foundProducts
 
-    def _isSatisfiedBy(self, product, compositeSpec):
-        satisfiesAllSpecs = True
-        for s in compositeSpec.specs:
-            satisfiesAllSpecs &= s.isSatisfiedBy(product)
-        return satisfiesAllSpecs
+
 
 class Product():
     def __init__(self, sid, name, color, price, size):
@@ -65,3 +61,9 @@ class BelowPriceSpec(Spec):
 class CompositeSpec(Spec):
     def __init__(self, specs):
         self.specs = specs
+
+    def isSatisfiedBy(self, product):
+        satisfiesAllSpecs = True
+        for s in self.specs:
+            satisfiesAllSpecs &= s.isSatisfiedBy(product)
+        return satisfiesAllSpecs

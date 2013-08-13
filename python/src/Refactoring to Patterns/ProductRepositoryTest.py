@@ -31,7 +31,7 @@ class ProductRepositoryTest(unittest.TestCase):
         specs.append(SizeSpec('small'))
         specs.append(BelowPriceSpec(10))
 
-        foundProducts = self.repository.selectByMany(specs)
+        foundProducts = self.repository.selectByOne(CompositeSpec(specs))
         
         self.assertEquals(0, len(foundProducts))
 

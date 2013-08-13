@@ -13,11 +13,27 @@ class CatalogApp():
 
     def executeActionAndGetResponse(self, actionName, *parameters):
         if actionName == 'new_workshop':
-            ### do sth.
-            self.executeActionAndGetResponse('all_workshops', parameters)
-            return 1
+            return NewWorkshopHandler(self).getNewWorkshopResponse(parameters)
         elif actionName == 'all_workshops':
-            ### do sth. else
-            return 2
+            return AllWorkshopsHandler(self).getAllWorkshopsResponse(parameters)
         else:
             return 3
+
+
+
+class NewWorkshopHandler:
+    def __init__(self, catalogApp):
+        self.catalogApp = catalogApp
+
+    def getNewWorkshopResponse(self, *parameters):
+        ### do sth.
+        self.catalogApp.executeActionAndGetResponse('all_workshops', parameters)
+        return 1
+
+class AllWorkshopsHandler:
+    def __init__(self, catalogApp):
+        self.catalogApp = catalogApp
+
+    def getAllWorkshopsResponse(self, *parameters):
+        ### do sth. else
+        return 2

@@ -17,13 +17,10 @@ class CatalogApp():
         self.handlers['all_workshops'] = AllWorkshopsHandler(self)
 
     def executeActionAndGetResponse(self, actionName, *parameters):
-        if actionName == 'new_workshop':
-            return self.handlers['new_workshop'].execute(parameters)
-        elif actionName == 'all_workshops':
-            return self.handlers['all_workshops'].execute(parameters)
-        else:
-            return 3
-
+        return self.lookupHandlerBy(actionName).execute(parameters)
+        
+    def lookupHandlerBy(self, handlerName):
+        return self.handlers[handlerName]
 
 class Handler:
     def __init__(self, catalogApp):

@@ -16,11 +16,11 @@ class LoanTest(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def testItCanGetReadyTheCar(self):
-        stubStatusPanel = Mock('StatusPanel')
-        self.assertEquals(2, 2)
-        d = date.today()
-        # print date.fromtimestamp(time.time())
+    # def testItCanGetReady
+        # print date.fromtimestTheCar(self):
+    #     stubStatusPanel = Mock('StatusPanel')
+    #     self.assertEquals(2, 2)
+    #     d = date.today()amp(time.time())
         # print date(2013, 8, 15)
         # print d.timetuple()
         # print d.strftime("%A %d. %B %Y")

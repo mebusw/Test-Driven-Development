@@ -1,52 +1,99 @@
 package training.templateEngine;
 
-import static org.junit.Assert.*;
+/**
+ * Created with IntelliJ IDEA.
+ * User: mebusw
+ * Date: 13-9-7
+ * Time: 下午10:44
+ * To change this template use File | Settings | File Templates.
+ */
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+
 public class TemplateEngineTest {
-    private Template template;
-    private TemplatePlaceholderValues replacementValues;
+    private TemplateEngine engine;
 
     @Before
-    public void setUp() throws Exception {
-        template = new Template();
-        replacementValues = new TemplatePlaceholderValues();
-
-    }
-
-    @After
-    public void tearDown() throws Exception {
+    public void setUp() {
     }
 
     @Test
-    public void templatesWithoutPlaceHoldersDoNotChange() throws Exception {
-        template.set("Nothing here");
-        assertEquals("Nothing here", template.replaceValues(replacementValues));
+    public void testTemplateWithNoVariable() {
+        engine = new TemplateEngine("Hello");
+        assertEquals("Hello", engine.evaluate());
     }
 
     @Test
-    public void templateWithOnePlaceholderReplacesItToValue() throws Exception {
-        template.set("Hi, $name");
-        replacementValues.placeholder("$name").hasValue("John");
-        assertEquals("Hi, John", template.replaceValues(replacementValues));
+    public void testTemplateWithOneVariable() {
+        engine = new TemplateEngine("Hello, $name");
+        engine.set("$name", "Jacky");
+        assertEquals("Hello, Jacky", engine.evaluate());
     }
 
     @Test
-    public void templateWhereOnePlaceholderIsReplacedAndOneIsNot()
-            throws Exception {
-        template.set("Hi, $name $last_name");
-        replacementValues.placeholder("$last_name").hasValue("Doe");
-        assertEquals("Hi, $name Doe", template.replaceValues(replacementValues));
-    }
-
-    @Test
-    public void templateWherePlaceholdersAreReplaced() throws Exception {
-        template.set("Hi, $first_name $last_name");
-        replacementValues.placeholder("$first_name").hasValue("John");
-        replacementValues.placeholder("$last_name").hasValue("Doe");
-        assertEquals("Hi, John Doe", template.replaceValues(replacementValues));
+    public void testTemplateWithTwoVariables() {
+        engine = new TemplateEngine("Hello, $name $family");
+        engine.set("$name", "Jacky");
+        engine.set("$family", "Shen");
+        assertEquals("Hello, Jacky Shen", engine.evaluate());
     }
 }
+
+class TemplateEngine {
+    private String templateString;
+    //    private PlaceHolder placeHolder;
+    private List<PlaceHolder> placeHolders;
+
+    public TemplateEngine(String templateString) {
+        this.templateString = templateString;
+//        this.placeHolder = PlaceHolder.NULL;
+        this.placeHolders = new ArrayList<PlaceHolder>();
+    }
+
+    public String evaluate() {
+        String replaced = this.templateString;
+        for (PlaceHolder placeHolder : this.placeHolders) {
+            replaced = placeHolder.replaceIn(replaced);
+        }
+        return replaced;
+    }
+
+    public void set(String variable, String value) {
+        this.placeHolders.add(new PlaceHolder(variable, value));
+    }
+}
+
+class PlaceHolder {
+    private String name;
+    private String value;
+    public static PlaceHolder NULL = new PlaceHolder(null, null) {
+        public String replaceIn(String templateString) {
+            return templateString;
+        }
+    };
+
+    public PlaceHolder(String name, String value) {
+        this.name = name;
+        this.value = value;
+    }
+
+    public String replaceIn(String templateString) {
+        return templateString.replace(this.getName(), this.getValue());
+    }
+
+    String getName() {
+        return name;
+    }
+
+    String getValue() {
+        return value;
+    }
+}
+
+

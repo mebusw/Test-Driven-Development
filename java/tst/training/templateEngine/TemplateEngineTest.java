@@ -1,99 +1,107 @@
 package training.templateEngine;
 
-/**
- * Created with IntelliJ IDEA.
- * User: mebusw
- * Date: 13-9-7
- * Time: 下午10:44
- * To change this template use File | Settings | File Templates.
- */
 
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertEquals;
 
 public class TemplateEngineTest {
     private TemplateEngine engine;
+    private Map<String, String> placeHolders;
 
     @Before
     public void setUp() {
+        engine = new TemplateEngine();
+        placeHolders = new HashMap<String, String>();
     }
 
     @Test
     public void testTemplateWithNoVariable() {
-        engine = new TemplateEngine("Hello");
-        assertEquals("Hello", engine.evaluate());
+        engine.compile("Hello");
+
+        assertEquals("Hello", engine.evaluate(placeHolders));
     }
 
     @Test
     public void testTemplateWithOneVariable() {
-        engine = new TemplateEngine("Hello, $name");
-        engine.set("$name", "Jacky");
-        assertEquals("Hello, Jacky", engine.evaluate());
+        engine.compile("Hello, $name");
+        placeHolders.put("$name", "Jacky");
+
+        assertEquals("Hello, Jacky", engine.evaluate(placeHolders));
     }
 
     @Test
     public void testTemplateWithTwoVariables() {
-        engine = new TemplateEngine("Hello, $name $family");
-        engine.set("$name", "Jacky");
-        engine.set("$family", "Shen");
-        assertEquals("Hello, Jacky Shen", engine.evaluate());
+        engine.compile("Hello, $name $family");
+        placeHolders.put("$name", "Jacky");
+        placeHolders.put("$family", "Shen");
+
+        assertEquals("Hello, Jacky Shen", engine.evaluate(placeHolders));
+    }
+
+    //    @Test
+//    public void testTemplateWithSpecialVariables() {
+//        engine.compile("Hello, $name $family");
+//        placeHolders.put("$name", "$family");
+//        placeHolders.put("$family", "$name");
+//
+//        assertEquals("Hello, $family $name", engine.evaluate(placeHolders));
+//    }
+    @Test
+    public void testCompileTemplateOfPureTextToSegments() {
+        List<String> segments = engine.compile("Hello");
+        assertSegments(segments, "Hello");
+    }
+
+    @Test
+    public void testCompileTemplateToSegments() {
+        List<String> segments = engine.compile("Hello ${aaa} ${bbb}");
+        assertSegments(segments, "Hello ", "aaa", " ", "bbb");
+    }
+
+    ///////////////////
+    private void assertSegments(List<String> segments, String... expected) {
+        assertEquals(Arrays.asList(expected), segments);
+        assertEquals(expected.length, segments.size());
     }
 }
 
 class TemplateEngine {
+
     private String templateString;
-    //    private PlaceHolder placeHolder;
-    private List<PlaceHolder> placeHolders;
 
-    public TemplateEngine(String templateString) {
+    public String evaluate(Map<String, String> placeHolders) {
+        for (Map.Entry<String, String> entry : placeHolders.entrySet()) {
+            this.templateString = this.templateString.replace(entry.getKey(), entry.getValue());
+        }
+        return this.templateString;
+    }
+
+    public List<String> compile(String templateString) {
         this.templateString = templateString;
-//        this.placeHolder = PlaceHolder.NULL;
-        this.placeHolders = new ArrayList<PlaceHolder>();
-    }
+        List<String> segments = new ArrayList<String>();
+        Pattern pattern = Pattern.compile("\\$\\{([^}]*)\\}");
+        Matcher matcher = pattern.matcher(templateString);
 
-    public String evaluate() {
-        String replaced = this.templateString;
-        for (PlaceHolder placeHolder : this.placeHolders) {
-            replaced = placeHolder.replaceIn(replaced);
+        int index = 0;
+        while (matcher.find()) {
+            segments.add(templateString.substring(index, matcher.start()));
+
+            segments.add(matcher.group(1));
+            index = matcher.end();
         }
-        return replaced;
-    }
 
-    public void set(String variable, String value) {
-        this.placeHolders.add(new PlaceHolder(variable, value));
-    }
-}
-
-class PlaceHolder {
-    private String name;
-    private String value;
-    public static PlaceHolder NULL = new PlaceHolder(null, null) {
-        public String replaceIn(String templateString) {
-            return templateString;
+        if (index < templateString.length()) {
+            segments.add(templateString.substring(index));
         }
-    };
-
-    public PlaceHolder(String name, String value) {
-        this.name = name;
-        this.value = value;
+        return segments;
     }
 
-    public String replaceIn(String templateString) {
-        return templateString.replace(this.getName(), this.getValue());
-    }
 
-    String getName() {
-        return name;
-    }
-
-    String getValue() {
-        return value;
-    }
 }
-
 

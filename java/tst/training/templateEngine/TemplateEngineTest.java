@@ -44,14 +44,7 @@ public class TemplateEngineTest {
         assertEquals("Hello, Jacky Shen", engine.evaluate(placeHolders));
     }
 
-    //    @Test
-//    public void testTemplateWithSpecialVariables() {
-//        engine.compile("Hello, $name $family");
-//        placeHolders.put("$name", "$family");
-//        placeHolders.put("$family", "$name");
-//
-//        assertEquals("Hello, $family $name", engine.evaluate(placeHolders));
-//    }
+
     @Test
     public void testCompileTemplateOfPureTextToSegments() {
         List<String> segments = engine.compile("Hello");
@@ -69,8 +62,37 @@ public class TemplateEngineTest {
         assertEquals("Hello, Jacky Shen", engine.evaluate2(placeHolders));
     }
 
+    @Test
+    public void testSegment() {
+        List<Segment> segments = engine.parse("Hello, ${name} ${family}");
+        assertEquals(new TextSegment("Hello ,"), new TextSegment("Hello ,"));
+        assertEquals(new VariableSegment("$name"), new VariableSegment("$name"));
+        assertSegments(segments, new TextSegment("Hello, "), new VariableSegment("${name}"), new TextSegment(" "), new VariableSegment("${family}"));
+
+    }
+
+    @Test
+    public void testSegmentEval() {
+        String text = "Hello, ";
+        assertEquals(text, new TextSegment(text).eval(null));
+
+        Map<String, String> vars = new HashMap<String, String>();
+        vars.put("${name}", "Jacky");
+        assertEquals("Jacky", new VariableSegment("${name}").eval(vars));
+    }
+
+    @Test(expected = MissingFormatArgumentException.class)
+    public void testSegmentEvalWithMissingVar() {
+        String text = "Hello, ";
+        assertEquals(text, new TextSegment(text).eval(null));
+
+        Map<String, String> vars = new HashMap<String, String>();
+        new VariableSegment("${name}").eval(vars);
+
+    }
+
     ///////////////////
-    private void assertSegments(List<String> segments, String... expected) {
+    private void assertSegments(List segments, Object... expected) {
         assertEquals(Arrays.asList(expected), segments);
         assertEquals(expected.length, segments.size());
     }
@@ -93,6 +115,7 @@ class TemplateEngine {
     }
 
     public List<String> compile(String templateString) {
+        this.templateString = templateString;
         segments = new ArrayList<String>();
         int index = collectSegments(templateString, segments);
         addTailText(templateString, segments, index);
@@ -101,15 +124,24 @@ class TemplateEngine {
 
 
     public String evaluate2(Map<String, String> placeHolders) {
-        StringBuffer sb = new StringBuffer();
-        for (String seg : segments) {
-            if (seg.startsWith("${")) {
-                sb.append(placeHolders.get(seg));
-            } else {
-                sb.append(seg);
-            }
+        StringBuffer result = new StringBuffer();
+        List<Segment> segments = parse(templateString);
+        for (Segment seg : segments) {
+            result.append(seg.eval(placeHolders));
         }
-        return sb.toString();
+        return result.toString();
+    }
+
+    private void append(Map<String, String> placeHolders, StringBuffer result, String seg) {
+        if (isVariable(seg)) {
+            result.append(placeHolders.get(seg));
+        } else {
+            result.append(seg);
+        }
+    }
+
+    private static boolean isVariable(String seg) {
+        return seg.startsWith("${");
     }
 
     private int collectSegments(String templateString, List<String> segments) {
@@ -119,7 +151,6 @@ class TemplateEngine {
         int index = 0;
         while (matcher.find()) {
             appendPreceedingText(templateString, segments, matcher, index);
-
             appendVariable(segments, matcher);
             index = matcher.end();
         }
@@ -140,6 +171,72 @@ class TemplateEngine {
         segments.add(templateString.substring(index, matcher.start()));
     }
 
-
+    public List<Segment> parse(String templateString) {
+        List<String> segments = compile(templateString);
+        List<Segment> result = new ArrayList<Segment>();
+        for (String seg : segments) {
+            if (isVariable(seg)) {
+                result.add(new VariableSegment(seg));
+            } else {
+                result.add(new TextSegment(seg));
+            }
+        }
+        return result;
+    }
 }
 
+interface Segment {
+    public String eval(Map<String, String> variables);
+}
+
+class TextSegment implements Segment {
+
+    private String text;
+
+    public TextSegment(String text) {
+        this.text = text;
+    }
+
+    public boolean equals(Object other) {
+        return text.equals(((TextSegment) other).text);
+    }
+
+    @Override
+    public String toString() {
+        return this.text;
+    }
+
+    @Override
+    public String eval(Map<String, String> variables) {
+        return this.text;
+    }
+}
+
+class VariableSegment implements Segment {
+
+    private String name;
+
+    public VariableSegment(String name) {
+        this.name = name;
+    }
+
+
+    public boolean equals(Object other) {
+        return name.equals(((VariableSegment) other).name);
+    }
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
+
+    @Override
+    public String eval(Map<String, String> variables) {
+        if (!variables.containsKey(this.name)) {
+            throw new MissingFormatArgumentException("");
+        }
+        return variables.get(this.name);
+
+
+    }
+}

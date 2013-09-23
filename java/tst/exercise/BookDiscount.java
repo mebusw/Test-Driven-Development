@@ -1,3 +1,5 @@
+package exercise;
+
 import java.util.Arrays;
 
 public class BookDiscount {

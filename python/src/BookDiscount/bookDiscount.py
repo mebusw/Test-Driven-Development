@@ -4,8 +4,10 @@ Created on 2013-7-6
 @author: mebusw@gmail.com
 '''
 
-
+PRICE = 8
 class BookDiscount(object):
+
+
     def __init__(self):
         pass
 
@@ -19,26 +21,26 @@ class BookDiscount(object):
         cost = 0
         if books[4] >= 1:
             cost = min(
-                8*5*(1-0.25)+self.findMinCost([books[0]-1,books[1]-1,books[2]-1,books[3]-1,books[4]-1]),
-                8*4*(1-0.20)+self.findMinCost([books[0]-1,books[1]-1,books[2]-1,books[3]-1,books[4]]),
-                8*3*(1-0.10)+self.findMinCost([books[0]-1,books[1]-1,books[2]-1,books[3],books[4]]),
-                8*2*(1-0.05)+self.findMinCost([books[0]-1,books[1]-1,books[2],books[3],books[4]]),
+                PRICE*5*(1-0.25)+self.findMinCost([books[0]-1,books[1]-1,books[2]-1,books[3]-1,books[4]-1]),
+                PRICE*4*(1-0.20)+self.findMinCost([books[0]-1,books[1]-1,books[2]-1,books[3]-1,books[4]]),
+                PRICE*3*(1-0.10)+self.findMinCost([books[0]-1,books[1]-1,books[2]-1,books[3],books[4]]),
+                PRICE*2*(1-0.05)+self.findMinCost([books[0]-1,books[1]-1,books[2],books[3],books[4]]),
                 )
         elif books[3] >= 1:
             cost = min(
-                8*4*(1-0.20)+self.findMinCost([books[0]-1,books[1]-1,books[2]-1,books[3]-1,books[4]]),
-                8*3*(1-0.10)+self.findMinCost([books[0]-1,books[1]-1,books[2]-1,books[3],books[4]]),
-                8*2*(1-0.05)+self.findMinCost([books[0]-1,books[1]-1,books[2],books[3],books[4]]),
+                PRICE*4*(1-0.20)+self.findMinCost([books[0]-1,books[1]-1,books[2]-1,books[3]-1,books[4]]),
+                PRICE*3*(1-0.10)+self.findMinCost([books[0]-1,books[1]-1,books[2]-1,books[3],books[4]]),
+                PRICE*2*(1-0.05)+self.findMinCost([books[0]-1,books[1]-1,books[2],books[3],books[4]]),
                 )
         elif books[2] >= 1:
             cost = min(
-                8*3*(1-0.10)+self.findMinCost([books[0]-1,books[1]-1,books[2]-1,books[3],books[4]]),
-                8*2*(1-0.05)+self.findMinCost([books[0]-1,books[1]-1,books[2],books[3],books[4]]),
+                PRICE*3*(1-0.10)+self.findMinCost([books[0]-1,books[1]-1,books[2]-1,books[3],books[4]]),
+                PRICE*2*(1-0.05)+self.findMinCost([books[0]-1,books[1]-1,books[2],books[3],books[4]]),
                 )
         elif books[1] >= 1:
-            cost = 8*2*(1-0.05)+self.findMinCost([books[0]-1,books[1]-1,books[2],books[3],books[4]])
+            cost = PRICE*2*(1-0.05)+self.findMinCost([books[0]-1,books[1]-1,books[2],books[3],books[4]])
         elif books[0] >= 1:
-            cost = 8*books[0]
+            cost = PRICE*books[0]
         else:
             cost = 0
 

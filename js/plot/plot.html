@@ -1,0 +1,60 @@
+<head>
+  <title>Plot with MVP pattern</title>
+
+  <script type="text/javascript" src="lib/jquery-1.10.2.min.js"></script>
+  <script type="text/javascript" src="src/Plot.js"></script>
+</head>
+
+<canvas id="myCanvas" width="200" height="100" style="border:1px solid #000000;" position="absolute"></canvas>
+</br>
+<label for="x">X:</label><input id="x" value="10">
+</br>
+<label for="y">Y:</label><input id="y" value="12">
+<input type="button" id="btnAdd" value="Add point" />
+
+<script type="text/javascript">
+
+var model = new PlotModel();
+var view = new PlotView();
+var presenter = new PlotPresenter(model, view);
+
+
+/*
+var c=document.getElementById("myCanvas");
+var ctx=c.getContext("2d");
+
+ctx.moveTo(0,0);
+ctx.lineTo(200,100);
+ctx.stroke();
+
+ctx.beginPath();
+ctx.arc(95,50,40,0,2*Math.PI);
+ctx.stroke();
+
+ctx.font="30px Arial";
+ctx.fillText("Hello World",10,50);
+ctx.strokeText("Hello World",10,80);
+
+
+// Create gradient
+var grd=ctx.createLinearGradient(0,0,200,0);
+grd.addColorStop(0,"red");
+grd.addColorStop(1,"white");
+// Fill with gradient
+ctx.fillStyle=grd;
+ctx.fillRect(50,10,180,30);
+
+// Create gradient
+var grd2=ctx.createRadialGradient(75,50,5,90,60,100);
+grd2.addColorStop(0,"red");
+grd2.addColorStop(1,"white");
+// Fill with gradient
+ctx.fillStyle=grd2;
+ctx.fillRect(10,50,120,60);
+
+
+// var img=document.getElementById("scream");
+// ctx.drawImage(img,10,10);
+
+*/
+</script>

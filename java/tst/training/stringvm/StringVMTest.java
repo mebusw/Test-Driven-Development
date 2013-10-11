@@ -51,6 +51,7 @@ public class StringVMTest {
 
 	}
 
+	/* below turn out to a builder */
 	@Test
 	public void testSimpleRuntime() {
 		List<Command> commands = new ArrayList<Command>();
@@ -58,10 +59,15 @@ public class StringVMTest {
 		commands.add(new Push("tail"));
 		commands.add(new Concat());
 		commands.add(new Print());
-		
+
 		new SimpleRuntime().run(commands);
-		
-		// TODO No assertion here!
+
 	}
 
+	@Test
+	public void testProgramBuilder() {
+		Iterable<Command> program = new ProgramBuilder().push("Hello")
+				.push(" World!").concat().print().getProgram();
+		new SimpleRuntime().run(program);
+	}
 }

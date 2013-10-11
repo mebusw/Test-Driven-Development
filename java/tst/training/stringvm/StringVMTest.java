@@ -13,7 +13,7 @@ import org.junit.Test;
 public class StringVMTest {
 
 	/**
-	 * As a user I want to add string to string vm As a user I want to
+	 * As a user I want to add string to string vm. As a user I want to
 	 * concatenate strings in string vm As a user I want to print strings in
 	 * string vm
 	 */
@@ -51,23 +51,21 @@ public class StringVMTest {
 
 	}
 
-	/* below turn out to a builder */
-	@Test
-	public void testSimpleRuntime() {
-		List<Command> commands = new ArrayList<Command>();
-		commands.add(new Push("head"));
-		commands.add(new Push("tail"));
-		commands.add(new Concat());
-		commands.add(new Print());
-
-		new SimpleRuntime().run(commands);
-
-	}
-
 	@Test
 	public void testProgramBuilder() {
 		Iterable<Command> program = new ProgramBuilder().push("Hello")
 				.push(" World!").concat().print().getProgram();
-		new SimpleRuntime().run(program);
+		new SimpleRuntime().run(program, true, 1);
 	}
+
+	/**
+	 * As a user I want to trace the vm execution (print out the current command
+	 * and stack) so I can debug my program
+	 */
+
+	/**
+	 * As a user I want to trace the vm execution (print out the current command
+	 * and stack) so I can debug my program As a user I want to set a breakpoint
+	 * in string vm so that I can stop my program at any point
+	 */
 }

@@ -73,8 +73,9 @@ public class StringVMTest {
 		Runtime runtime = new SimpleRuntime();
 		runtime.run(program, runtime.breakAt(4, runtime.tracing(runtime.cpu())));
 	}
-	
+
 	/** As a user I want to execute my program in optimized manner when needed */
+	/** Separate construction and usage */
 	@Test
 	public void testOptimizedRuntime() {
 		Iterable<Command> program = new ProgramBuilder().push("Hello")
@@ -83,7 +84,14 @@ public class StringVMTest {
 		runtime.run(program, runtime.breakAt(4, runtime.tracing(runtime.cpu())));
 	}
 
+	/** Facade */
+	@Test
+	public void testInterpreter() {
+		Iterable<Command> program = new ProgramBuilder().push("Hello")
+				.push(" World!").concat().print().getProgram();
 
-
+		Interpreter i = new Interpreter();
+		i.run(i.parse(""), true, true, 4);
+	}
 
 }

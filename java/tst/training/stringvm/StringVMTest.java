@@ -55,7 +55,8 @@ public class StringVMTest {
 	public void testProgramBuilder() {
 		Iterable<Command> program = new ProgramBuilder().push("Hello")
 				.push(" World!").concat().print().getProgram();
-		new SimpleRuntime().run(program, true, 1);
+		SimpleRuntime runtime = new SimpleRuntime();
+		runtime.run(program, runtime.breakAt(4, runtime.tracing(runtime.cpu())));
 	}
 
 	/**

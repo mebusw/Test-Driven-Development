@@ -13,9 +13,13 @@ import org.junit.Test;
 public class StringVMTest {
 
 	/**
-	 * As a user I want to add string to string vm. As a user I want to
-	 * concatenate strings in string vm As a user I want to print strings in
-	 * string vm
+	 * As a user I want to add string to string vm.
+	 */
+	/**
+	 * As a user I want to concatenate strings in string vm.
+	 */
+	/**
+	 * As a user I want to print strings in string vm.
 	 */
 
 	@Test
@@ -51,14 +55,6 @@ public class StringVMTest {
 
 	}
 
-	@Test
-	public void testProgramBuilder() {
-		Iterable<Command> program = new ProgramBuilder().push("Hello")
-				.push(" World!").concat().print().getProgram();
-		SimpleRuntime runtime = new SimpleRuntime();
-		runtime.run(program, runtime.breakAt(4, runtime.tracing(runtime.cpu())));
-	}
-
 	/**
 	 * As a user I want to trace the vm execution (print out the current command
 	 * and stack) so I can debug my program
@@ -69,4 +65,25 @@ public class StringVMTest {
 	 * and stack) so I can debug my program As a user I want to set a breakpoint
 	 * in string vm so that I can stop my program at any point
 	 */
+
+	@Test
+	public void testProgramBuilder() {
+		Iterable<Command> program = new ProgramBuilder().push("Hello")
+				.push(" World!").concat().print().getProgram();
+		Runtime runtime = new SimpleRuntime();
+		runtime.run(program, runtime.breakAt(4, runtime.tracing(runtime.cpu())));
+	}
+	
+	/** As a user I want to execute my program in optimized manner when needed */
+	@Test
+	public void testOptimizedRuntime() {
+		Iterable<Command> program = new ProgramBuilder().push("Hello")
+				.push(" World!").concat().print().getProgram();
+		Runtime runtime = new OptimizedRuntime();
+		runtime.run(program, runtime.breakAt(4, runtime.tracing(runtime.cpu())));
+	}
+
+
+
+
 }

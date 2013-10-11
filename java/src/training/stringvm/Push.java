@@ -1,5 +1,7 @@
 package training.stringvm;
 
+import java.util.Stack;
+
 public class Push {
 
 	private String value;
@@ -9,11 +11,10 @@ public class Push {
 	}
 
 	public void invoke(Stack stack) {
-		// TODO Auto-generated method stub
-
+		stack.push(value);
 	}
 
 	public String toString() {
-		return "CMD push \"value\"";
+		return "CMD push \"" + value + "\"";
 	}
 }

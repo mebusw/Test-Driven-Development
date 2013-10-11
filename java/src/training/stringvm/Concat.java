@@ -2,7 +2,7 @@ package training.stringvm;
 
 import java.util.Stack;
 
-public class Concat {
+public class Concat implements Command {
 	public String toString() {
 		return "CMD concat";
 	}

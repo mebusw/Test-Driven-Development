@@ -2,7 +2,7 @@ package training.stringvm;
 
 import java.util.Stack;
 
-public class Push {
+public class Push implements Command {
 
 	private String value;
 

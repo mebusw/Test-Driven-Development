@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class GeneratePrimesTest {
+public class PrimeGeneratorTest {
 
 	@Test
 	public void testPrimes() {

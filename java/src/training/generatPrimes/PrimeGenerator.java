@@ -1,8 +1,8 @@
 package training.generatPrimes;
 
 public class PrimeGenerator {
-	private static boolean[] unCrossed;
-	private static int[] result;
+	private static final int TWO = 2;
+	private static boolean[] isCrossed;
 
 	/**
 	 * 
@@ -12,30 +12,30 @@ public class PrimeGenerator {
 	 */
 	public static int[] generatePrimes(int maxValue) {
 		if (maxValue >= 2) { // the only valid case
-			initializeArrayOfIntegers(maxValue);
+			uncrossIntegersUpTo(maxValue);
 			crossOutMultiples();
-			putUncrossedIntegerIntoResult();
-			return result;
+			return putUncrossedToResult();
 		} else { // maxValue < 2
 			return new int[0]; // return null array if bad input.
 		}
 	}
 
-	private static void putUncrossedIntegerIntoResult() {
-		result = new int[numberOfUncrossedIntegers()];
+	private static int[] putUncrossedToResult() {
+		int[] result = new int[numberOfUncrossedIntegers()];
 
 		// move the primes into the result
-		for (int i = 0, j = 0; i < unCrossed.length; i++) {
-			if (unCrossed[i])
+		for (int i = TWO, j = 0; i < isCrossed.length; i++) {
+			if (notCrossed(i))
 				result[j++] = i;
 		}
+		return result;
 	}
 
 	private static int numberOfUncrossedIntegers() {
 		// how many primes are there?
 		int count = 0;
-		for (int i = 0; i < unCrossed.length; i++) {
-			if (unCrossed[i])
+		for (int i = TWO; i < isCrossed.length; i++) {
+			if (notCrossed(i))
 				count++; // bump count
 		}
 		return count;
@@ -43,30 +43,33 @@ public class PrimeGenerator {
 
 	private static void crossOutMultiples() {
 		// sieve
-		for (int i = 2; i < calcMaxPrimeFactor(); i++) {
-			if (unCrossed[i]) { // if i is uncrossed, cross out its multiples
-				crossOutMultiplesOf(i);
+		for (int i = TWO; i < determineInterationLimit(); i++) {
+			if (notCrossed(i)) {
+				crossOutMultipleOf(i);
 			}
 		}
 	}
 
-	private static void crossOutMultiplesOf(int i) {
-		for (int multiple = 2 * i; multiple < unCrossed.length; multiple += i) {
-			unCrossed[multiple] = false; // multiple is not prime
+	private static void crossOutMultipleOf(int i) {
+		for (int j = 2 * i; j < isCrossed.length; j += i) {
+			isCrossed[j] = true; // multiple is not prime
 		}
 	}
 
-	private static int calcMaxPrimeFactor() {
-		return (int) Math.sqrt(unCrossed.length) + 1;
+	private static double determineInterationLimit() {
+		return Math.sqrt(isCrossed.length) + 1;
 	}
 
-	private static void initializeArrayOfIntegers(int maxValue) {
-		// declarations
-		unCrossed = new boolean[maxValue + 1];
+	private static boolean notCrossed(int i) {
+		return !isCrossed[i];
+	}
+
+	private static void uncrossIntegersUpTo(int maxValue) {
+		isCrossed = new boolean[maxValue + 1];
 
 		// initialize array to true
-		for (int i = 2; i < unCrossed.length; i++) {
-			unCrossed[i] = true;
+		for (int i = TWO; i < isCrossed.length; i++) {
+			isCrossed[i] = false;
 		}
 	}
 }

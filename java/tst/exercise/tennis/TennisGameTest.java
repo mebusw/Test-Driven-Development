@@ -53,9 +53,8 @@ public class TennisGameTest {
 
     @Test
     public void test_win_thirty() {
-        game.playerOneScore(3);
+        game.playerOneScore(4);
         game.playerTwoScore(2);
-        game.playerOneScore(1);
 
         assertEquals("Player One Win", game.status());
     }
@@ -79,17 +78,16 @@ public class TennisGameTest {
     @Test
     public void test_advantage() {
         game.playerOneScore(4);
-        game.playerTwoScore(3);
+        game.playerTwoScore(5);
 
-        assertEquals("Player One Advantage", game.status());
+        assertEquals("Player Two Advantage", game.status());
     }
 
     @Test
     public void test_win_after_advantage() {
-        game.playerOneScore(4);
+        game.playerOneScore(5);
         game.playerTwoScore(3);
 
-        game.playerOneScore(1);
         assertEquals("Player One Win", game.status());
     }
 }

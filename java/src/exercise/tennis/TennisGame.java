@@ -10,26 +10,50 @@ package exercise.tennis;
 public class TennisGame {
     private int playerOneScore = 0;
     private int playerTwoScore = 0;
-    private String display[] = {"love", "fifteen", "thirty", "forty"};
+    private String translate[] = {"love", "fifteen", "thirty", "forty"};
 
     public String status() {
-        if (playerOneScore >= 4) {
-            if (playerOneScore == playerTwoScore) {
+        if (canWin()) {
+            if (isSameScore()) {
                 return "Deuce";
             }
-            if (playerOneScore - playerTwoScore > 1) {
-                return "Player One Win";
+            if (hasWinner()) {
+                return highestScoredPlayer() + " Win";
             }
 
-            if (playerOneScore - playerTwoScore == 1) {
-                return "Player One Advantage";
+            if (hasAdvantage()) {
+                return highestScoredPlayer() + " Advantage";
             }
-            return "Player One Win";
+
         }
-        if(playerTwoScore==playerOneScore){
-            return display[playerTwoScore]+" All";
+        if (isSameScore()) {
+            return translate[playerTwoScore] + " All";
         }
-        return display[playerOneScore] + " " + display[playerTwoScore];
+        return translate[playerOneScore] + " " + translate[playerTwoScore];
+    }
+
+    private boolean canWin() {
+        return playerOneScore >= 4 || playerTwoScore >= 4;
+    }
+
+    private boolean isSameScore() {
+        return playerTwoScore == playerOneScore;
+    }
+
+    private boolean hasAdvantage() {
+        return scoreGap() == 1;
+    }
+
+    private boolean hasWinner() {
+        return scoreGap() > 1;
+    }
+
+    private int scoreGap() {
+        return Math.abs(playerOneScore - playerTwoScore);
+    }
+
+    private String highestScoredPlayer() {
+        return playerOneScore > playerTwoScore ? "Player One" : "Player Two";
     }
 
     public void playerOneScore(int times) {

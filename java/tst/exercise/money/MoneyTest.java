@@ -28,6 +28,7 @@ public class MoneyTest {
 		assertNotNull(f12CHF);
 		assertEquals(f12CHF, f12CHF);
 		assertNotEquals(f12CHF, f14CHF);
+		assertNotEquals("", f14CHF);
 		assertEquals(new Money(12, "CHF"), f12CHF);
 	}
 
@@ -90,5 +91,16 @@ public class MoneyTest {
 		Money f28USD = new Money(28, "USD");
 		assertEquals(new MoneyBag(f40CHF, f28USD),
 				mb_12CHF_7USD.add(mb_14CHF_21USD));
+	}
+
+	@Test
+	public void test_resolve_to_a_certain_currency() {
+		Money f4USD = new Money(4, "USD");
+		Money f24RMB = new Money(24, "RMB");
+		Exchanger exchanger = new Exchanger();
+		exchanger.addRate("USD", "RMB", 6);
+
+		assertEquals(f24RMB, f4USD.resolveTo("RMB", exchanger));
+
 	}
 }

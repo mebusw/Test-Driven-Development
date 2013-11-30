@@ -5,55 +5,64 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MoneyBag implements IMoney {
-	public List<Money> moneys;
+	public List<Money> moneis;
 
 	public MoneyBag(Money... moneys) {
-		this.moneys = new ArrayList<Money>(Arrays.asList(moneys));
+		this.moneis = new ArrayList<Money>(Arrays.asList(moneys));
 	}
 
 	@Override
 	public boolean equals(Object other) {
+		if (!(other instanceof MoneyBag))
+			return false;
 		MoneyBag mb = (MoneyBag) other;
-
-		return mb.moneys.equals(this.moneys);
+		return mb.moneis.equals(this.moneis);
 	}
 
 	@Override
 	public String toString() {
-		return "" + this.moneys;
+		return "" + this.moneis;
 	}
 
 	@Override
 	public MoneyBag clone() {
 		MoneyBag newMb = new MoneyBag();
-		newMb.moneys = new ArrayList<Money>(this.moneys);
+		newMb.moneis = new ArrayList<Money>(this.moneis);
 		return newMb;
 	}
 
 	@Override
 	public IMoney add(Money addend) {
 		MoneyBag newMb = this.clone();
-		for (Money m : newMb.moneys) {
+		for (Money m : newMb.moneis) {
 			if (addend.currency.equals(m.currency)) {
 				m.amount += addend.amount;
-				if (0 == m.amount) {
-					newMb.moneys.remove(m);
-				}
-				if (newMb.moneys.size() == 1) {
-					return newMb.moneys.get(0);
-				}
-				return newMb;
+				removeZero(newMb, m);
+				return newMb.simplify();
 			}
 		}
 
-		newMb.moneys.add(addend);
+		newMb.moneis.add(addend);
 		return newMb;
+	}
+
+	private void removeZero(MoneyBag newMb, Money m) {
+		if (0 == m.amount) {
+			newMb.moneis.remove(m);
+		}
+	}
+
+	private IMoney simplify() {
+		if (this.moneis.size() == 1) {
+			return this.moneis.get(0);
+		}
+		return this;
 	}
 
 	@Override
 	public IMoney add(MoneyBag moneyBag) {
 		MoneyBag newMb = this.clone();
-		for (Money m : moneyBag.moneys) {
+		for (Money m : moneyBag.moneis) {
 			newMb.add(m);
 		}
 		return newMb;

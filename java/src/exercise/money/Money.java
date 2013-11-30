@@ -11,6 +11,8 @@ public class Money implements IMoney {
 
 	@Override
 	public boolean equals(Object other) {
+		if (!(other instanceof Money))
+			return false;
 		Money m = (Money) other;
 		return this.amount == m.amount && this.currency.equals(m.currency);
 	}
@@ -22,6 +24,7 @@ public class Money implements IMoney {
 
 	@Override
 	public IMoney add(Money addend) {
+		// Here comes two types, so as to introduce interface as IMoney
 		if (this.currency.equals(addend.currency))
 			return new Money(this.amount + addend.amount, this.currency);
 		return new MoneyBag(this, addend);
@@ -31,5 +34,10 @@ public class Money implements IMoney {
 	public IMoney add(MoneyBag moneyBag) {
 		MoneyBag newMB = moneyBag.clone();
 		return newMB.add(this);
+	}
+
+	public IMoney resolveTo(String foriegnCurrency, Exchanger exchanger) {
+		return new Money(this.amount * exchanger.get(foriegnCurrency),
+				foriegnCurrency);
 	}
 }

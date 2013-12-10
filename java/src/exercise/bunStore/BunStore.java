@@ -2,34 +2,64 @@ package exercise.bunStore;
 
 public class BunStore {
 
-	public Bun order(String bunType) {
-		if (bunType.equals("Green Onion and Pork bun"))
-			return new GOPBun();
-		else if (bunType.equals("Sam Sun and Pork bun"))
-			return new SSPBun();
-		return new SSSBun();
+	public String order(String bunType) {
+		return new FollowUpWork().make(RawMateriaWork.make(bunType));
 	}
 
 }
 
 class Bun {
-
-}
-
-class GOPBun extends Bun {
+	protected String process;
+	
 	public String toString() {
-		return "Mixed stuffing of Green Onion and Pork bun. Kneaded into dough. Wrapped buns. Steamed buns. Dished out buns.";
+		return process;
 	}
 }
 
-class SSPBun extends Bun {
+class QFBun extends Bun {
+	protected String style = "QF";
 	public String toString() {
-		return "Mixed stuffing of Sam Sum and Pork bun. Kneaded into dough. Wrapped buns. Steamed buns. Dished out buns.";
+		return process;
 	}
 }
 
-class SSSBun extends Bun {
-	public String toString() {
-		return "Mixed stuffing of Su Sam Sun bun. Kneaded into dough. Wrapped buns. Steamed buns. Dished out buns.";
+class GOP_QFBun extends QFBun {
+	public GOP_QFBun() {
+		process = String.format("Mixed stuffing of Green Onion and Pork bun in %s style.", "QF");
+	}
+}
+
+class SSP_QFBun extends QFBun {
+	public SSP_QFBun() {
+		process = "Mixed stuffing of Sam Sum and Pork bun in QF style.";
+	}
+}
+
+class SSS_QFBun extends QFBun {
+	public SSS_QFBun() {
+		process = "Mixed stuffing of Su Sam Sun bun in QF style.";
+	}
+}
+
+class RawMateriaWork {
+	public static Bun make(String bunType) {
+		Bun bun;
+		if (bunType.equals("Green Onion and Pork bun"))
+			bun = new GOP_QFBun();
+		else if (bunType.equals("Sam Sun and Pork bun"))
+			bun = new SSP_QFBun();
+		else
+			bun = new SSS_QFBun();
+
+		return bun;
+
+	}
+}
+
+class FollowUpWork {
+	public String make(Bun bun) {
+		return bun
+				.toString()
+				.concat(" Kneaded into dough. Wrapped buns. Steamed buns. Dished out buns.");
 	}
 }

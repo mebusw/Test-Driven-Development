@@ -36,6 +36,7 @@ public class BunStoreTest {
 	@Before
 	public void setUp() throws Exception {
 		store = new BunStore();
+		store.setStuffingSource(new ManualStuffing());
 	}
 
 	@Test
@@ -73,4 +74,16 @@ public class BunStoreTest {
 				"Mixed stuffing of Pork bun in GBL style. Kneaded into dough in GBL style. Wrapped buns in GBL style. Steamed buns. Dished out buns.",
 				bun.toString());
 	}
+
+	@Test
+	public void test_QF_Su_Sam_Sun_bun_From_Ingredient_Factory() {
+		store.setStuffingSource(new FactoryStuffing());
+
+		Bun bun = store.orderQF("Su Sam Sun bun");
+
+		assertEquals(
+				"Got mixed stuffing of Su Sam Sun bun from QF Ingredient Factory. Got flour from QF Ingredient Factory. Prepared stuffing. Kneaded into dough in QF style. Wrapped buns in QF style. Steamed buns. Dished out buns.",
+				bun.toString());
+	}
+
 }

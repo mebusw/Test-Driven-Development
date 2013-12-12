@@ -2,12 +2,21 @@ package exercise.bunStore;
 
 public class BunStore {
 
+	private StuffingSource stuffingSource;
+
+	public BunStore() {
+	}
+
 	public Bun orderQF(String bunType) {
-		return new Waiter().make(CookQF.make(bunType));
+		return new Waiter().make(CookQF.make(bunType, stuffingSource));
 	}
 
 	public Bun orderGBL(String bunType) {
-		return new Waiter().make(CookGBL.make(bunType));
+		return new Waiter().make(CookGBL.make(bunType, stuffingSource));
+	}
+
+	public void setStuffingSource(StuffingSource stuffingSource) {
+		this.stuffingSource = stuffingSource;
 	}
 
 }
@@ -21,15 +30,44 @@ class Bun {
 
 }
 
+// ////////// Abstract Factory
+interface StuffingSource {
+	public Bun mix(Bun bun, String stuffing, String style);
+
+}
+
+class ManualStuffing implements StuffingSource {
+	public Bun mix(Bun bun, String stuffing, String style) {
+		bun.sb.append(String.format("Mixed stuffing of %s bun in %s style.",
+				stuffing, style));
+		return bun;
+	}
+}
+
+class FactoryStuffing implements StuffingSource {
+
+	public Bun mix(Bun bun, String stuffing, String style) {
+		bun.sb.append(String
+				.format("Got mixed stuffing of %s bun from %s Ingredient Factory. Got flour from %s Ingredient Factory. Prepared stuffing.",
+						stuffing, style, style));
+		return bun;
+
+	}
+
+}
+
 // //////////////
-
 class BunCooker {
-
 	protected Bun bun;
 	protected String style = "===";
+	protected StuffingSource stuffingSource;
+	protected String stuffing = ">>>";
+
+	public void setStuffingSource(StuffingSource stuffingSource) {
+		this.stuffingSource = stuffingSource;
+	}
 
 	public BunCooker() {
-		super();
 		bun = new Bun();
 	}
 
@@ -40,9 +78,8 @@ class BunCooker {
 		return bun;
 	}
 
-	public Bun mix(String stuffing) {
-		bun.sb.append(String.format("Mixed stuffing of %s bun in %s style.",
-				stuffing, style));
+	public Bun mix() {
+		stuffingSource.mix(bun, stuffing, style);
 		return bun;
 	}
 
@@ -67,26 +104,26 @@ class GBLBunCooker extends BunCooker {
 class GOP_QFBunCooker extends QFBunCooker {
 
 	public GOP_QFBunCooker() {
-		mix("Green Onion and Pork");
+		stuffing = "Green Onion and Pork";
 	}
 }
 
 class SSP_QFBunCooker extends QFBunCooker {
 	public SSP_QFBunCooker() {
-		mix("Sam Sum and Pork");
+		stuffing = "Sam Sum and Pork";
 	}
 
 }
 
 class SSS_QFBunCooker extends QFBunCooker {
 	public SSS_QFBunCooker() {
-		mix("Su Sam Sun");
+		stuffing = "Su Sam Sun";
 	}
 }
 
 class P_GBLBunCooker extends GBLBunCooker {
 	public P_GBLBunCooker() {
-		mix("Pork");
+		stuffing = "Pork";
 	}
 }
 
@@ -94,25 +131,35 @@ class P_GBLBunCooker extends GBLBunCooker {
 // // Simple Factory
 
 class CookGBL {
-	public static Bun make(String bunType) {
+	public static Bun make(String bunType, StuffingSource stuffingSource) {
 		Bun bun = null;
+		BunCooker bunCooker = null;
 
 		if (bunType.equals("Pork bun"))
-			bun = new P_GBLBunCooker().kneadAndWrap();
-		return bun;
+			bunCooker = new P_GBLBunCooker();
 
+		bunCooker.setStuffingSource(stuffingSource);
+		bun = bunCooker.mix();
+		bun = bunCooker.kneadAndWrap();
+		return bun;
 	}
 }
 
 class CookQF {
-	public static Bun make(String bunType) {
+	public static Bun make(String bunType, StuffingSource stuffingSource) {
 		Bun bun;
-		if (bunType.equals("Green Onion and Pork bun"))
-			bun = new GOP_QFBunCooker().kneadAndWrap();
-		else if (bunType.equals("Sam Sun and Pork bun"))
-			bun = new SSP_QFBunCooker().kneadAndWrap();
-		else
-			bun = new SSS_QFBunCooker().kneadAndWrap();
+		BunCooker bunCooker = null;
+		if (bunType.equals("Green Onion and Pork bun")) {
+			bunCooker = new GOP_QFBunCooker();
+		} else if (bunType.equals("Sam Sun and Pork bun")) {
+			bunCooker = new SSP_QFBunCooker();
+		} else {
+			bunCooker = new SSS_QFBunCooker();
+		}
+
+		bunCooker.setStuffingSource(stuffingSource);
+		bun = bunCooker.mix();
+		bun = bunCooker.kneadAndWrap();
 
 		return bun;
 

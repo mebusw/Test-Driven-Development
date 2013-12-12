@@ -12,6 +12,7 @@ public class BunStoreTest {
 	@Before
 	public void setUp() throws Exception {
 		store = new BunStore();
+		store.setStuffingSource(new ManualStuffing());
 	}
 
 	@Test
@@ -38,6 +39,16 @@ public class BunStoreTest {
 
 		assertEquals(
 				"Mixed stuffing of Pork bun in GBL style. Kneaded into dough in GBL style. Wrapped buns in GBL style. Steamed buns. Dished out buns.",
+				bun.getDesc());
+	}
+	
+	@Test
+	public void test_gbl_Pork_bun_From_Gredient_Factory() {
+		store.setStuffingSource(new StuffingFactory());
+		Bun bun = store.orderGBL("Pork");
+
+		assertEquals(
+				"Got mixed stuffing of Pork bun from GBL Ingredient Factory. Got flour from GBL Ingredient Factory. Prepared stuffing. Kneaded into dough in GBL style. Wrapped buns in GBL style. Steamed buns. Dished out buns.",
 				bun.getDesc());
 	}
 }

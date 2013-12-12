@@ -1,22 +1,52 @@
 package exercise.bunStore;
 
 public class BunStore {
+	StuffingSource stuffingSource;
 
 	public Bun orderQF(String bunName) {
-		Bun bun = new QFCooker().make(bunName);
+		Bun bun = new QFCooker(stuffingSource).make(bunName);
 		return bun;
 	}
 
 	public Bun orderGBL(String bunName) {
-		Bun bun = new GBLCooker().make(bunName);
+		Bun bun = new GBLCooker(stuffingSource).make(bunName);
 		return bun;
 
+	}
+
+	public void setStuffingSource(StuffingSource stuffingSource) {
+		this.stuffingSource = stuffingSource;
+	}
+
+}
+
+interface StuffingSource {
+	public String getSource(String bunStyle);
+}
+
+class ManualStuffing implements StuffingSource {
+
+	@Override
+	public String getSource(String bunStyle) {
+		return String.format("Mixed stuffing of %s bun in %s style. ", "%s",
+				bunStyle);
+	}
+}
+
+class StuffingFactory implements StuffingSource {
+
+	@Override
+	public String getSource(String bunStyle) {
+		return String
+				.format("Got mixed stuffing of %s bun from %s Ingredient Factory. Got flour from %s Ingredient Factory. Prepared stuffing. ",
+						"%s", bunStyle, bunStyle);
 	}
 
 }
 
 class Cooker {
 	protected String style;
+	protected StuffingSource stuffingSource;
 
 	public Bun make(String bunName) {
 		Bun bun = new Bun();
@@ -33,8 +63,8 @@ class Cooker {
 	}
 
 	public void mix(Bun bun, String bunName) {
-		bun.content.append(String.format(
-				"Mixed stuffing of %s bun in %s style. ", bunName, style));
+		bun.content.append(String.format(stuffingSource.getSource(style),
+				bunName));
 	}
 
 	private void steamAndDishOut(Bun bun) {
@@ -43,15 +73,17 @@ class Cooker {
 }
 
 class QFCooker extends Cooker {
-	public QFCooker() {
+	public QFCooker(StuffingSource stuffingSource) {
 		style = "QF";
+		this.stuffingSource = stuffingSource;
 	}
 
 }
 
 class GBLCooker extends Cooker {
-	public GBLCooker() {
+	public GBLCooker(StuffingSource stuffingSource) {
 		style = "GBL";
+		this.stuffingSource = stuffingSource;
 	}
 }
 

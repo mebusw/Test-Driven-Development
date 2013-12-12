@@ -2,64 +2,128 @@ package exercise.bunStore;
 
 public class BunStore {
 
-	public String order(String bunType) {
-		return new FollowUpWork().make(RawMateriaWork.make(bunType));
+	public Bun orderQF(String bunType) {
+		return new Waiter().make(CookQF.make(bunType));
+	}
+
+	public Bun orderGBL(String bunType) {
+		return new Waiter().make(CookGBL.make(bunType));
 	}
 
 }
 
 class Bun {
-	protected String process;
-	
+	public StringBuffer sb = new StringBuffer();
+
 	public String toString() {
-		return process;
+		return sb.toString();
+	}
+
+}
+
+// //////////////
+
+class BunCooker {
+
+	protected Bun bun;
+	protected String style = "===";
+
+	public BunCooker() {
+		super();
+		bun = new Bun();
+	}
+
+	public Bun kneadAndWrap() {
+		bun.sb.append(String.format(
+				" Kneaded into dough in %s style. Wrapped buns in %s style. ",
+				style, style));
+		return bun;
+	}
+
+	public Bun mix(String stuffing) {
+		bun.sb.append(String.format("Mixed stuffing of %s bun in %s style.",
+				stuffing, style));
+		return bun;
+	}
+
+}
+
+class QFBunCooker extends BunCooker {
+	public QFBunCooker() {
+		style = "QF";
 	}
 }
 
-class QFBun extends Bun {
-	protected String style = "QF";
-	public String toString() {
-		return process;
+class GBLBunCooker extends BunCooker {
+	public GBLBunCooker() {
+		style = "GBL";
+
 	}
 }
 
-class GOP_QFBun extends QFBun {
-	public GOP_QFBun() {
-		process = String.format("Mixed stuffing of Green Onion and Pork bun in %s style.", "QF");
+// /////////////////
+// / Factory
+
+class GOP_QFBunCooker extends QFBunCooker {
+
+	public GOP_QFBunCooker() {
+		mix("Green Onion and Pork");
 	}
 }
 
-class SSP_QFBun extends QFBun {
-	public SSP_QFBun() {
-		process = "Mixed stuffing of Sam Sum and Pork bun in QF style.";
+class SSP_QFBunCooker extends QFBunCooker {
+	public SSP_QFBunCooker() {
+		mix("Sam Sum and Pork");
+	}
+
+}
+
+class SSS_QFBunCooker extends QFBunCooker {
+	public SSS_QFBunCooker() {
+		mix("Su Sam Sun");
 	}
 }
 
-class SSS_QFBun extends QFBun {
-	public SSS_QFBun() {
-		process = "Mixed stuffing of Su Sam Sun bun in QF style.";
+class P_GBLBunCooker extends GBLBunCooker {
+	public P_GBLBunCooker() {
+		mix("Pork");
 	}
 }
 
-class RawMateriaWork {
+// ///////////
+// // Simple Factory
+
+class CookGBL {
+	public static Bun make(String bunType) {
+		Bun bun = null;
+
+		if (bunType.equals("Pork bun"))
+			bun = new P_GBLBunCooker().kneadAndWrap();
+		return bun;
+
+	}
+}
+
+class CookQF {
 	public static Bun make(String bunType) {
 		Bun bun;
 		if (bunType.equals("Green Onion and Pork bun"))
-			bun = new GOP_QFBun();
+			bun = new GOP_QFBunCooker().kneadAndWrap();
 		else if (bunType.equals("Sam Sun and Pork bun"))
-			bun = new SSP_QFBun();
+			bun = new SSP_QFBunCooker().kneadAndWrap();
 		else
-			bun = new SSS_QFBun();
+			bun = new SSS_QFBunCooker().kneadAndWrap();
 
 		return bun;
 
 	}
 }
 
-class FollowUpWork {
-	public String make(Bun bun) {
-		return bun
-				.toString()
-				.concat(" Kneaded into dough. Wrapped buns. Steamed buns. Dished out buns.");
+// ///////////
+
+class Waiter {
+	public Bun make(Bun bun) {
+		bun.sb.append("Steamed buns. Dished out buns.");
+		return bun;
 	}
 }

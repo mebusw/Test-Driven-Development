@@ -40,28 +40,37 @@ public class BunStoreTest {
 
 	@Test
 	public void test_QF_Green_Onion_and_Pork_bun() {
-		String bun = store.order("Green Onion and Pork bun");
+		Bun bun = store.orderQF("Green Onion and Pork bun");
 
 		assertEquals(
-				"Mixed stuffing of Green Onion and Pork bun in QF style. Kneaded into dough. Wrapped buns. Steamed buns. Dished out buns.",
+				"Mixed stuffing of Green Onion and Pork bun in QF style. Kneaded into dough in QF style. Wrapped buns in QF style. Steamed buns. Dished out buns.",
 				bun.toString());
 	}
 
 	@Test
 	public void test_QF_Sam_Sun_and_Pork_bun() {
-		String bun = store.order("Sam Sun and Pork bun");
+		Bun bun = store.orderQF("Sam Sun and Pork bun");
 
 		assertEquals(
-				"Mixed stuffing of Sam Sum and Pork bun in QF style. Kneaded into dough. Wrapped buns. Steamed buns. Dished out buns.",
+				"Mixed stuffing of Sam Sum and Pork bun in QF style. Kneaded into dough in QF style. Wrapped buns in QF style. Steamed buns. Dished out buns.",
 				bun.toString());
 	}
 
 	@Test
 	public void test_QF_Su_Sam_Sun_bun() {
-		String bun = store.order("Su Sam Sun bun");
+		Bun bun = store.orderQF("Su Sam Sun bun");
 
 		assertEquals(
-				"Mixed stuffing of Su Sam Sun bun in QF style. Kneaded into dough. Wrapped buns. Steamed buns. Dished out buns.",
+				"Mixed stuffing of Su Sam Sun bun in QF style. Kneaded into dough in QF style. Wrapped buns in QF style. Steamed buns. Dished out buns.",
+				bun.toString());
+	}
+
+	@Test
+	public void test_GBL_Pork_bun() {
+		Bun bun = store.orderGBL("Pork bun");
+
+		assertEquals(
+				"Mixed stuffing of Pork bun in GBL style. Kneaded into dough in GBL style. Wrapped buns in GBL style. Steamed buns. Dished out buns.",
 				bun.toString());
 	}
 }

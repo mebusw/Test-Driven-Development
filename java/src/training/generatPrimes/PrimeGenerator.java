@@ -3,14 +3,15 @@ package training.generatPrimes;
 /**
  * Refactorings:
  * 
- * Extract Fields.
+ * (Extract Fields.)
  * Extract Methods: initArrayOfIntegers, crossOutMultiples, putUncrossedIntegerIntoResult
  * Inline s with f.length
- * Rename f to isCrossed
- * Ensure for loop starts from 2
+ * Rename f to isCrossed and revert logic
+ * Ensure for-loop starts from 2
  * Extract Methods: crossOutMultipleOf, numberOfUncrossedIntegers, notCrossed
- * Rename methods to: uncrossIntegersUpTo
- * Inline fields to make thread safe and lessen dependency
+ * Rename method initArrayOfIntegers to uncrossIntegersUpTo
+ * Inline fields to make thread safe and lessen dependency as functional programming
+ * Ensure abstract level of names
  * @author jacky
  * 
  */

@@ -10,6 +10,7 @@ package training.generatPrimes;
  * Ensure for loop starts from 2
  * Extract Methods: crossOutMultipleOf, numberOfUncrossedIntegers, notCrossed
  * Rename methods to: uncrossIntegersUpTo
+ * Inline fields to make thread safe and lessen dependency
  * @author jacky
  * 
  */

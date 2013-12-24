@@ -8,33 +8,46 @@ public class PinyinService {
 	}
 
 	public String getPinyin(String cnChars) {
+		String[] pyChars = readPyForCn(cnChars);
 
-		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < cnChars.length(); i++) {
-			String cnChar = cnChars.substring(i, i + 1);
-			String pyChar = dao.get(cnChar);
-			if (pyChar == null) {
-				pyChar = "?";
+		return transformPy(pyChars, new PinyinTransformer() {
+			public String transform(String pyString) {
+				return pyString.substring(0, 1).toUpperCase()
+						+ pyString.substring(1);
 			}
-			String capitalizedPyChar = pyChar.substring(0, 1).toUpperCase()
-					+ pyChar.substring(1);
-			sb.append(capitalizedPyChar);
-		}
-		return sb.toString();
+		});
 	}
 
 	public String getPinyinHeader(String cnChars) {
-		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < cnChars.length(); i++) {
-			String cnChar = cnChars.substring(i, i + 1);
-			String pyChar = dao.get(cnChar);
-			if (pyChar == null) {
-				pyChar = "?";
+		String[] pyChars = readPyForCn(cnChars);
+		return transformPy(pyChars, new PinyinTransformer() {
+			public String transform(String pyString) {
+				return pyString.substring(0, 1).toUpperCase();
 			}
-			String capitalizedPyChar = pyChar.substring(0, 1).toUpperCase()
-					;
-			sb.append(capitalizedPyChar);
+		});
+	}
+
+	private String transformPy(String[] pyChars, PinyinTransformer transformer) {
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < pyChars.length; i++) {
+			sb.append(transformer.transform(pyChars[i]));
 		}
 		return sb.toString();
 	}
+
+	private String[] readPyForCn(String cnChars) {
+		String[] pyChars = new String[cnChars.length()];
+		for (int i = 0; i < cnChars.length(); i++) {
+			String cnChar = cnChars.substring(i, i + 1);
+			pyChars[i] = dao.get(cnChar);
+			if (pyChars[i] == null) {
+				pyChars[i] = "?";
+			}
+		}
+		return pyChars;
+	}
+}
+
+interface PinyinTransformer {
+	public String transform(String pyString);
 }

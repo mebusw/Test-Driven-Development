@@ -13,8 +13,11 @@ public class FizzBuzzTest {
 
 	@Test
 	public void testOne() {
-		FizzBuzz fizzBuzz = new FizzBuzz();
-		String results[] = fizzBuzz.play(100);
+		Handler firstHandler = new HandlerForMultiplesOfThree(
+				new HandlerForMultiplesOfFive(
+						new HandlerForOthers(Handler.EMPTY_HANDLER)));
+		FizzBuzz fizzBuzz = new FizzBuzz(firstHandler);
+		String results[] = fizzBuzz.play(18);
 		assertBySN("1", results, 1);
 		assertBySN("2", results, 2);
 		assertBySN("Fizz", results, 3);
@@ -26,4 +29,5 @@ public class FizzBuzzTest {
 	private void assertBySN(String expect, String[] results, int SN) {
 		assertEquals(expect, results[SN - 1]);
 	}
+
 }

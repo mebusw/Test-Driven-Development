@@ -87,6 +87,7 @@ class SingleRoundRobinTournamentsTest(unittest.TestCase):
         self.assertEqual(1, self.tournament.calcRoundCount())
         self._assertOneMatch('Tianjin - Beijing', 0)
 
+
     def testGenerateTournamentWithFourTeams(self):
         self._addTeams('Tianjin', 'Beijing', 'Shanghai', 'Chengdu')
 
@@ -100,7 +101,6 @@ class SingleRoundRobinTournamentsTest(unittest.TestCase):
         self._assertOneMatch('Shanghai - Chengdu', 4)
         self._assertOneMatch('Tianjin - Beijing', 5)
 
-
     def testGenerateTournamentWithThreeTeams(self):
         self._addTeams('Tianjin', 'Beijing', 'Shanghai')
 
@@ -110,6 +110,7 @@ class SingleRoundRobinTournamentsTest(unittest.TestCase):
         self._assertOneMatch('Tianjin - Shanghai', 0)
         self._assertOneMatch('Beijing - Shanghai', 1)
         self._assertOneMatch('Tianjin - Beijing', 2)
+
 
     def _addTeams(self, *teams):
         for t in teams:
@@ -168,10 +169,10 @@ class SingleRoundRobinTournament:
             for match in xrange(N / 2):
                 self.matches.append(Match(l[match], l[N - 1 - match]))
 
+        # an extra round when odd number of teams
         l = teamsWithoutLast
         for match in xrange(N / 2):
             self.matches.append(Match(l[match], l[N - 2 - match]))
-
 
 class SingleEliminationTournament:
     def __init__(self):

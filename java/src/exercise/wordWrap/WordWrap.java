@@ -8,8 +8,13 @@ public class WordWrap {
 		if (s.length() <= length) {
 			return s;
 		} else {
-			return s.substring(0, length) + "\n"
-					+ wrap(s.substring(length), length);
+			int space = s.indexOf(" ");
+			if (space >= 0)
+				return s.substring(0, space) + "\n"
+						+ wrap(s.substring(space + 1), length);
+			else
+				return s.substring(0, length) + "\n"
+						+ wrap(s.substring(length), length);
 		}
 	}
 }

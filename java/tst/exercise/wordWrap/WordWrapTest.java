@@ -48,15 +48,17 @@ public class WordWrapTest {
 	public void WordLongerThenTwiceLengthShouldBreaksTwice() throws Exception {
 		assertThat(WordWrap.wrap("verylongword", 4), is("very\nlong\nword"));
 	}
-	
-	@Ignore
+
+	@Test
 	/* (expression->function) */
 	public void TwoWordsLongerThanLimitShouldWrap() throws Exception {
 		assertThat(WordWrap.wrap("word word", 6), is("word\nword"));
+		assertThat(WordWrap.wrap("wrap here", 6), is("wrap\nhere"));
 	}
 
-	@Ignore
+	@Test
+	/* (expression->function) */
 	public void ThreeWordsJustOverTheLimitShouldWrapAtSecondWord() {
-		assertThat(WordWrap.wrap("word word word", 9), is("word word\nword"));
+		assertThat(WordWrap.wrap("word word word", 6), is("word\nword\nword"));
 	}
 }

@@ -2,8 +2,7 @@ package exercise.wordWrap;
 
 import static org.junit.Assert.*;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import static org.hamcrest.CoreMatchers.*;
 
 /**
@@ -38,12 +37,25 @@ public class WordWrapTest {
 	}
 
 	@Test
+	/* (unconditional->if),(expression->function) */
+	public void WordLongerThenLengthBreaksAtLength() throws Exception {
+		assertThat(WordWrap.wrap("longword", 4), is("long\nword"));
+		assertThat(WordWrap.wrap("longword", 6), is("longwo\nrd"));
+	}
+
+	@Test
+	/* (statement->recursion) */
+	public void WordLongerThenTwiceLengthShouldBreaksTwice() throws Exception {
+		assertThat(WordWrap.wrap("verylongword", 4), is("very\nlong\nword"));
+	}
+	
+	@Ignore
 	/* (expression->function) */
 	public void TwoWordsLongerThanLimitShouldWrap() throws Exception {
 		assertThat(WordWrap.wrap("word word", 6), is("word\nword"));
 	}
 
-	@Test
+	@Ignore
 	public void ThreeWordsJustOverTheLimitShouldWrapAtSecondWord() {
 		assertThat(WordWrap.wrap("word word word", 9), is("word word\nword"));
 	}

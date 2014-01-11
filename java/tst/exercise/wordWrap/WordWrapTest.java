@@ -44,32 +44,32 @@ public class WordWrapTest {
 	}
 
 	@Test
-	/* (statement->recursion) */
+	/* (if->while) */
 	public void WordLongerThenTwiceLengthShouldBreaksTwice() throws Exception {
 		assertThat(WordWrap.wrap("verylongword", 4), is("very\nlong\nword"));
 	}
-
-	@Test
-	/* (expression->function) */
-	public void TwoWordsLongerThanLimitShouldWrap() throws Exception {
-		assertThat(WordWrap.wrap("word word", 6), is("word\nword"));
-		assertThat(WordWrap.wrap("wrap here", 6), is("wrap\nhere"));
-	}
-
-	@Test
-	/* (expression->function) */
-	public void ThreeWordsEachLongerThanLimitShouldWrap() {
-		assertThat(WordWrap.wrap("word word word", 6), is("word\nword\nword"));
-	}
-
-	@Test
-	public void ThreeWordsJustOverTheLimitShouldBreakAtSecond() {
-		assertThat(WordWrap.wrap("word word word", 11), is("word word\nword"));
-	}
-	
-	@Test
-	public void TwoWordsTheFirstEndingAtTheLimit() {
-		assertThat(WordWrap.wrap("word word", 4), is("word\nword"));
-	}
-	
+//
+//	@Test
+//	/* (expression->function) */
+//	public void TwoWordsLongerThanLimitShouldWrap() throws Exception {
+//		assertThat(WordWrap.wrap("word word", 6), is("word\nword"));
+//		assertThat(WordWrap.wrap("wrap here", 6), is("wrap\nhere"));
+//	}
+//
+//	@Test
+//	/* (expression->function) */
+//	public void ThreeWordsEachLongerThanLimitShouldWrap() {
+//		assertThat(WordWrap.wrap("word word word", 6), is("word\nword\nword"));
+//	}
+//
+//	@Test
+//	public void ThreeWordsJustOverTheLimitShouldBreakAtSecond() {
+//		assertThat(WordWrap.wrap("word word word", 11), is("word word\nword"));
+//	}
+//	
+//	@Test
+//	public void TwoWordsTheFirstEndingAtTheLimit() {
+//		assertThat(WordWrap.wrap("word word", 4), is("word\nword"));
+//	}
+//	
 }

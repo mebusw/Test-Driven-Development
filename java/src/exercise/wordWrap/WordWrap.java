@@ -8,13 +8,15 @@ public class WordWrap {
 		if (s.length() <= length) {
 			return s;
 		} else {
-			int space = s.indexOf(" ");
+			int space = s.substring(0, length + 1).lastIndexOf(" ");
 			if (space >= 0)
-				return s.substring(0, space) + "\n"
-						+ wrap(s.substring(space + 1), length);
+				return breakBetween(s, space, space + 1, length);
 			else
-				return s.substring(0, length) + "\n"
-						+ wrap(s.substring(length), length);
+				return breakBetween(s, length, length, length);
 		}
+	}
+
+	private static String breakBetween(String s, int start, int end, int length) {
+		return s.substring(0, start) + "\n" + wrap(s.substring(end), length);
 	}
 }

@@ -58,7 +58,18 @@ public class WordWrapTest {
 
 	@Test
 	/* (expression->function) */
-	public void ThreeWordsJustOverTheLimitShouldWrapAtSecondWord() {
+	public void ThreeWordsEachLongerThanLimitShouldWrap() {
 		assertThat(WordWrap.wrap("word word word", 6), is("word\nword\nword"));
 	}
+
+	@Test
+	public void ThreeWordsJustOverTheLimitShouldBreakAtSecond() {
+		assertThat(WordWrap.wrap("word word word", 11), is("word word\nword"));
+	}
+	
+	@Test
+	public void TwoWordsTheFirstEndingAtTheLimit() {
+		assertThat(WordWrap.wrap("word word", 4), is("word\nword"));
+	}
+	
 }

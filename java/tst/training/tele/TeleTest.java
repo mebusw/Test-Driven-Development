@@ -80,4 +80,17 @@ public class TeleTest {
 		assertEquals(2 * 5 + 2 * 21.5 + 29.95, plan.billing(), 0.01);
 	}
 
+	// #4
+
+	@Test
+	public void goldPlanWithFourLinesAndExceedingMinutes() {
+		Plan plan = new GoldPlan(4, 1123);
+		assertEquals(123 * 0.45 + 5 + 2 * 14.5 + 49.95, plan.billing(), 0.01);
+	}
+
+	@Test
+	public void silverPlanWithFiveLinesAndExceedingMinutes() {
+		Plan plan = new SilverPlan(5, 521);
+		assertEquals(21 * 0.54 + 2 * 5 + 2 * 21.5 + 29.95, plan.billing(), 0.01);
+	}
 }

@@ -11,6 +11,7 @@ public class TeleTest {
 	public void setUp() throws Exception {
 	}
 
+	// #1
 	@Test
 	public void goldPlanWithOneLine() {
 		Plan plan = new GoldPlan(1);
@@ -25,13 +26,45 @@ public class TeleTest {
 
 	@Test
 	public void silverPlanWithOneLine() {
-		SilverPlan plan = new SilverPlan(1);
+		Plan plan = new SilverPlan(1);
 		assertEquals(29.95, plan.billing(), 0.01);
 	}
 
 	@Test
 	public void silverPlanWithLine() {
-		SilverPlan plan = new SilverPlan(3);
+		Plan plan = new SilverPlan(3);
 		assertEquals((2 * 21.5) + 29.95, plan.billing(), 0.01);
 	}
+
+	// #2
+	@Test
+	public void goldPlanWithOneLineNotExceedMinutes() {
+		Plan plan = new GoldPlan(1, 999);
+		assertEquals(49.95, plan.billing(), 0.01);
+	}
+
+	@Test
+	public void goldPlanWithOneLineExceedingOneMinute() {
+		Plan plan = new GoldPlan(1, 1001);
+		assertEquals(49.95 + 0.45, plan.billing(), 0.01);
+	}
+
+	@Test
+	public void goldPlanWithOneLineExceedingTenMinutes() {
+		Plan plan = new GoldPlan(1, 1010);
+		assertEquals(49.95 + 10 * 0.45, plan.billing(), 0.01);
+	}
+
+	@Test
+	public void silverPlanWithOneLineNotExceedMinutes() {
+		Plan plan = new SilverPlan(1, 500);
+		assertEquals(29.95, plan.billing(), 0.01);
+	}
+
+	@Test
+	public void silverPlanWithOneLineExceedingTwentyMinutes() {
+		Plan plan = new SilverPlan(1, 520);
+		assertEquals(29.95 + 20 * 0.54, plan.billing(), 0.01);
+	}
+
 }

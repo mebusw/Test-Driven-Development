@@ -19,7 +19,7 @@ public class TeleTest {
 	}
 
 	@Test
-	public void goldPlanWithTwoLine() {
+	public void goldPlanWithTwoLines() {
 		Plan plan = new GoldPlan(2);
 		assertEquals(14.5 + 49.95, plan.billing(), 0.01);
 	}
@@ -31,7 +31,7 @@ public class TeleTest {
 	}
 
 	@Test
-	public void silverPlanWithLine() {
+	public void silverPlanWithTwoLines() {
 		Plan plan = new SilverPlan(3);
 		assertEquals((2 * 21.5) + 29.95, plan.billing(), 0.01);
 	}
@@ -65,6 +65,19 @@ public class TeleTest {
 	public void silverPlanWithOneLineExceedingTwentyMinutes() {
 		Plan plan = new SilverPlan(1, 520);
 		assertEquals(29.95 + 20 * 0.54, plan.billing(), 0.01);
+	}
+
+	// #3
+	@Test
+	public void goldPlanWithFourLines_shouldGetFamilyDiscount() {
+		Plan plan = new GoldPlan(4);
+		assertEquals(5 + 2 * 14.5 + 49.95, plan.billing(), 0.01);
+	}
+
+	@Test
+	public void silverPlanWithFourLines_shouldGetFamilyDiscount() {
+		Plan plan = new SilverPlan(5);
+		assertEquals(2 * 5 + 2 * 21.5 + 29.95, plan.billing(), 0.01);
 	}
 
 }

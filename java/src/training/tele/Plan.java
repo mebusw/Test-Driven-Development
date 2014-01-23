@@ -2,9 +2,10 @@ package training.tele;
 
 public class Plan {
 
+	protected static final int familyDiscountLimit = 3;
 	protected int numberOfLines;
-	protected double ratePerAdditionalLine = 0;
-	protected double basicMonthlyRate = 0;
+	protected double ratePerAdditionalLine;
+	protected double basicMonthlyRate;
 	protected int usedMinutes;
 	protected double ratePerExceedMinute;
 	protected int includedMinutes;
@@ -17,15 +18,23 @@ public class Plan {
 	}
 
 	protected double billing() {
-		if (usedMinutes > includedMinutes)
-			return monthlyBasicRate() + (usedMinutes - includedMinutes)
-					* ratePerExceedMinute;
-		return monthlyBasicRate();
+		return feeOfIncludedMinutes() + feeOfExceedMinute();
 
 	}
 
-	protected double monthlyBasicRate() {
+
+	protected double feeOfIncludedMinutes() {
+		if (numberOfLines > familyDiscountLimit)
+			return (numberOfLines - familyDiscountLimit) * 5 + 2
+					* ratePerAdditionalLine + basicMonthlyRate;
 		return (numberOfLines - 1) * ratePerAdditionalLine + basicMonthlyRate;
 	}
 
+	protected double feeOfExceedMinute() {
+		double feeOfExceedMinute = 0;
+		if (usedMinutes > includedMinutes)
+			feeOfExceedMinute = (usedMinutes - includedMinutes)
+					* ratePerExceedMinute;
+		return feeOfExceedMinute;
+	}
 }

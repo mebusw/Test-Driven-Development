@@ -15,8 +15,5 @@ public class SilverPlan extends Plan {
 		this.usedMinutes = usedMinutes;
 	}
 
-	protected double billing() {
-		return super.billing();
-	}
-
+	
 }

@@ -29,5 +29,8 @@ public class Buddy {
 		}
 	}
 
+	public int stat() {
+		return parkingLots.size();
+	}
 
 }

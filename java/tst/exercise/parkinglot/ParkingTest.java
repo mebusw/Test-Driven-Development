@@ -180,6 +180,7 @@ public class ParkingTest {
 
 		assertEquals("class exercise.parkinglot.Buddy's\n", result.toString());
 	}
+
 	@Test
 	public void testPrintBothOwnAndSubLots() {
 		Manager manager = new Manager();
@@ -188,9 +189,30 @@ public class ParkingTest {
 		buddy.manage(parkingLot);
 		manager.manage(buddy);
 		StringBuffer result = new StringBuffer();
-		
+
 		manager.print(result);
+
+		assertEquals(
+				"class exercise.parkinglot.Manager's\nclass exercise.parkinglot.Buddy's\n",
+				result.toString());
+	}
+
+	// ////////////// #7 Print Total Parking Lots
+	@Test
+	public void testHavingOnlyOwnLots() {
+		Manager manager = new Manager();
+		manager.manage(parkingLot);
+
+		assertEquals(1, manager.stat());
+	}
+	@Test
+	public void testHavingSubLots() {
+		Manager manager = new Manager();
+		manager.manage(new ParkingLot(5));
+		Buddy buddy = new Buddy();
+		buddy.manage(parkingLot);
+		manager.manage(buddy);
 		
-		assertEquals("class exercise.parkinglot.Manager's\nclass exercise.parkinglot.Buddy's\n", result.toString());
+		assertEquals(2, manager.stat());
 	}
 }

@@ -26,4 +26,12 @@ public class Manager extends Buddy {
 		}
 	}
 
+	public int stat() {
+		int sum = parkingLots.size();
+		for (Buddy sub : subordinates) {
+			sum += sub.stat();
+		}
+		return sum;
+	}
+
 }

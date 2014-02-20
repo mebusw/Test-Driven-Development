@@ -2,30 +2,30 @@ package exercise.parkinglot;
 
 public class ParkingLot {
 
-	private int lots;
+	private int emptyLots;
 	private int totalLots;
 
 	public ParkingLot(int lots) {
 		this.totalLots = lots;
-		this.lots = lots;
+		this.emptyLots = lots;
 
 	}
 
 	public void park() {
-		if (this.lots > 0)
-			this.lots -= 1;
+		if (this.emptyLots > 0)
+			this.emptyLots -= 1;
 	}
 
 	public int remainingLots() {
-		return this.lots;
+		return this.emptyLots;
 	}
 
 	public void getOut() {
-		this.lots += 1;
+		this.emptyLots += 1;
 	}
 
-	public int emptyRate() {
-		return lots / totalLots;
+	public double emptyRate() {
+		return emptyLots * 1.0 / totalLots;
 	}
 
 }

@@ -8,7 +8,6 @@ public class SmarterBuddy extends Buddy {
 			if (pl.emptyRate() > parkingLots.get(mostEmptyRateParkingLot)
 					.emptyRate()) {
 				mostEmptyRateParkingLot = i;
-				break;
 			}
 		}
 		parkingLots.get(mostEmptyRateParkingLot).park();

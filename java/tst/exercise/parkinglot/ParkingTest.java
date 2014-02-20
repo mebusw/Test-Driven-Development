@@ -48,6 +48,7 @@ public class ParkingTest {
 	public void testParkingLotCanMultiCars() {
 		parkMultiCars(parkingLot, 9);
 		assertEquals(1, parkingLot.remainingLots());
+		assertEquals(1.0 / 10, parkingLot.emptyRate(), 0.1);
 	}
 
 	@Test
@@ -130,4 +131,28 @@ public class ParkingTest {
 		assertEquals(5 - 3, anotherLot.remainingLots());
 	}
 
+	// ////////////// #5
+	@Test
+	public void testAManagerCanParkTheCarToHisOwnLot() {
+		Buddy manager = new Manager();
+		manager.manage(parkingLot);
+		parkMultiCars(parkingLot, 5);
+
+		manager.park();
+
+		assertEquals(10 - 5 - 1, parkingLot.remainingLots());
+	}
+
+	@Test
+	public void testAManagerCanParkTheCarToLotOfHisBuddy() {
+		Manager manager = new Manager();
+		Buddy subordinate = new Buddy();
+		manager.manage(subordinate);
+		subordinate.manage(parkingLot);
+		parkMultiCars(parkingLot, 5);
+
+		manager.park();
+
+		assertEquals(10 - 5 - 1, parkingLot.remainingLots());
+	}
 }

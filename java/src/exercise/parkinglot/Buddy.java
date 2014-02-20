@@ -19,6 +19,15 @@ public class Buddy {
 		}
 	}
 
+	public void print(StringBuffer result) {
+		printOwnLots(result);
+	}
+
+	protected void printOwnLots(StringBuffer result) {
+		if (!parkingLots.isEmpty()) {
+			result.append(this.getClass().toString() + "'s\n");
+		}
+	}
 
 
 }

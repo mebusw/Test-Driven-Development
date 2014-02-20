@@ -31,7 +31,7 @@ public class ParkingTest {
 		parkingLot = new ParkingLot(10);
 	}
 
-	// //////////// #1
+	// //////////// #1 Parking Lot
 	@Test
 	public void testAnEmptyParkingLotCanParkACar() {
 		parkingLot.park();
@@ -67,7 +67,7 @@ public class ParkingTest {
 		assertEquals(1, parkingLot.remainingLots());
 	}
 
-	// ////////////// #2
+	// ////////////// #2 Buddy
 	@Test
 	public void testABuddyCanParkTheCar() {
 		Buddy buddy = new Buddy();
@@ -91,7 +91,7 @@ public class ParkingTest {
 		assertEquals(5 - 1, anotherLot.remainingLots());
 	}
 
-	// ////////////// #3
+	// ////////////// #3 Smart Buddy
 	@Test
 	public void testASmartBuddyCanParkTheCar() {
 		Buddy buddy = new SmartBuddy();
@@ -115,7 +115,7 @@ public class ParkingTest {
 		assertEquals(5 - 1, anotherLot.remainingLots());
 	}
 
-	// ////////////// #4
+	// ////////////// #4 Smarter Buddy
 	@Test
 	public void testASmarterBuddyCanParkTheCarToThatOfMostEmptyRate() {
 		Buddy buddy = new SmarterBuddy();
@@ -131,7 +131,7 @@ public class ParkingTest {
 		assertEquals(5 - 3, anotherLot.remainingLots());
 	}
 
-	// ////////////// #5
+	// ////////////// #5 Manager
 	@Test
 	public void testAManagerCanParkTheCarToHisOwnLot() {
 		Buddy manager = new Manager();
@@ -154,5 +154,43 @@ public class ParkingTest {
 		manager.park();
 
 		assertEquals(10 - 5 - 1, parkingLot.remainingLots());
+	}
+
+	// ////////////// #6 Print Parking Lots
+	@Test
+	public void testPrintOnlyOwnLots() {
+		Manager manager = new Manager();
+		manager.manage(parkingLot);
+		StringBuffer result = new StringBuffer();
+
+		manager.print(result);
+
+		assertEquals("class exercise.parkinglot.Manager's\n", result.toString());
+	}
+
+	@Test
+	public void testPrintOnlySubLots() {
+		Manager manager = new Manager();
+		Buddy buddy = new Buddy();
+		buddy.manage(parkingLot);
+		manager.manage(buddy);
+		StringBuffer result = new StringBuffer();
+
+		manager.print(result);
+
+		assertEquals("class exercise.parkinglot.Buddy's\n", result.toString());
+	}
+	@Test
+	public void testPrintBothOwnAndSubLots() {
+		Manager manager = new Manager();
+		manager.manage(new ParkingLot(5));
+		Buddy buddy = new Buddy();
+		buddy.manage(parkingLot);
+		manager.manage(buddy);
+		StringBuffer result = new StringBuffer();
+		
+		manager.print(result);
+		
+		assertEquals("class exercise.parkinglot.Manager's\nclass exercise.parkinglot.Buddy's\n", result.toString());
 	}
 }

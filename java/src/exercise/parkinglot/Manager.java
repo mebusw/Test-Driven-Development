@@ -18,4 +18,12 @@ public class Manager extends Buddy {
 		}
 		subordinates.get(0).park();
 	}
+
+	public void print(StringBuffer result) {
+		printOwnLots(result);
+		for (Buddy sub : subordinates) {
+			sub.print(result);
+		}
+	}
+
 }

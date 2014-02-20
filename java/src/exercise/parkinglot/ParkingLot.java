@@ -3,9 +3,12 @@ package exercise.parkinglot;
 public class ParkingLot {
 
 	private int lots;
+	private int totalLots;
 
 	public ParkingLot(int lots) {
+		this.totalLots = lots;
 		this.lots = lots;
+
 	}
 
 	public void park() {
@@ -19,6 +22,10 @@ public class ParkingLot {
 
 	public void getOut() {
 		this.lots += 1;
+	}
+
+	public int emptyRate() {
+		return lots / totalLots;
 	}
 
 }

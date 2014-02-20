@@ -38,7 +38,7 @@ public class ParkingTest {
 		assertEquals(10 - 1, parkingLot.remainingLots());
 	}
 
-	protected void parkMultiCars(int times) {
+	protected void parkMultiCars(ParkingLot parkingLot, int times) {
 		for (int i = 0; i < times; i++) {
 			parkingLot.park();
 		}
@@ -46,21 +46,21 @@ public class ParkingTest {
 
 	@Test
 	public void testParkingLotCanMultiCars() {
-		parkMultiCars(9);
+		parkMultiCars(parkingLot, 9);
 		assertEquals(1, parkingLot.remainingLots());
 	}
 
 	@Test
 	public void testAnAlmostFullParkingLotCanOnlyParkOneMoreCar() {
-		parkMultiCars(10);
-		parkMultiCars(1);
+		parkMultiCars(parkingLot, 10);
+		parkMultiCars(parkingLot, 1);
 		assertEquals(0, parkingLot.remainingLots());
 
 	}
 
 	@Test
 	public void testAFullParkingLotCanGetCarOut() {
-		parkMultiCars(10);
+		parkMultiCars(parkingLot, 10);
 		parkingLot.getOut();
 
 		assertEquals(1, parkingLot.remainingLots());
@@ -80,7 +80,7 @@ public class ParkingTest {
 	public void testABuddyCanParkTheCarToEmptyParkingLot() {
 		Buddy buddy = new Buddy();
 		buddy.manage(parkingLot);
-		parkMultiCars(10);
+		parkMultiCars(parkingLot, 10);
 		ParkingLot anotherLot = new ParkingLot(5);
 		buddy.manage(anotherLot);
 
@@ -104,7 +104,7 @@ public class ParkingTest {
 	public void testASmartBuddyCanParkTheCarToMostEmptyLot() {
 		Buddy buddy = new SmartBuddy();
 		buddy.manage(parkingLot);
-		parkMultiCars(9);
+		parkMultiCars(parkingLot, 9);
 		ParkingLot anotherLot = new ParkingLot(5);
 		buddy.manage(anotherLot);
 
@@ -113,6 +113,21 @@ public class ParkingTest {
 		assertEquals(10 - 9, parkingLot.remainingLots());
 		assertEquals(5 - 1, anotherLot.remainingLots());
 	}
-	
-	
+
+	// ////////////// #4
+	@Test
+	public void testASmarterBuddyCanParkTheCarToThatOfMostEmptyRate() {
+		Buddy buddy = new SmarterBuddy();
+		ParkingLot anotherLot = new ParkingLot(5);
+		buddy.manage(anotherLot);
+		parkMultiCars(anotherLot, 3);
+		buddy.manage(parkingLot);
+		parkMultiCars(parkingLot, 5);
+
+		buddy.park();
+
+		assertEquals(10 - 5 - 1, parkingLot.remainingLots());
+		assertEquals(5 - 3, anotherLot.remainingLots());
+	}
+
 }

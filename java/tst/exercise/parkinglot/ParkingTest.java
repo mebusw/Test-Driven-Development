@@ -31,6 +31,7 @@ public class ParkingTest {
 		parkingLot = new ParkingLot(10);
 	}
 
+	// //////////// #1
 	@Test
 	public void testAnEmptyParkingLotCanParkACar() {
 		parkingLot.park();
@@ -61,7 +62,31 @@ public class ParkingTest {
 	public void testAFullParkingLotCanGetCarOut() {
 		parkMultiCars(10);
 		parkingLot.getOut();
-		assertEquals(1, parkingLot.remainingLots());
 
+		assertEquals(1, parkingLot.remainingLots());
+	}
+
+	// ////////////// #2
+	@Test
+	public void testABuddyCanParkTheCar() {
+		Buddy buddy = new Buddy();
+		buddy.manage(parkingLot);
+		buddy.park();
+
+		assertEquals(10 - 1, parkingLot.remainingLots());
+	}
+
+	@Test
+	public void testABuddyCanParkTheCarToEmptyParkingLot() {
+		Buddy buddy = new Buddy();
+		buddy.manage(parkingLot);
+		parkMultiCars(10);
+		ParkingLot anotherLot = new ParkingLot(5);
+		buddy.manage(anotherLot);
+
+		buddy.park();
+		
+		assertEquals(0, parkingLot.remainingLots());
+		assertEquals(5 - 1, anotherLot.remainingLots());
 	}
 }

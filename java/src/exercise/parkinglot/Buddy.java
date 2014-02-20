@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Buddy {
-	private List<ParkingLot> parkingLots;
+	protected List<ParkingLot> parkingLots = new ArrayList<ParkingLot>();
 
 	public void manage(ParkingLot parkingLot) {
-		this.parkingLots = new ArrayList<ParkingLot>();
 		this.parkingLots.add(parkingLot);
 	}
 

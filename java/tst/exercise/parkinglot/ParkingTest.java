@@ -85,8 +85,34 @@ public class ParkingTest {
 		buddy.manage(anotherLot);
 
 		buddy.park();
-		
-		assertEquals(0, parkingLot.remainingLots());
+
+		assertEquals(10 - 10, parkingLot.remainingLots());
 		assertEquals(5 - 1, anotherLot.remainingLots());
 	}
+
+	// ////////////// #3
+	@Test
+	public void testASmartBuddyCanParkTheCar() {
+		Buddy buddy = new SmartBuddy();
+		buddy.manage(parkingLot);
+		buddy.park();
+
+		assertEquals(10 - 1, parkingLot.remainingLots());
+	}
+
+	@Test
+	public void testASmartBuddyCanParkTheCarToMostEmptyLot() {
+		Buddy buddy = new SmartBuddy();
+		buddy.manage(parkingLot);
+		parkMultiCars(9);
+		ParkingLot anotherLot = new ParkingLot(5);
+		buddy.manage(anotherLot);
+
+		buddy.park();
+
+		assertEquals(10 - 9, parkingLot.remainingLots());
+		assertEquals(5 - 1, anotherLot.remainingLots());
+	}
+	
+	
 }

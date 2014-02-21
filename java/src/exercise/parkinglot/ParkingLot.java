@@ -1,6 +1,6 @@
 package exercise.parkinglot;
 
-public class ParkingLot {
+public class ParkingLot implements Parkable {
 
 	private int emptyLots;
 	private int totalLots;
@@ -26,6 +26,12 @@ public class ParkingLot {
 
 	public double emptyRate() {
 		return emptyLots * 1.0 / totalLots;
+	}
+
+	@Override
+	public void print(StringBuffer result) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

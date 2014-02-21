@@ -1,13 +1,15 @@
 package exercise.parkinglot;
 
-public class ParkingLot implements Parkable {
+public class ParkingLot {
 
 	private int emptyLots;
-	private int totalLots;
+	public int totalLots;
+	public String name;
 
-	public ParkingLot(int lots) {
+	public ParkingLot(String name, int lots) {
 		this.totalLots = lots;
 		this.emptyLots = lots;
+		this.name = name;
 
 	}
 
@@ -26,12 +28,6 @@ public class ParkingLot implements Parkable {
 
 	public double emptyRate() {
 		return emptyLots * 1.0 / totalLots;
-	}
-
-	@Override
-	public void print(StringBuffer result) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

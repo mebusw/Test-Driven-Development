@@ -31,8 +31,8 @@ public class ParkingTest {
 
 	@Before
 	public void setUp() throws Exception {
-		parkingLot10 = new ParkingLot(10);
-		parkingLot5 = new ParkingLot(5);
+		parkingLot10 = new ParkingLot("X", 10);
+		parkingLot5 = new ParkingLot("V", 5);
 		buddy = new Buddy("Alice", new JuniorStrategy());
 		manager = new Buddy("Dante", new ManagerStrategy());
 
@@ -163,7 +163,7 @@ public class ParkingTest {
 
 		manager.print(result);
 
-		assertEquals("Dante's\n", result.toString());
+		assertEquals("Dante's X\n", result.toString());
 	}
 
 	@Test
@@ -174,7 +174,7 @@ public class ParkingTest {
 
 		manager.print(result);
 
-		assertEquals("Alice's\n", result.toString());
+		assertEquals("Alice's X\n", result.toString());
 	}
 
 	@Test
@@ -187,7 +187,7 @@ public class ParkingTest {
 		manager.print(result);
 
 		assertEquals(
-				"Dante's\nAlice's\n",
+				"Dante's V\nAlice's X\n",
 				result.toString());
 	}
 
@@ -195,16 +195,25 @@ public class ParkingTest {
 	@Test
 	public void testHavingOnlyOwnLots() {
 		manager.takecare(parkingLot10);
+		parkMultiCars(parkingLot10, 9);
+		StringBuffer result = new StringBuffer();
 
-		assertEquals(1, manager.stat());
+		manager.stat(result);
+		
+		assertEquals("X of 9\n", result.toString());
 	}
 
 	@Test
 	public void testHavingSubLots() {
 		manager.takecare(parkingLot5);
+		parkMultiCars(parkingLot5, 2);
 		buddy.takecare(parkingLot10);
+		parkMultiCars(parkingLot10, 9);
 		manager.manage(buddy);
+		StringBuffer result = new StringBuffer();
 
-		assertEquals(2, manager.stat());
+		manager.stat(result);
+		
+		assertEquals("V of 2\nX of 9\n", result.toString());
 	}
 }

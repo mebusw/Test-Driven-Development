@@ -8,9 +8,11 @@ class MonopolyGame:
     def __init__(self):
         self.MAX_MOVE = 40
 
-    def setupWithPlayerCount(self, playerCount):
+    def setupWithPlayerCount(self, playerCount, *names):
         self.playerCount = playerCount
-        self.playersPos = [0] * playerCount
+        self.players = []
+        for name in names:
+            self.players.append(Player(name))
         self.board = [None] * self.MAX_MOVE
         self.communityChestPile = []
         self.chancePile = []
@@ -30,5 +32,14 @@ class MonopolyGame:
         self.currentPlayer = max_roll_player
 
     def currentPlayerMove(self):
-        self.playersPos[self.currentPlayer] += self.roll()
-        self.playersPos[self.currentPlayer] %= self.MAX_MOVE
+        self.players[self.currentPlayer].pos += self.roll()
+        self.players[self.currentPlayer].pos %= self.MAX_MOVE
+
+class Player(object):
+    """docstring for Player"""
+    def __init__(self, name):
+        super(Player, self).__init__()
+        self.name = name
+        self.pos = 0
+
+        

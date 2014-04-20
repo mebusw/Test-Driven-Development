@@ -11,7 +11,7 @@ from monopoly import MonopolyGame
 class GameTest(unittest.TestCase):
     def setUp(self):
         self.game = MonopolyGame()
-        self.game.setupWithPlayerCount(3)
+        self.game.setupWithPlayerCount(3, 'Alice', 'Bob', 'Carol')
 
     def tearDown(self):
         pass
@@ -22,7 +22,12 @@ class GameTest(unittest.TestCase):
         self.assertIsNotNone(self.game.communityChestPile)
         self.assertIsNotNone(self.game.chancePile)
 
-    def testRollDiceToDecideFirstPlayer(self):
+    def testCreatePlayers(self):
+        self.assertEqual(3, len(self.game.players))
+        self.assertEqual('Alice', self.game.players[0].name)
+        self.assertEqual(0, self.game.players[0].pos)
+
+    def testPlayerWhoRollHighestDiceBecomeFirstPlayer(self):
         self._mockTheRoll(4, 5, 2)
 
         self.game.decideFirstPlayer()
@@ -37,19 +42,19 @@ class GameTest(unittest.TestCase):
         self.game.currentPlayerMove()
 
         self.assertEquals(0, self.game.currentPlayer)
-        self.assertEquals(0 + ROLL, self.game.playersPos[0])
+        self.assertEquals(0 + ROLL, self.game.players[0].pos)
 
 
     def testSecondPlayerRollDiceToMoveReversely(self):
         ROLL = 6
         self.game.currentPlayer = 1
-        self.game.playersPos[1] = 38
+        self.game.players[1].pos = 38
         self._mockTheRoll(ROLL)
         
         self.game.currentPlayerMove()
 
         self.assertEquals(1, self.game.currentPlayer)
-        self.assertEquals(38 + ROLL - self.game.MAX_MOVE, self.game.playersPos[1])
+        self.assertEquals(38 + ROLL - self.game.MAX_MOVE, self.game.players[1].pos)
 
 
     def _mockTheRoll(self, *seq):

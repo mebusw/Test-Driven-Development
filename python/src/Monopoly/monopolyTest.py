@@ -11,14 +11,13 @@ from monopoly import MonopolyGame
 class GameTest(unittest.TestCase):
     def setUp(self):
         self.game = MonopolyGame()
+        self.game.setupWithPlayerCount(3)
 
     def tearDown(self):
         pass
 
-    def testSetupBoardAndEquipmentFor2Player(self):
-        self.game.setupWithPlayerCount(2)
-        
-        self.assertEquals(2, self.game.playerCount)
+    def testSetupBoardAndEquipmentFor3Player(self):
+        self.assertEquals(3, self.game.playerCount)
         self.assertEquals(40, len(self.game.board))
         self.assertIsNotNone(self.game.communityChestPile)
         self.assertIsNotNone(self.game.chancePile)
@@ -26,10 +25,31 @@ class GameTest(unittest.TestCase):
     def testRollDiceToDecideFirstPlayer(self):
         self._mockTheRoll(4, 5, 2)
 
-        self.game.setupWithPlayerCount(3)
+        self.game.decideFirstPlayer()
         
-        self.assertEquals(3, self.game.playerCount)
         self.assertEquals(1, self.game.currentPlayer)
+
+
+    def testFirstPlayerRollDiceToMove(self):
+        ROLL = 6
+        self._mockTheRoll(ROLL)
+        
+        self.game.currentPlayerMove()
+
+        self.assertEquals(0, self.game.currentPlayer)
+        self.assertEquals(0 + ROLL, self.game.playersPos[0])
+
+
+    def testSecondPlayerRollDiceToMoveReversely(self):
+        ROLL = 6
+        self.game.currentPlayer = 1
+        self.game.playersPos[1] = 38
+        self._mockTheRoll(ROLL)
+        
+        self.game.currentPlayerMove()
+
+        self.assertEquals(1, self.game.currentPlayer)
+        self.assertEquals(38 + ROLL - self.game.MAX_MOVE, self.game.playersPos[1])
 
 
     def _mockTheRoll(self, *seq):

@@ -25,21 +25,12 @@ class GameTest(unittest.TestCase):
 
     def testRollDiceToDecideFirstPlayer(self):
         self._mockTheRoll(4, 5, 2)
-        
+
         self.game.setupWithPlayerCount(3)
         
         self.assertEquals(3, self.game.playerCount)
+        self.assertEquals(1, self.game.currentPlayer)
 
-        max_roll_player = 0
-        max_roll = 0
-        for i in xrange(self.game.playerCount):
-            r = self.game.roll() 
-            print r
-            if r > max_roll:
-                max_roll = r
-                max_roll_player = i
-
-        self.assertEquals(max_roll_player, self.game.currentPlayer)
 
     def _mockTheRoll(self, *seq):
         self.game.roll = Mock()

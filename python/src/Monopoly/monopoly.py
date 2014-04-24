@@ -10,9 +10,10 @@ class MonopolyGame:
 
     def setupWithPlayerCount(self, playerCount, *names):
         self.playerCount = playerCount
+        self.bank = Bank()
         self.players = []
         for name in names:
-            self.players.append(Player(name))
+            self.players.append(Player(name, self.bank))
         self.board = [None] * self.MAX_MOVE
         self.communityChestPile = []
         self.chancePile = []
@@ -37,9 +38,39 @@ class MonopolyGame:
 
 class Player(object):
     """docstring for Player"""
-    def __init__(self, name):
+    def __init__(self, name, bank):
         super(Player, self).__init__()
         self.name = name
         self.pos = 0
+        self.balance = 0
+        self.properties = []
+        self.bank = bank
+ 
+    def purchaseProperty(self, landProperty):
+        self.properties.append(landProperty)
+        self.toll(landProperty.price)
 
+    def toll(self, amount):
+        self.bank.tollFrom(self, amount)
+
+    def withdraw(self, amount):
+        self.bank.withdrawTo(self, amount)        
+
+class Bank(object):
+    """docstring for Bank"""
+    def __init__(self):
+        super(Bank, self).__init__()
+    
+    def withdrawTo(self, player, amount):
+        player.balance += amount
         
+    def tollFrom(self, player, amount):
+        player.balance -= amount
+        
+class LandProperty:
+    def __init__(self, name, section):
+        self.name = name
+        self.section = section
+
+
+

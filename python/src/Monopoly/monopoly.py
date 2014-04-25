@@ -7,6 +7,7 @@ Created on 2014-4-20
 class MonopolyGame:
     def __init__(self):
         self.MAX_MOVE = 40
+        self.RENT_RATE = 0.15
 
     def setupWithPlayerCount(self, playerCount, *names):
         self.playerCount = playerCount
@@ -48,6 +49,7 @@ class Player(object):
  
     def purchaseProperty(self, landProperty):
         self.properties.append(landProperty)
+        landProperty.owner = self
         self.toll(landProperty.price)
 
     def toll(self, amount):
@@ -55,6 +57,11 @@ class Player(object):
 
     def withdraw(self, amount):
         self.bank.withdrawTo(self, amount)        
+
+    def rent(self, landProperty):
+        rentPrice = landProperty.updatedPrice() * 0.15
+        self.balance -= rentPrice
+        landProperty.owner.balance += rentPrice
 
 class Bank(object):
     """docstring for Bank"""
@@ -68,9 +75,26 @@ class Bank(object):
         player.balance -= amount
         
 class LandProperty:
-    def __init__(self, name, section):
+    def __init__(self, name, price, section):
         self.name = name
+        self.price = price
         self.section = section
+        section.add(self)
+        self.owner = None
 
+    def updatedPrice(self):
+        return self.price * self.section.caculateRate()
 
+class PropertySection:
+    def __init__(self, name):
+        self.name = name
+        self.landProperties = []
+
+    def add(self, landProperty):
+        self.landProperties.append(landProperty)
+
+    def caculateRate(self):
+        RATE_FACTOR = 1.2
+        soldProperties = filter(lambda p: p.owner is not None, self.landProperties)
+        return RATE_FACTOR ** len(soldProperties)
 

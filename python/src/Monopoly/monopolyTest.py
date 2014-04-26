@@ -31,6 +31,8 @@ class GameTest(unittest.TestCase):
         self.assertIsNotNone(self.game.communityChestPile)
         self.assertIsNotNone(self.game.chancePile)
         self.assertEqual(self.Alice10M, self.game.getCurrentPlayer())
+        self.assertEqual(32, self.game.houseCount)
+        self.assertEqual(12, self.game.hotelCount)
 
     def testCreatePlayers(self):
         self.assertEqual(3, len(self.game.players))
@@ -48,7 +50,7 @@ class GameTest(unittest.TestCase):
     def testFirstPlayerRollDiceToMove(self):
         ROLL = 6
         
-        self.game.getCurrentPlayer().moveBy(ROLL)
+        self.game.getCurrentPlayer().roll(ROLL)
 
         self.assertEquals(0 + ROLL, self.Alice10M.pos)
 
@@ -57,9 +59,17 @@ class GameTest(unittest.TestCase):
         ROLL = 6
         self.Alice10M.pos = 38
         
-        self.game.getCurrentPlayer().moveBy(ROLL)
+        self.game.getCurrentPlayer().roll(ROLL)
 
         self.assertEquals(38 + ROLL - MAX_MOVE, self.Alice10M.pos)
+
+    def testPlayerReceive200WhenPassTheStartingPoint(self):
+        ROLL = 6
+        self.Alice10M.pos = 38
+        
+        self.game.getCurrentPlayer().roll(ROLL)
+
+        self.assertEquals(10000 + 200, self.Alice10M.balance)
 
     def testTurnToNextPlayer(self):
         self.assertEquals(self.Alice10M, self.game.getCurrentPlayer())
@@ -96,16 +106,15 @@ class GameTest(unittest.TestCase):
 
     def testPlayerCanPayToBank(self):
         AMOUNT = 100
-        self.Alice10M.balance = 200
 
         self.Alice10M.toll(AMOUNT)
         
-        self.assertEquals(200 - AMOUNT, self.Alice10M.balance)
+        self.assertEquals(10000 - AMOUNT, self.Alice10M.balance)
 
     def testPlayerCanPurchasePropertyWhenLandOnUnownedParcel(self):
         PRICE = 300
-        sectionChina = PropertySection('China')
-        unownedProperty = LandProperty('Shanghai', PRICE, sectionChina)
+        sectionChina = RealEstateSection('China')
+        unownedProperty = RealEstateSpot('Shanghai', PRICE, sectionChina)
 
         self.Alice10M.purchaseProperty(unownedProperty)
         
@@ -113,9 +122,9 @@ class GameTest(unittest.TestCase):
         self.assertEquals(self.Alice10M, unownedProperty.owner)
         self.assertEquals(10000 - PRICE, self.Alice10M.balance)
 
-    def testPlayerMustRentWhenHeStandOnOthersLandProperty(self):
-        sectionChina = PropertySection('China')
-        Shanghai = LandProperty('Shanghai', 1000, sectionChina)
+    def testPlayerMustRentWhenHeStandOnOthersRealEstateSpot(self):
+        sectionChina = RealEstateSection('China')
+        Shanghai = RealEstateSpot('Shanghai', 1000, sectionChina)
         Shanghai.owner = self.Bob20M
         rentPrice = Shanghai.rentPrice()
 
@@ -124,37 +133,91 @@ class GameTest(unittest.TestCase):
         self.assertEquals(10000 - rentPrice, self.Alice10M.balance)
         self.assertEquals(20000 + rentPrice, self.Bob20M.balance)
 
-    def testPlayerReceive200WhenPassTheStartingPoint(self):
+    def testPlayerCanMakeASettlementWhenBankruptFirstTime(self):
+        self.Alice10M.isMakingSettlement = False
+
+        self.Alice10M.toll(10010)
+
+        self.assertEqual(None, self.game.winner)
+        self.assertTrue(self.Alice10M.isMakingSettlement)
+
+    def testGameOverAndRichestWinWhenAPlayerBankruptAgain(self):
+        self.Alice10M.isMakingSettlement = True
+
+        self.Alice10M.toll(10010)
+
+        self.assertEqual(self.Carol30M, self.game.winner)
+
+
+    def testPlayerCanMotageUnimprovedLandToBank(self):
+        sectionChina = RealEstateSection('China')
+        Shanghai = RealEstateSpot('Shanghai', 1000, sectionChina)
+        Shanghai.owner = self.Alice10M
+
+        self.Alice10M.motage(Shanghai)
+
+        self.assertEquals(10000 + Shanghai.purchasePrice() * 0.5, self.Alice10M.balance)
+
+    def testPlayerMoveToJailWhenStopAtGoToJailLand(self):
+        self.game.board[30] = ArrestingSpot()
+        self.Alice10M.pos = 30
+        
+        self.Alice10M.resolveSpotRule()
+
+        self.assertEqual(10, self.Alice10M.pos)
+
+    def testPlayerMoveToJailWhenDrewGoToJailCard(self):
         pass
+
+    def testPlayerMoveToJailWhenRollThreeDoubles(self):
+        pass
+
+    def testPlayerCanGetOutOfJailAndMoveWhenRollADouble(self):
+        ROLL = 4
+        self.Alice10M.pos = 10
+        self.Alice10M.isInJail = True
+
+        self.game.getCurrentPlayer().roll(ROLL)
+
+        self.assertEquals(10 + ROLL, self.Alice10M.pos)
+        self.assertFalse(self.Alice10M.isInJail)
+
+    def testPlayerCanNotGetOutOfJailWhenRollASingle(self):
+        ROLL = 3
+        self.Alice10M.pos = 10
+        self.Alice10M.isInJail = True
+
+        self.game.getCurrentPlayer().roll(ROLL)
+
+        self.assertEquals(10, self.Alice10M.pos)
+        self.assertTrue(self.Alice10M.isInJail)
+
+    def testPlayerCanPay50ToGetOutOfJail(self):
+        self.Alice10M.pos = 10
+        self.Alice10M.isInJail = True
+
+        self.game.getCurrentPlayer().payForFreedom()
+
+        self.assertEquals(10, self.Alice10M.pos)
+        self.assertFalse(self.Alice10M.isInJail)
 
 class SpotTest(unittest.TestCase):
     def setUp(self):
         pass
     def testSpotCreated(self):
-        spot = Spot('起点')
+        spot = Spot('somewhere')
 
         self.assertIsNotNone(spot)
-        self.assertEquals('起点', spot.name)
+        self.assertEquals('somewhere', spot.name)
 
-class LandPropertyTest(unittest.TestCase):
+class RealEstateSpotTest(unittest.TestCase):
     def setUp(self):
-        self.sectionGreen = PropertySection('Green')
-        self.greenLand1 = LandProperty('威尼斯大街', 320, self.sectionGreen)
-        self.greenLand2 = LandProperty('汤姆大街', 360, self.sectionGreen)
-        self.greenLand3 = LandProperty('太平洋大街', 300, self.sectionGreen)
+        self.sectionGreen = RealEstateSection('Green')
+        self.greenLand1 = RealEstateSpot('威尼斯大街', 320, self.sectionGreen)
+        self.greenLand2 = RealEstateSpot('汤姆大街', 360, self.sectionGreen)
+        self.greenLand3 = RealEstateSpot('太平洋大街', 300, self.sectionGreen)
 
-    def testPurchasePriceOfLandPropertyInfluenceEachOtherInSameSection(self):
-        self.assertEquals(320, self.greenLand1.purchasePrice())
-
-        self.greenLand2.owner = 'Bob'
-
-        self.assertEquals(320 * 1.2, self.greenLand1.purchasePrice())
-
-        self.greenLand3.owner = 'Bob'
-
-        self.assertAlmostEquals(320 * 1.2 * 1.2, self.greenLand1.purchasePrice())
-
-    def testPurchasePriceOfLandPropertyDependsOnPriceAndBuildingLevel(self):
+    def testPurchasePriceOfRealEstateSpotDependsOnPriceAndBuildingLevel(self):
         self.assertAlmostEquals(320 * 0.15, self.greenLand1.rentPrice())
 
         self.greenLand1.buildingLevel = 1

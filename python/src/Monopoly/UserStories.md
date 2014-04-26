@@ -20,7 +20,7 @@ Create a bank and identify one player to be the banker. The bank must be able to
 
 ## User story #5:
 
-Players can purchase a piece of property when they land on an un-owned parcel. The price depends upon the neighborhood.
+Players can purchase a piece of property when they land on an un-owned parcel. 
 
 ## User story #6:
 

@@ -5,24 +5,29 @@ Created on 2014-6-17
 '''
 
 class AbstractNode:
-	pass
-
-
-class StringNode(AbstractNode):
-	@staticmethod
-	def create():
+	def __init__(self):
 		pass
 
-	def __init__(self, textBuffer, shouldDecode):
+
+		
+class StringNode(AbstractNode):
+	def __init__(self, textBuffer):
+		AbstractNode.__init__(self)
 		self.textBuffer = textBuffer
-		self.shouldDecode = shouldDecode
+		# self.shouldDecode = shouldDecode
 
 	def toPlainTextString(self):
 		result = str(self.textBuffer)
-		if self.shouldDecode:
-			result = Translate.decode(result)
 		return result
 
+
+class DecodingNode(AbstractNode):
+	"""docstring for DecodingNode"""
+	def __init__(self, delegate):
+		self.delegate = delegate
+
+	def toPlainTextString(self):
+		return Translate.decode(self.delegate.toPlainTextString())
 
 class Translate:
 	''' This is just a mock'''

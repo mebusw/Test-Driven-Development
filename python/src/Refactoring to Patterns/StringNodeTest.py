@@ -14,10 +14,10 @@ class StringNodeTest(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def testGrantedBy(self):
-        stringNode = StringNode("abc&amp;def", True)
+    def testStringNodeDecorator(self):
+        node = DecodingNode(StringNode("abc&amp;def"))
 
-        self.assertEqual("abc&def", stringNode.toPlainTextString())
+        self.assertEqual("abc&def", node.toPlainTextString())
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

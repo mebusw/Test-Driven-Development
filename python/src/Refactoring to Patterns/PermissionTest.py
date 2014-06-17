@@ -16,13 +16,13 @@ class PermissionTest(unittest.TestCase):
 
     def testGrantedBy(self):
         permission = SystemPermission()
-        self.assertEqual(SystemPermission.REQUESTED, permission.state)
+        self.assertEqual(REQUESTED, permission.state)
         self.assertFalse(permission.isGranted)
 
         permission.claimedBy()
         permission.grantedBy()
 
-        self.assertEqual(SystemPermission.GRANTED, permission.state)
+        self.assertEqual(GRANTED, permission.state)
         self.assertTrue(permission.isGranted)
 
 

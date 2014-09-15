@@ -48,8 +48,8 @@ public class Buddy {
 
 	protected void statOwnLots(StringBuffer result) {
 		for (ParkingLot pl : parkingLots) {
-			result.append(pl.name + " of "
-					+ (pl.totalLots - pl.remainingLots()) + "\n");
+			result.append((pl.totalLots - pl.remainingLots()) + " in " + pl.name
+					+ "\n");
 		}
 	}
 }

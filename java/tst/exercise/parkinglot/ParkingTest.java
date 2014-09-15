@@ -11,11 +11,13 @@ import org.junit.Test;
  */
 
 /**
- * 练习2：停车伙计 现在我们雇佣了一个停车伙计。伙计可以管理多个停车场，帮助客人停车取车。他停车的策略很简单，哪个停车场有空位就停在哪里。
+ * 练习2：停车伙计 
+ * 现在我们雇佣了一个停车伙计。伙计可以管理多个停车场，帮助客人停车取车。他停车的策略很简单，哪个停车场有空位就停在哪里。
  */
 
 /**
- * 练习3：聪明停车伙计 停车场越来越多，原来一个伙计都不够用了，我们又雇佣了一个，这次的伙计比较聪明，他会判断哪个停车场的空位较多，然后把车停在那里
+ * 练习3：聪明停车伙计 
+ * 停车场越来越多，原来一个伙计都不够用了，我们又雇佣了一个，这次的伙计比较聪明，他会判断哪个停车场的空位较多，然后把车停在那里
  */
 
 /**
@@ -34,9 +36,10 @@ import org.junit.Test;
  * 我们到底有多少停车场了，是不是需要了解一下？找停车经理吧，他会随时给我们汇报。比如，他当前以及他手下伙计管理的所有停车场，打印出他们的名字和对应的停车场。
  */
 /**
- * 练习7：打印停车场使用率 想起来了，除了伙计和停车场名字，我们还要另外一个报表，统计每个停车场的车辆总数。
+ * 练习7：打印停车场使用率 
+ * 想起来了，除了伙计和停车场名字，我们还要另外一个报表，统计每个停车场的车辆总数。
  */
-/** 
+/**
  * @author jacky
  * 
  */
@@ -57,54 +60,67 @@ public class ParkingTest {
 	}
 
 	// //////////// #1 Parking Lot
-	@Test
-	public void testAnEmptyParkingLotCanParkACar() {
-		parkingLot10.park();
-		assertEquals(10 - 1, parkingLot10.remainingLots());
-	}
-
-	protected void parkMultiCars(ParkingLot parkingLot, int times) {
+	protected void givenParkMultiCars(ParkingLot parkingLot, int times) {
 		for (int i = 0; i < times; i++) {
 			parkingLot.park();
 		}
 	}
 
 	@Test
-	public void testParkingLotCanMultiCars() {
-		parkMultiCars(parkingLot10, 9);
+	public void anEmptyParkingLotCanParkACar() {
+		parkingLot10.park();
+
+		assertEquals(10 - 1, parkingLot10.remainingLots());
+	}
+
+	@Test
+	public void parkingLotCanParkMultiCars() {
+		givenParkMultiCars(parkingLot10, 9);
+
 		assertEquals(1, parkingLot10.remainingLots());
+
 		assertEquals(1.0 / 10, parkingLot10.emptyRate(), 0.1);
 	}
 
 	@Test
-	public void testAnAlmostFullParkingLotCanOnlyParkOneMoreCar() {
-		parkMultiCars(parkingLot10, 10);
-		parkMultiCars(parkingLot10, 1);
+	public void aFullParkingLotCanNotParkAnyMore() {
+		givenParkMultiCars(parkingLot10, 10);
+
+		parkingLot10.park();
+
 		assertEquals(0, parkingLot10.remainingLots());
 
 	}
 
 	@Test
-	public void testAFullParkingLotCanGetCarOut() {
-		parkMultiCars(parkingLot10, 10);
+	public void aParkingLotCanGetCarOut() {
+		givenParkMultiCars(parkingLot10, 5);
+
 		parkingLot10.getOut();
 
-		assertEquals(1, parkingLot10.remainingLots());
+		assertEquals(5 + 1, parkingLot10.remainingLots());
+	}
+	@Test
+	public void anEmptyParkingLotCanNotGetCarOut() {
+		parkingLot10.getOut();
+		
+		assertEquals(10, parkingLot10.remainingLots());
 	}
 
 	// ////////////// #2 Buddy
 	@Test
-	public void testABuddyCanParkTheCar() {
+	public void aBuddyCanParkTheCar() {
 		buddy.takecare(parkingLot10);
+
 		buddy.park();
 
 		assertEquals(10 - 1, parkingLot10.remainingLots());
 	}
 
 	@Test
-	public void testABuddyCanParkTheCarToEmptyParkingLot() {
+	public void aBuddyCanParkTheCarToEmptyParkingLot() {
 		buddy.takecare(parkingLot10);
-		parkMultiCars(parkingLot10, 10);
+		givenParkMultiCars(parkingLot10, 10);
 		buddy.takecare(parkingLot5);
 
 		buddy.park();
@@ -115,19 +131,20 @@ public class ParkingTest {
 
 	// ////////////// #3 Smart Buddy
 	@Test
-	public void testASmartBuddyCanParkTheCar() {
-		buddy = new Buddy("Bruce",new SmartStrategy());
+	public void aSmartBuddyCanParkTheCar() {
+		buddy = new Buddy("Bruce", new SmartStrategy());
 		buddy.takecare(parkingLot10);
+		
 		buddy.park();
 
 		assertEquals(10 - 1, parkingLot10.remainingLots());
 	}
 
 	@Test
-	public void testASmartBuddyCanParkTheCarToMostEmptyLot() {
-		buddy = new Buddy("Bruce",new SmartStrategy());
+	public void aSmartBuddyCanParkTheCarToMostEmptyLot() {
+		buddy = new Buddy("Bruce", new SmartStrategy());
 		buddy.takecare(parkingLot10);
-		parkMultiCars(parkingLot10, 9);
+		givenParkMultiCars(parkingLot10, 9);
 		buddy.takecare(parkingLot5);
 
 		buddy.park();
@@ -138,24 +155,24 @@ public class ParkingTest {
 
 	// ////////////// #4 Smarter Buddy
 	@Test
-	public void testASmarterBuddyCanParkTheCarToThatOfMostEmptyRate() {
+	public void aSmarterBuddyCanParkTheCarToThatOfMostEmptyRate() {
 		Buddy buddy = new Buddy("Calvin", new SmarterStrategy());
 		buddy.takecare(parkingLot5);
-		parkMultiCars(parkingLot5, 3);
+		givenParkMultiCars(parkingLot5, 3);
 		buddy.takecare(parkingLot10);
-		parkMultiCars(parkingLot10, 5);
+		givenParkMultiCars(parkingLot10, 5);
 
 		buddy.park();
 
-		assertEquals(10 - 5 - 1, parkingLot10.remainingLots());
 		assertEquals(5 - 3, parkingLot5.remainingLots());
+		assertEquals(10 - 5 - 1, parkingLot10.remainingLots());
 	}
 
 	// ////////////// #5 Manager
 	@Test
-	public void testAManagerCanParkTheCarToHisOwnLot() {
+	public void aManagerCanParkTheCarToHisOwnLot() {
 		manager.takecare(parkingLot10);
-		parkMultiCars(parkingLot10, 5);
+		givenParkMultiCars(parkingLot10, 5);
 
 		manager.park();
 
@@ -163,10 +180,10 @@ public class ParkingTest {
 	}
 
 	@Test
-	public void testAManagerCanParkTheCarToLotOfHisBuddy() {
+	public void aManagerCanParkTheCarToLotOfHisBuddy() {
 		manager.manage(buddy);
 		buddy.takecare(parkingLot10);
-		parkMultiCars(parkingLot10, 5);
+		givenParkMultiCars(parkingLot10, 5);
 
 		manager.park();
 
@@ -175,7 +192,7 @@ public class ParkingTest {
 
 	// ////////////// #6 Print Parking Lots
 	@Test
-	public void testPrintOnlyOwnLots() {
+	public void printOnlyOwnLots() {
 		manager.takecare(parkingLot10);
 		StringBuffer result = new StringBuffer();
 
@@ -185,7 +202,7 @@ public class ParkingTest {
 	}
 
 	@Test
-	public void testPrintOnlySubLots() {
+	public void printOnlySubLots() {
 		buddy.takecare(parkingLot10);
 		manager.manage(buddy);
 		StringBuffer result = new StringBuffer();
@@ -196,7 +213,7 @@ public class ParkingTest {
 	}
 
 	@Test
-	public void testPrintBothOwnAndSubLots() {
+	public void printBothOwnAndSubLots() {
 		manager.takecare(parkingLot5);
 		buddy.takecare(parkingLot10);
 		manager.manage(buddy);
@@ -204,34 +221,32 @@ public class ParkingTest {
 
 		manager.print(result);
 
-		assertEquals(
-				"Dante's V\nAlice's X\n",
-				result.toString());
+		assertEquals("Dante's V\nAlice's X\n", result.toString());
 	}
 
 	// ////////////// #7 Print Total Parking Lots
 	@Test
-	public void testHavingOnlyOwnLots() {
+	public void printCarCountOfOnlyOwnLots() {
 		manager.takecare(parkingLot10);
-		parkMultiCars(parkingLot10, 9);
+		givenParkMultiCars(parkingLot10, 9);
 		StringBuffer result = new StringBuffer();
 
 		manager.stat(result);
-		
-		assertEquals("X of 9\n", result.toString());
+
+		assertEquals("9 in X\n", result.toString());
 	}
 
 	@Test
-	public void testHavingSubLots() {
+	public void printCarCountOfSubLots() {
 		manager.takecare(parkingLot5);
-		parkMultiCars(parkingLot5, 2);
+		givenParkMultiCars(parkingLot5, 2);
 		buddy.takecare(parkingLot10);
-		parkMultiCars(parkingLot10, 9);
+		givenParkMultiCars(parkingLot10, 9);
 		manager.manage(buddy);
 		StringBuffer result = new StringBuffer();
 
 		manager.stat(result);
-		
-		assertEquals("V of 2\nX of 9\n", result.toString());
+
+		assertEquals("2 in V\n9 in X\n", result.toString());
 	}
 }

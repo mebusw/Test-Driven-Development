@@ -1,5 +1,7 @@
 package exercise.parkinglot;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class ParkingLot {
 
 	private int emptyLots;
@@ -23,7 +25,8 @@ public class ParkingLot {
 	}
 
 	public void getOut() {
-		this.emptyLots += 1;
+		if (this.emptyLots < totalLots)
+			this.emptyLots += 1;
 	}
 
 	public double emptyRate() {

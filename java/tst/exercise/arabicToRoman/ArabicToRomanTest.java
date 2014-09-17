@@ -1,57 +1,42 @@
 package exercise.arabicToRoman;
-
 import static org.junit.Assert.*;
 
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
 
-@RunWith(Parameterized.class)
 public class ArabicToRomanTest {
 
-	private int arabic;
-	private String expectedRoman;
-	private ArabicToRoman converter = new ArabicToRoman();;
-
-	public ArabicToRomanTest(int theArabic, String expectedRoman) {
-		arabic = theArabic;
-		this.expectedRoman = expectedRoman;
-	}
-
-	@Parameters
-	public static Collection<Object[]> data() {
-		return Arrays.asList(new Object[][] { 
-				{ 1, "I" }, 
-				{ 5, "V" }, 
-				{ 2, "II" }, 
-				{ 3, "III" }, 
-				{ 4, "IV" }, 
-				{ 6, "VI" }, 
-				{ 0, "" }, 
-				{ 9, "IX" }, 
-				{ 10, "X" }, 
-				{ 40, "XL" }, 
-				{ 50, "L" },
-				{ 90, "XC" }, 
-				{ 100, "C" }, 
-				{ 400, "CD" }, 
-				{ 500, "D" }, 
-				{ 900, "CM" }, 
-				{ 1000, "M" }, 
-				{ 2457, "MMCDLVII" }, 
-			});
+	@Before
+	public void setUp() throws Exception {
 	}
 
 	@Test
-	public void convert_arabic_to_roman() {
-		String actual = converter.convert(arabic);
+	public void test() {
+		assertEquals("I", convert(1));
+		assertEquals("X", convert(10));
+		assertEquals("XI", convert(11));
+		assertEquals("C", convert(100));
+		assertEquals("CI", convert(101));
+		assertEquals("CXI", convert(111));
+		
+		assertEquals("CCI", convert(201));
+	}
 
-		assertEquals(expectedRoman, actual);
+	private String symbolX1[] = new String[] { "", "I", "II" };
+	private String symbolX10[] = new String[] { "", "X", "XX" };
+	private String symbolX100[] = new String[] { "", "C", "CC" };
+	private String symbolX1000[] = new String[] { "", "D", "DD" };
+
+	private String convert(int arabic) {
+		String x1 = symbolX1[arabic % 10];
+		String x10 = symbolX10[arabic % 100 / 10];
+		String x100 = symbolX100[arabic % 1000 / 100];
+		String x1000 = symbolX1000[arabic % 10000 / 1000];
+
+		return x1000 + x100 + x10 + x1;
 	}
 
 }

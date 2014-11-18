@@ -1,5 +1,6 @@
 package training.patterns.composite;
 
+import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.*;
 import java.util.List;
 import org.junit.Before;

@@ -1,3 +1,6 @@
+#!/usr/bin/python
+#-*- coding: utf-8 -*-
+
 '''
 Created on 2012-9-17
 
@@ -43,7 +46,26 @@ class TestParsingXML(unittest.TestCase):
     def testNodeByFindAll(self):
         self.assertEqual(2, len(self.root.findall('person/name')))
 
- 
+class TestGB2312Xml(unittest.TestCase):
+
+    def setUp(self):
+        self.xml = '''<?xml version="1.0" encoding="utf-8"?>
+            <business_trans>
+                <response_type>consumption_response</response_type>
+                <req_seq>1</req_seq>
+                <sys_seq>1234</sys_seq>
+                <trans_time>20070405010104</trans_time>
+                <result>
+                    <id>0000</id>
+                    <code>6846844</code>
+                    <comment>成功</comment>
+                </result>
+            </business_trans>'''
+        self.root = ElementTree.fromstring(self.xml)
+
+    def testSimple(self):
+        self.assertEqual('6846844', self.root.find('result/code').text)
+        self.assertEqual(u'成功', self.root.find('result/comment').text)
         
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

@@ -49,7 +49,7 @@ class TestParsingXML(unittest.TestCase):
 class TestGB2312Xml(unittest.TestCase):
 
     def setUp(self):
-        self.xml = '''<?xml version="1.0" encoding="utf-8"?>
+        self.xml = '''<?xml version="1.0" encoding="gb2312"?>
             <business_trans>
                 <response_type>consumption_response</response_type>
                 <req_seq>1</req_seq>
@@ -61,7 +61,7 @@ class TestGB2312Xml(unittest.TestCase):
                     <comment>成功</comment>
                 </result>
             </business_trans>'''
-        self.root = ElementTree.fromstring(self.xml)
+        self.root = ElementTree.fromstring(self.xml.replace('gb2312', 'utf-8'))
 
     def testSimple(self):
         self.assertEqual('6846844', self.root.find('result/code').text)

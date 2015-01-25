@@ -146,11 +146,9 @@ class SingleRoundRobinTournament:
         self.teams.append(team)
 
     def lshift(self, ori, n):
-        a = []
-        l = len(ori)
-        n = n % l
-        a[0 : l - n] = ori[n:]
-        a[l - n : l] = ori[0 : n]
+        n = n % len(ori)
+        a = ori[n:]
+        a.extend(ori[:n])
         return a
 
     def calcRoundCount(self):
@@ -181,7 +179,7 @@ class SingleEliminationTournament:
     def addTeam(self, team):
         self.teams.append(team)
 
-    def generate(self):
+    def generate(self, bronzeMatch=False):
         """Builder"""
         """Strategy"""
         self.matches = []

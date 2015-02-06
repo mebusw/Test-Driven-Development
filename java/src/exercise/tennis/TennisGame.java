@@ -1,66 +1,28 @@
 package exercise.tennis;
 
-/**
- * Created with IntelliJ IDEA.
- * User: jacky
- * Date: 13-11-27
- * Time: 下午9:22
- * To change this template use File | Settings | File Templates.
- */
-public class TennisGame {
-    private int playerOneScore = 0;
-    private int playerTwoScore = 0;
-    private String translate[] = {"love", "fifteen", "thirty", "forty"};
+class TennisGame {
 
-    public String status() {
-        if (canWin()) {
-            if (isSameScore()) {
-                return "Deuce";
-            }
-            if (hasWinner()) {
-                return highestScoredPlayer() + " Win";
-            }
+    private static String[] translation = new String[]{"love", "fifteen", "thirty", "forty"};
 
-            if (hasAdvantage()) {
-                return highestScoredPlayer() + " Advantage";
-            }
-
+    public static String score(int playerOne, int playerTwo) {
+        if (playerOne >= 4 || playerTwo >= 4) {
+            return winnable(playerOne, playerTwo, "player one");
         }
-        if (isSameScore()) {
-            return translate[playerTwoScore] + " All";
+
+        if (playerOne == playerTwo && playerOne == 3) {
+            return "deuce";
         }
-        return translate[playerOneScore] + " " + translate[playerTwoScore];
+        if (playerOne == playerTwo) {
+            return translation[playerOne] + " all";
+        }
+
+        return translation[playerOne] + " love";
     }
 
-    private boolean canWin() {
-        return playerOneScore >= 4 || playerTwoScore >= 4;
-    }
+    private static String winnable(int playerOne, int playerTwo, String leadingPlayerName) {
+        if (playerOne < playerTwo)
+            return winnable(playerTwo, playerOne, "player two");
 
-    private boolean isSameScore() {
-        return playerTwoScore == playerOneScore;
-    }
-
-    private boolean hasAdvantage() {
-        return scoreGap() == 1;
-    }
-
-    private boolean hasWinner() {
-        return scoreGap() > 1;
-    }
-
-    private int scoreGap() {
-        return Math.abs(playerOneScore - playerTwoScore);
-    }
-
-    private String highestScoredPlayer() {
-        return playerOneScore > playerTwoScore ? "Player One" : "Player Two";
-    }
-
-    public void playerOneScore(int times) {
-        playerOneScore += times;
-    }
-
-    public void playerTwoScore(int times) {
-        playerTwoScore += times;
+        return String.format(new String[]{"deuce", "%s advantage", "%s win"}[playerOne - playerTwo], leadingPlayerName);
     }
 }

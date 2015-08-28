@@ -23,13 +23,22 @@ public class ProductTest {
     public void findByPrice() {
         assertEquals("doll", productFinder.byPrice(120).get(0).name);
     }
+
     @Test
     public void findByColor() {
         assertEquals("car", productFinder.byColor("red").get(0).name);
         assertEquals("bike", productFinder.byColor("red").get(1).name);
     }
+
     @Test
     public void findByColorAndBelowPrice() {
         assertEquals("bike", productFinder.byColorAndBelowPrice("red", 1500).get(0).name);
+    }
+
+    @Test
+    public void selectBySpec() {
+        assertEquals("car", productFinder.selectBy(new ColorSpec("red")).get(0).name);
+        assertEquals("bike", productFinder.selectBy(new ColorSpec("red")).get(1).name);
+        assertEquals("doll", productFinder.byPrice(120).get(0).name);
     }
 }

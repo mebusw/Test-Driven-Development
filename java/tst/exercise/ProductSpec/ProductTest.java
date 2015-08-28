@@ -39,6 +39,6 @@ public class ProductTest {
     public void selectBySpec() {
         assertEquals("car", productFinder.selectBy(new ColorSpec("red")).get(0).name);
         assertEquals("bike", productFinder.selectBy(new ColorSpec("red")).get(1).name);
-        assertEquals("doll", productFinder.byPrice(120).get(0).name);
+        assertEquals("bike", productFinder.selectBy(new AndSpec(new ColorSpec("red"), new PriceSpec(1000))).get(0).name);
     }
 }

@@ -1,5 +1,7 @@
 package exercise.ProductSpec
 
+import java.util.HashMap
+
 /**
  * Created by jacky on 15/9/1.
  */
@@ -21,48 +23,52 @@ class AndSpecTest extends groovy.util.GroovyTestCase {
         assertNull finder.products
     }
 
+    class Animal {
+        String name
+        BigDecimal price
+        String farmer
+
+        String toString() { name }
+    }
+
+    def func(a, b = 2, c = null) {
+        if (c == null) {
+            'b is null'
+        } else {
+            a + b + c
+        }
+    }
+
+
     void testGroovySyntax() {
-        def h="hello"
-        3.times { i ->
+        def h = "hello"
+        3.times { it ->
             print "time-${it}-($h)  "
         }
 
-        def l = [5,6,3,7,1,4,9]
+        def l = [5, 6, 3, 7, 1, 4, 9]
         println l
-        println l.sort { 
-            a,b -> -a.compareTo(b)
+        println l.sort {
+            a, b -> -a.compareTo(b)
         }
-        for(ll in l) {
+        for (ll in l) {
             print ll + ' '
         }
 
         def reverse = [
-                equals: false,
+                equals : false,
                 compare: { Object[] args -> args[1].compareTo(args[0]) }
         ] as Comparator
-        def list = [5,3,9]
+        def list = [5, 3, 9]
         Collections.sort(list, reverse)
 
-        def d = [a:1,b:2]
+        def d = [a: 1, b: 2]
         println d
         println d.a
 
-        def func(a, b=2, c=null) {
-            if (c == null) {
-                'b is null'
-            } else {
-                a+b+c
-            }
-        }
         println func(1, 2, 3)
         println func(1)
 
-        class Animal {
-            String name
-            BigDecimal price
-            String farmer
-            String toString() { name }
-        }
 
         def animals = []
         animals << new Animal(name: "Buttercup", price: 2, farmer: "john")
@@ -72,8 +78,7 @@ class AndSpecTest extends groovy.util.GroovyTestCase {
         assert 9 == animals.sum { it.price }
         println animals.collect { it.name.toUpperCase() }
         println animals.groupBy { it.farmer }
-        println animals.groupBy{ it.farmer }.collectEntries { k, v -> [k, v.price.sum()] }
+        println animals.groupBy { it.farmer }.collectEntries { k, v -> [k, v.price.sum()] }
 
-        import java.util.HashMap        
     }
 }

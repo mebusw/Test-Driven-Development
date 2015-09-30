@@ -53,23 +53,25 @@ Also return true if the string is a valid ISBN-10.
 
 import unittest
 
-def isValid13(isbn):
-    m = 0
-    isbn = isbn.replace('-', '').replace(' ', '')
-    for i in range(12):
-        m += int(isbn[i]) * (1 if i % 2 == 0 else 3)
-    c = 10 - divmod(m, 10)[1]
-    c = divmod(c, 10)[1]
-    return c == int(isbn[12])
+def cs13(m):
+    return (10 - m % 10) % 10
 
-def isValid10(isbn):
-    m = 0
+def cs10(m):
+    c = m % 11
+    return 'X' if c == 10 else c
+    
+def isValid(isbn, LEN, f, g):
     isbn = isbn.replace('-', '').replace(' ', '')
-    for i in range(9):
-        m += int(isbn[i]) * (i + 1)
-    c = divmod(m, 11)[1]
-    c = 'X' if c == 10 else c
-    return c == int(isbn[9])
+    m = 0
+    for i in range(LEN - 1):
+        m += int(isbn[i]) * f(i)
+    return g(m) == int(isbn[LEN - 1])
+
+def isValid13(isbn, LEN=13, f=lambda i: 1 if i % 2 == 0 else 3, g=cs13):
+    return isValid(isbn, LEN, f, g)
+
+def isValid10(isbn, LEN=10, f=lambda i: i + 1, g=cs10):
+    return isValid(isbn, LEN, f, g)
 
 class ISBNTest(unittest.TestCase):
 

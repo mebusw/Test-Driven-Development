@@ -19,7 +19,7 @@ class SMCRSocketTest extends groovy.util.GroovyTestCase {
         def connectionCount = 0
         def connectionCounter = new SocketServant() {
             @Override
-            void serve(Socket port) throws Exception {
+            void serve(Socket s) throws Exception {
                 connectionCount++
             }
         }
@@ -76,6 +76,30 @@ class SMCRSocketTest extends groovy.util.GroovyTestCase {
         socket.close()
 
         assertEquals "myMsg", answer
+    }
+
+    void testMultiThreaded(){
+        ss.serve 2000, new EchoServant()
+
+        def s1 = new Socket("localhost", 2000)
+        def br1 = SocketServant.getBufferReader(s1)
+        def ps1 = SocketServant.getPrintStream(s1)
+
+        def s2 = new Socket("localhost", 2000)
+        def br2 = SocketServant.getBufferReader(s2)
+        def ps2 = SocketServant.getPrintStream(s2)
+
+        ps2.println("msg2")
+        def answer2 = br2.readLine()
+        s2.close()
+
+        ps1.println("msg1")
+        def answer1 = br1.readLine()
+        s1.close()
+
+        assertEquals "msg1", answer1
+        assertEquals "msg2", answer2
+
     }
 
     void connect(int port) {

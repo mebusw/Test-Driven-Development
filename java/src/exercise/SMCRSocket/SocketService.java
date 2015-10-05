@@ -7,28 +7,34 @@ import java.net.Socket;
 /**
  * Created by jacky on 15/10/5.
  */
+
+
 class SocketService {
     private ServerSocket serverSocket = null;
     private int count = 0;
     private Thread serverThread = null;
+    private boolean run = true;
+    private SocketServent itsServent;
 
-    public void serve(int port) throws Exception {
+    public void serve(int port, SocketServent servent) throws Exception {
+        itsServent = servent;
         serverSocket = new ServerSocket(port);
         serverThread = new Thread(() -> {
-            try {
-                Thread.sleep(200);
-                Socket s = serverSocket.accept();
-                s.close();
-                count++;
-            } catch (Exception e) {
+            while(run) {
+                try {
+                    Socket s = serverSocket.accept();
+                    itsServent.serve(s);
+                    s.close();
+                } catch (Exception e) {
 
+                }
             }
-
         });
         serverThread.start();
     }
 
     public void close() throws Exception {
+        run = false;
         serverSocket.close();
     }
 

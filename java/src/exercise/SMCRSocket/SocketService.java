@@ -1,6 +1,5 @@
 package exercise.SMCRSocket;
 
-import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -11,34 +10,37 @@ import java.net.Socket;
 
 class SocketService {
     private ServerSocket serverSocket = null;
-    private int count = 0;
     private Thread serverThread = null;
     private boolean run = true;
-    private SocketServent itsServent;
+    private SocketServant itsServant;
 
-    public void serve(int port, SocketServent servent) throws Exception {
-        itsServent = servent;
+    public void serve(int port, SocketServant servant) throws Exception {
+        itsServant = servant;
         serverSocket = new ServerSocket(port);
+        makeServerThread();
+        serverThread.start();
+    }
+
+    private void makeServerThread() {
         serverThread = new Thread(() -> {
             while(run) {
-                try {
-                    Socket s = serverSocket.accept();
-                    itsServent.serve(s);
-                    s.close();
-                } catch (Exception e) {
-
-                }
+                acceptAndServeConnection();
             }
         });
-        serverThread.start();
+    }
+
+    private void acceptAndServeConnection() {
+        try {
+            Socket s = serverSocket.accept();
+            itsServant.serve(s);
+            s.close();
+        } catch (Exception e) {
+
+        }
     }
 
     public void close() throws Exception {
         run = false;
         serverSocket.close();
-    }
-
-    public int connections() {
-        return count;
     }
 }

@@ -4,32 +4,35 @@ package exercise.SMCRSocket
  * Created by jacky on 15/10/5.
  */
 class SMCRSocketTest extends groovy.util.GroovyTestCase {
+    private ss
+
     void setUp() {
         super.setUp()
-
+        ss = new SocketService()
     }
 
+    void tearDown() {
+        ss.close()
+
+    }
     void testOneConnection() {
-        def ss = new SocketService()
         def connectionCount = 0
-        def connectionCounter = new SocketServent() {
+        def connectionCounter = new SocketServant() {
             @Override
             void serve(Socket port) throws Exception {
                 connectionCount++
             }
         }
 
-        ss.serve 2000, connectionCounter
+        this.ss.serve 2000, connectionCounter
         connect 2000
-        ss.close()
 
         assertEquals 1, connectionCount
     }
 
     void testManyConnection() {
-        def ss = new SocketService()
         def connectionCount = 0
-        def connectionCounter = new SocketServent() {
+        def connectionCounter = new SocketServant() {
             @Override
             void serve(Socket port) throws Exception {
                 connectionCount++
@@ -40,13 +43,11 @@ class SMCRSocketTest extends groovy.util.GroovyTestCase {
         10.times {
             connect 2000
         }
-        ss.close()
 
         assertEquals 10, connectionCount
     }
 
     void testSendMessage() {
-        def ss = new SocketService()
         ss.serve 2000, new HelloServer()
 
         def socket = new Socket("localhost", 2000)
@@ -55,7 +56,6 @@ class SMCRSocketTest extends groovy.util.GroovyTestCase {
         def br = new BufferedReader(isr)
         def answer = br.readLine()
         socket.close()
-        ss.close()
 
         assertEquals "hello", answer
 

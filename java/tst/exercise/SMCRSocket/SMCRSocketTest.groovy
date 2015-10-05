@@ -48,7 +48,7 @@ class SMCRSocketTest extends groovy.util.GroovyTestCase {
     }
 
     void testSendMessage() {
-        ss.serve 2000, new HelloServer()
+        ss.serve 2000, new HelloServant()
 
         def socket = new Socket("localhost", 2000)
         def is = socket.getInputStream()
@@ -58,8 +58,24 @@ class SMCRSocketTest extends groovy.util.GroovyTestCase {
         socket.close()
 
         assertEquals "hello", answer
+    }
 
+    void testReceiveMessage() {
+        ss.serve 2000, new EchoServant()
 
+        def socket = new Socket("localhost", 2000)
+        def is = socket.getInputStream()
+        def isr = new InputStreamReader(is)
+        def br = new BufferedReader(isr)
+        def os = socket.getOutputStream()
+        def ps = new PrintStream(os)
+
+        ps.println "myMsg"
+
+        def answer = br.readLine()
+        socket.close()
+
+        assertEquals "myMsg", answer
     }
 
     void connect(int port) {

@@ -12,7 +12,7 @@ import java.util.concurrent.SynchronousQueue;
  */
 
 
-class SocketService {
+public class SocketService {
     private ServerSocket serverSocket = null;
     private Thread serverThread = null;
     private boolean run = true;

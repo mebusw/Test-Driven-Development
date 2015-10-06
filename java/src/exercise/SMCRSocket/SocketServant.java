@@ -7,7 +7,8 @@ import java.net.Socket;
  * Created by jacky on 15/10/5.
  */
 public class SocketServant {
-    void serve(Socket s) throws Exception {
+    public void serve(Socket s) throws Exception {
+        throw new Exception("Not implemented");
     }
 
     public static OutputStream getPrintStream(Socket s) throws Exception {

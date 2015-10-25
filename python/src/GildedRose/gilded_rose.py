@@ -2,6 +2,8 @@
 SULFURAS = "Sulfuras, Hand of Ragnaros"
 AGED_BRIE = "Aged Brie"
 BACKSTAGE = "Backstage passes to a TAFKAL80ETC concert"
+CONJURED = "Conjured Mana Cake"
+
 
 class GildedRose(object):
 
@@ -23,13 +25,17 @@ class GildedRose(object):
         if item.name == AGED_BRIE:
             item.quality += 1
             return
-            
+
         if item.name == BACKSTAGE:
             item.quality += 1
             if item.sell_in < 11:
                 item.quality += 1
             if item.sell_in < 6:
                 item.quality += 1
+            return
+
+        if item.name == CONJURED:
+            item.quality -= 2
             return
 
         if item.name != SULFURAS:
@@ -49,11 +55,14 @@ class GildedRose(object):
             item.quality = 0
             return
 
+        if item.name == CONJURED:
+            item.quality -= 2
+            return
+
         if item.name != SULFURAS:
             item.quality -= 1
             return
         
-
 
     def _quality_should_between_0_and_50(self, item):
         item.quality = min(item.quality, 50)

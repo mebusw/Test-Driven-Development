@@ -79,6 +79,13 @@ class GildedRoseTest(unittest.TestCase):
         gilded_rose = self.update_for(items, day=6)
         self.assert_match("Backstage passes to a TAFKAL80ETC concert, -1, 0", items[0])
 
+    ###########
+    def test_Conjured_items_degrade_in_Quality_twice_as_fast_as_normal_items(self):
+        items = [Item(name="Conjured Mana Cake", sell_in=3, quality=6)]
+        gilded_rose = self.update_for(items, day=1)
+        self.assert_match("Conjured Mana Cake, 2, 4", items[0])
+
+
 
 
 if __name__ == '__main__':

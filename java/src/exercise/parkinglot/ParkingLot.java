@@ -1,7 +1,5 @@
 package exercise.parkinglot;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 public class ParkingLot {
 
 	private int emptyLots;

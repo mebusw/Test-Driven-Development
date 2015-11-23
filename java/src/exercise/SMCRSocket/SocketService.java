@@ -1,10 +1,7 @@
 package exercise.SMCRSocket;
 
-import groovy.transform.Synchronized;
-
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Collections.*;
 import java.util.concurrent.SynchronousQueue;
 
 /**

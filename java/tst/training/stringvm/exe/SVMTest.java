@@ -1,12 +1,12 @@
 package training.stringvm.exe;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Stack;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 public class SVMTest {
 

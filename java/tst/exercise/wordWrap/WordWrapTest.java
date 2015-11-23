@@ -1,9 +1,10 @@
 package exercise.wordWrap;
 
-import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
 
-import org.junit.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * http://blog.8thlight.com/uncle-bob/2013/05/27/

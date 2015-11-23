@@ -1,9 +1,9 @@
 package exercise.parkinglot;
 
-import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * 练习1：基本停车场

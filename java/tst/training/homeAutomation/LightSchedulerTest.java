@@ -1,12 +1,11 @@
 package training.homeAutomation;
 
-import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Calendar;
-import org.mockito.*;
-import org.junit.*;
 import static org.mockito.Mockito.*;
 
 /**

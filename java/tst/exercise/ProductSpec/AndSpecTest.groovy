@@ -1,7 +1,4 @@
 package exercise.ProductSpec
-
-import java.util.HashMap
-
 /**
  * Created by jacky on 15/9/1.
  */

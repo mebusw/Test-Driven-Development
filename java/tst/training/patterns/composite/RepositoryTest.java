@@ -1,11 +1,13 @@
 package training.patterns.composite;
 
-import static org.hamcrest.Matchers.hasItem;
-import static org.junit.Assert.*;
-import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
-import static org.hamcrest.CoreMatchers.*;
+
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertThat;
 
 //import static org.junit.matchers.JUnitMatchers.*;
 

@@ -1,11 +1,10 @@
 package guessnumber;
 
-import static org.junit.Assert.*;
-
+import exercise.guessnumber.GuessNumber;
 import org.junit.Before;
 import org.junit.Test;
 
-import exercise.guessnumber.GuessNumber;
+import static org.junit.Assert.assertEquals;
 
 public class GuessNumberTest {
 	/**

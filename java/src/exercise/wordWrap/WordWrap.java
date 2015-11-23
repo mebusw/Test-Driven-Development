@@ -1,7 +1,5 @@
 package exercise.wordWrap;
 
-import sun.security.util.Length;
-
 public class WordWrap {
 
 	public static String wrap(String s, int length) {

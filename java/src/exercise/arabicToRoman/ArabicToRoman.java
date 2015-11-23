@@ -1,6 +1,5 @@
 package exercise.arabicToRoman;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.SortedMap;
 import java.util.TreeMap;

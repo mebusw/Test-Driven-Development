@@ -1,14 +1,10 @@
 package training.stringvm;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Stack;
 
-import junit.framework.Assert;
-
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 public class StringVMTest {
 

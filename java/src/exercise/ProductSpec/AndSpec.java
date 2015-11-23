@@ -1,7 +1,5 @@
 package exercise.ProductSpec;
 
-import java.util.List;
-
 /**
  * Created by jacky on 15/8/28.
  */

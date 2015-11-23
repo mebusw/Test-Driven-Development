@@ -1,10 +1,10 @@
 package exercise.circularBuffer;
 
-import static org.junit.Assert.*;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * Copyright (c) mebusw@163.com, the test cases are learned from James Grenning's

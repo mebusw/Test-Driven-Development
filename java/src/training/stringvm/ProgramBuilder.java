@@ -1,7 +1,6 @@
 package training.stringvm;
 
 import java.util.ArrayList;
-import java.util.Stack;
 
 public class ProgramBuilder {
 	ArrayList<Command> program = new ArrayList<Command>();

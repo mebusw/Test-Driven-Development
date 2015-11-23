@@ -1,11 +1,10 @@
 package training.args;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 import java.text.ParseException;
 
-import org.junit.Test;
-import training.args.Args;
+import static org.junit.Assert.*;
 
 public class ArgsTest {
 

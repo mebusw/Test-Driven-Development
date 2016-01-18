@@ -15,12 +15,14 @@ Spell out a number. For example
 
 import unittest
 
-DIGIT_ONE = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', \
+DIGIT_ONE = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine',
              'ten', 'eleven', 'twelve', 'thirteen', 'forteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen']
-DIGIT_TWO = ['ten', 'XXX', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety', 'hundred']
+DIGIT_TWO = ['ten', 'XXX', 'twenty', 'thirty', 'forty',
+             'fifty', 'sixty', 'seventy', 'eighty', 'ninety', 'hundred']
 
 THOUSAND = 1000
 MILLION = 1000000
+
 
 def spell(num):
     if num < 20:
@@ -32,14 +34,16 @@ def spell(num):
     if num < THOUSAND:
         return DIGIT_ONE[num / 100] + ' hundred' + ('' if num % 100 == 0 else ' and ' + spell(num % 100))
 
+    sec = lambda mark: '' if num % mark == 0 else ', ' + spell(num % mark)
 
     if num < MILLION:
-        return spell(num / THOUSAND) + ' thousand'  + ('' if num % THOUSAND == 0 else ', ' + spell(num % THOUSAND))
+        return spell(num / THOUSAND) + ' thousand' + ('' if num % THOUSAND == 0 else ', ' + spell(num % THOUSAND))
 
-    return spell(num / MILLION) + ' million'  + ('' if num % MILLION == 0 else ', ' + spell(num % MILLION))
+    return spell(num / MILLION) + ' million' + ('' if num % MILLION == 0 else ', ' + spell(num % MILLION))
 
 
 class SpellNumberTest(unittest.TestCase):
+
     def setUp(self):
         pass
 
@@ -67,13 +71,15 @@ class SpellNumberTest(unittest.TestCase):
     def test_thousand(self):
         self.assertEqual('one thousand', spell(1000))
         self.assertEqual('one thousand, five hundred and one', spell(1501))
-        self.assertEqual('forty five thousand, six hundred and nine', spell(45609))
-        self.assertEqual('five hundred and twelve thousand, six hundred and seven', spell(512607))
+        self.assertEqual(
+            'forty five thousand, six hundred and nine', spell(45609))
+        self.assertEqual(
+            'five hundred and twelve thousand, six hundred and seven', spell(512607))
 
     def test_million(self):
-        self.assertEqual('forty three million, one hundred and twelve thousand, six hundred and three', spell(43112603))
+        self.assertEqual(
+            'forty three million, one hundred and twelve thousand, six hundred and three', spell(43112603))
 
-        
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

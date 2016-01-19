@@ -20,26 +20,30 @@ DIGIT_ONE = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eig
 DIGIT_TWO = ['ten', 'XXX', 'twenty', 'thirty', 'forty',
              'fifty', 'sixty', 'seventy', 'eighty', 'ninety', 'hundred']
 
+TEN = 10
+HUNDRED = 100
 THOUSAND = 1000
 MILLION = 1000000
+
+
+def postfix(unit, seperator):
+    return lambda num: '' if num % unit == 0 else seperator + spell(num % unit)
 
 
 def spell(num):
     if num < 20:
         return DIGIT_ONE[num]
 
-    if num < 100:
-        return DIGIT_TWO[num / 10] + ('' if num % 10 == 0 else (' ' + DIGIT_ONE[num % 10]))
+    if num < HUNDRED:
+        return DIGIT_TWO[num / TEN] + postfix(TEN, ' ')(num)
 
     if num < THOUSAND:
-        return DIGIT_ONE[num / 100] + ' hundred' + ('' if num % 100 == 0 else ' and ' + spell(num % 100))
-
-    sec = lambda mark: '' if num % mark == 0 else ', ' + spell(num % mark)
+        return DIGIT_ONE[num / HUNDRED] + ' hundred' + postfix(HUNDRED, ' and ')(num)
 
     if num < MILLION:
-        return spell(num / THOUSAND) + ' thousand' + ('' if num % THOUSAND == 0 else ', ' + spell(num % THOUSAND))
+        return spell(num / THOUSAND) + ' thousand' + postfix(THOUSAND, ', ')(num)
 
-    return spell(num / MILLION) + ' million' + ('' if num % MILLION == 0 else ', ' + spell(num % MILLION))
+    return spell(num / MILLION) + ' million' + postfix(MILLION, ', ')(num)
 
 
 class SpellNumberTest(unittest.TestCase):

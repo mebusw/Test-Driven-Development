@@ -37,9 +37,9 @@ class FizzBuzzWhizzTest(unittest.TestCase):
         self.assertEqual('Whizz', lord_of_the_rule(7))
 
     def test_rule_2(self):
-        self.assertEqual('FizzBuzzWhizz', r2(3 * 5 * 7))
-        self.assertEqual('FizzBuzz', r2(3 * 5))
-        self.assertEqual('BuzzWhizz', r2((5 * 7) * 2))
+        self.assertEqual('FizzBuzzWhizz', lord_of_the_rule(3 * 5 * 7))
+        self.assertEqual('FizzBuzz', lord_of_the_rule(3 * 5))
+        self.assertEqual('BuzzWhizz', lord_of_the_rule((5 * 7) * 2))
 
     def test_rule_3(self):
         self.assertEqual('Fizz', lord_of_the_rule(13))

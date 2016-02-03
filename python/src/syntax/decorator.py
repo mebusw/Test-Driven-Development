@@ -10,6 +10,7 @@ def anna(fn):
 
 def annie(param):
     resultStack.append('by annie1 param=%s' % str(param))
+    print 'by annie1 param=%s' % str(param)
     def _A(fn):
         def new_func(*args):
             resultStack.append('by annie2 args=%s' % str(args))
@@ -53,12 +54,12 @@ class TestAnnotation(unittest.TestCase):
         annieHost((3, 4))
         self.assertEqual('by annie2 args=((3, 4),)', resultStack[0])
         self.assertEqual('by annieHost a=(3, 4)', resultStack[1])
-        
+
     def testAnnotationOfClassWithoutParam(self):
         host = Host()
         host.tom((5, 6))
         self.assertIn('by anna args=', resultStack[0])
-        self.assertIn('<syntax.decorator.Host instance at', resultStack[0])
+        self.assertIn('Host instance at', resultStack[0])
         self.assertIn('(5, 6)', resultStack[0])
         self.assertEqual('by Host.tom a=(5, 6)', resultStack[1])
 
@@ -66,7 +67,10 @@ class TestAnnotation(unittest.TestCase):
         host = Host()
         host.tonny((7, 8))
         self.assertIn('by annie2 args=', resultStack[0])
-        self.assertIn('<syntax.decorator.Host instance at', resultStack[0])
+        self.assertIn('Host instance at', resultStack[0])
         self.assertIn('(7, 8)', resultStack[0])
         self.assertEqual('by Host.tonny a=(7, 8)', resultStack[1])
-        
+       
+
+if __name__ == '__main__':
+    unittest.main()

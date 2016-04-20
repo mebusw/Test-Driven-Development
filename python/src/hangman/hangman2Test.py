@@ -10,6 +10,7 @@
 """
 
 import unittest
+# from mock import *
 
 VOWELS = 'AEIOU'
 
@@ -22,16 +23,20 @@ class Hangman(object):
         self._used = VOWELS
         self.tries = 12
         self.is_win = False
+        self.is_winning = lambda: self.word == self.discovered()
+        self.is_losing = lambda: self.tries <= 0
+
 
     def used(self):
         return self._used
 
     def tap(self, char):
+        self._consume_a_try(char)
+        self._mark_as_used(char)
+
+    def _consume_a_try(self, char):
         if self._is_uncontained(char) or self._is_already_tapped(char):
             self.tries -= 1
-
-        if char not in self._used:
-            self._used += char
 
     def _is_uncontained(self, char):
         return char not in self.word
@@ -39,19 +44,14 @@ class Hangman(object):
     def _is_already_tapped(self, char):
         return char in self._used
 
+    def _mark_as_used(self, char):
+        if char not in self._used:
+            self._used += char
+
     def discovered(self):
         return ''.join(map(lambda c: c if c in self._used else '_', self.word))
 
-    def is_over(self):
-        if self.word == self.discovered():
-            self.is_win = True
-            return True
-
-        if self.tries <= 0:
-            return True
-        return False
-
-
+        
 class Hangman_LengthTest(unittest.TestCase):
 
     def setUp(self):
@@ -155,22 +155,25 @@ class Hangman_GameOverTest(unittest.TestCase):
         self.hangman = Hangman("XYZ")
 
     def test_game_is_not_over_when_start(self):
-        self.assertFalse(self.hangman.is_over())
+        self.assertFalse(self.hangman.is_winning())
+        self.assertFalse(self.hangman.is_losing())
 
-    def test_game_is_over_and_lose_when_try_out(self):
+    def test_game_is_losing_when_try_out(self):
+        self._try_out_with_uncontained_char()
+
+        self.assertTrue(self.hangman.is_losing())
+
+    def _try_out_with_uncontained_char(self):
         for i in range(12):
             self.hangman.tap('N')
 
-        self.assertTrue(self.hangman.is_over())
-        self.assertFalse(self.hangman.is_win)
-
-    def test_game_is_over_and_win_when_all_char_discovered(self):
+    def test_game_is_winning_when_all_char_discovered(self):
         self.hangman.tap('X')
         self.hangman.tap('Y')
+
         self.hangman.tap('Z')
 
-        self.assertTrue(self.hangman.is_over())
-        self.assertTrue(self.hangman.is_win)
+        self.assertTrue(self.hangman.is_winning())
 
 if __name__ == '__main__':
     unittest.main()

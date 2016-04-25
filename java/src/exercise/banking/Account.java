@@ -1,21 +1,18 @@
 package exercise.banking;
 
 public class Account {
-    private static IAssessmentService service = new IAssessmentService.AssessmentService();
 
-    private final boolean isDebit;
-    private long balance;
+    protected long balance;
 
-    protected Account(boolean isDebit) {
-        this.isDebit = isDebit;
+    protected Account() {
     }
 
     public static Account openDebitAccount() {
-        return new Account(true);
+        return new DebitAccount();
     }
 
     public static Account openAccount() {
-        return new Account(false);
+        return new Account();
     }
 
     public long getBalance() {
@@ -27,10 +24,6 @@ public class Account {
     }
 
     public void withdraw(long amount) {
-        boolean insufficientFunds = getBalance() < amount;
         balance -= amount;
-        if (isDebit && insufficientFunds) {
-            throw new InsufficientFundsException();
-        }
     }
 }

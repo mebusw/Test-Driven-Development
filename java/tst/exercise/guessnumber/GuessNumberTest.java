@@ -1,6 +1,5 @@
-package guessnumber;
+package exercise.guessnumber;
 
-import exercise.guessnumber.GuessNumber;
 import org.junit.Before;
 import org.junit.Test;
 

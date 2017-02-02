@@ -7,9 +7,11 @@ class Truck(object):
 
 
 class Field(object):
-    tiles = []
     MAX_STALL = 1
     MAX_TILES = 0
+
+    def __init__(self):
+        self.tiles = []
 
     def put(self, tile):
         self.tiles.append(tile)
@@ -47,7 +49,14 @@ class FieldSix(Field):
 
 
 class Barn(object):
-    animals = []
+    def __init__(self):
+        self.animals = []
+
+    def put(self, *animals):
+        self.animals.extend(animals)
+
+    def score(self):
+        return len(set(map(lambda a: type(a), self.animals))) * -3
 
 
 class Animal(object):
@@ -70,6 +79,12 @@ class Player(object):
         self.fields = [FieldFour(), FieldFive(), FieldSix()]
         self.barn = Barn()
 
+    def put_animal_to_field(self, animal, field_id):
+        return self.fields[field_id].put(animal)
+
+    def can_put_animal_to_field(self, animal, field_id):
+        return self.fields[field_id].can_put(animal)
+
 
 class Test(unittest.TestCase):
     def setUp(self):
@@ -85,41 +100,67 @@ class Test(unittest.TestCase):
         self.assertIsNotNone(self.player.barn)
 
     def test_player_get_high_score_when_full(self):
-        score = self.player.fields[0].put(Elephant('F'))
-        score = self.player.fields[0].put(Elephant('F'))
+        score = self.player.put_animal_to_field(Elephant('F'), 0)
+        score = self.player.put_animal_to_field(Elephant('F'), 0)
 
         self.assertEquals(0, score)
 
     def test_player_get_high_score_when_one_missing(self):
-        score = self.player.fields[0].put(Elephant('F'))
-        score = self.player.fields[0].put(Elephant('F'))
-        score = self.player.fields[0].put(Elephant('F'))
+        score = self.player.put_animal_to_field(Elephant('F'), 0)
+        score = self.player.put_animal_to_field(Elephant('F'), 0)
+        score = self.player.put_animal_to_field(Elephant('F'), 0)
 
         self.assertEquals(self.player.fields[0].LOW_SCORE, score)
 
     def test_player_get_high_score_when_more_than_two_missing(self):
-        score = self.player.fields[0].put(Elephant('F'))
-        score = self.player.fields[0].put(Elephant('F'))
-        score = self.player.fields[0].put(Elephant('F'))
-        score = self.player.fields[0].put(Elephant('F'))
+        score = self.player.put_animal_to_field(Elephant('F'), 0)
+        score = self.player.put_animal_to_field(Elephant('F'), 0)
+        score = self.player.put_animal_to_field(Elephant('F'), 0)
+        score = self.player.put_animal_to_field(Elephant('F'), 0)
 
         self.assertEquals(self.player.fields[0].HIGH_SCORE, score)
 
     def test_can_put_an_animal_when_empty(self):
-        self.assertTrue(self.player.fields[0].can_put(Elephant('F')))
+        self.assertTrue(self.player.can_put_animal_to_field(Elephant('F'), 0))
 
     def test_can_put_an_animal_when_same_animal(self):
-        self.player.fields[0].put(Elephant('F'))
+        score = self.player.put_animal_to_field(Elephant('F'), 0)
 
-        self.assertTrue(self.player.fields[0].can_put(Elephant('F')))
+        self.assertTrue(self.player.can_put_animal_to_field(Elephant('F'), 0))
 
     def test_can_not_put_an_animal_when_different_animal(self):
-        self.player.fields[0].put(Elephant('F'))
+        score = self.player.put_animal_to_field(Elephant('F'), 0)
 
-        self.assertFalse(self.player.fields[0].can_put(Zebra('F')))
+        self.assertFalse(self.player.can_put_animal_to_field(Zebra('F'), 0))
 
     def test_new_born(self):
         pass
+
+
+class FinalScoringTest(unittest.TestCase):
+    def setUp(self):
+        self.barn = Barn()
+
+    def test_no_animal_in_barn(self):
+        self.barn.put()
+
+        self.assertEqual(0, self.barn.score())
+
+    def test_one_animal_in_barn(self):
+        self.barn.put(Elephant('F'))
+
+        self.assertEqual(-3, self.barn.score())
+
+    def test_two_diff_animal_in_barn(self):
+        self.barn.put(Elephant('F'), Zebra('M'))
+
+        self.assertEqual(-6, self.barn.score())
+
+    def test_one_type_of_animal_in_barn(self):
+        self.barn.put(Elephant('F'))
+        self.barn.put(Elephant('M'))
+
+        self.assertEqual(-3, self.barn.score())
 
 
 if __name__ == '__main__':
